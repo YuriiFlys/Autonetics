@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # Logs
 *.log
@@ -42,3 +43,300 @@ Thumbs.db
 # Turtle
 turtle-build/
   
+=======
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+##################
+# NEW IGNORE FILES
+
+# Config Files
+*.ini
+.DS_Store
+
+# Binary Files
+*.dat
+
+# Addition
+# Ignore all temporary files in the root directory
+*.[oa]
+
+# Single Module Project
+/.externalToolBuilders/
+/.settings/
+/.metadata/
+/.recommenders/
+/.allure/
+/target/
+/bin/
+/build/
+/doc/
+/lib/
+/test-output/
+/allure-results/
+/.classpath
+/.project
+/.checkstyle
+/reports/
+/.idea/
+/out/
+/shelf/
+/resources/static/
+/resources/front/
+workspace.xml
+*.iml
+*.ucls
+
+# Multi Modules Project
+/**/.externalToolBuilders/
+/**/.settings/
+/**/.allure/
+/**/target/
+/**/doc/
+/**/bin/
+/**/build/
+/**/lib/
+/**/test-output/
+/**/allure-results/
+/**/report/
+/**/.classpath
+/**/.project
+/**/.checkstyle
+/**/reports
+/**/af.reporting
+/**/.idea/
+/**/out/
+/**/shelf/
+/**/workspace.xml
+/**/*.iml
+/**/*.ucls
+
+/**/frontend/static/
+/**/frontend/*.png
+/**/frontend/*.json
+/**/frontend/*.ico
+/**/frontend/*.html
+/**/frontend/robots.txt
+
+# Ignore binary
+*.bin
+*.exe
+*.xpi
+
+# Ignore log
+# *.log
+*.log.[1234567890]
+
+# Ignore IntelliJ IDEA Config Files
+*.stackdump
+
+# Ignore Picture
+*.bmp
+# *.png
+#*.jpg
+*.jpeg
+
+# Ignore doc/notes.txt, but not doc/info/arch.txt
+# doc/*.txt
+
+# Ignore all .txt files in the directory doc/
+# doc/**/*.txt
+
+# Ignore .doc .pfd .docx
+*.doc
+*.docx
+*.pdf
+
+# bower
+/bower_components/
+/**/bower_components/
+
+# npm
+/node_modules/
+/**/node_modules/
+
+# Visual Studio Code
+/.vscode/
+
+# Xcode
+!**/*.xcodeproj
+!**/*.pbxproj
+!**/*.xcworkspacedata
+!**/*.xcsettings
+!**/*.xcscheme
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+**/.xcode.env.local
+
+# Gradle
+/build/
+/packages/react-native-gradle-plugin/build/
+/packages/rn-tester/build
+/packages/rn-tester/android/app/.cxx/
+/packages/rn-tester/android/app/build/
+/packages/rn-tester/android/app/gradle/
+/packages/rn-tester/android/app/gradlew
+/packages/rn-tester/android/app/gradlew.bat
+/packages/react-native/ReactAndroid/build/
+/packages/react-native/ReactAndroid/.cxx/
+/packages/react-native/ReactAndroid/gradle/
+/packages/react-native/ReactAndroid/gradlew
+/packages/react-native/ReactAndroid/gradlew.bat
+/packages/react-native/ReactAndroid/external-artifacts/build/
+/packages/react-native/ReactAndroid/external-artifacts/artifacts/
+/packages/react-native/ReactAndroid/hermes-engine/build/
+/packages/react-native/ReactAndroid/hermes-engine/.cxx/
+/packages/react-native/template/android/app/build/
+/packages/react-native/template/android/build/
+
+# Buck
+.buckd
+buck-out
+/.lsp.buckd
+/.lsp-buck-out
+/packages/react-native/ReactAndroid/src/main/jni/prebuilt/lib/
+/packages/react-native/ReactAndroid/src/main/gen
+/.cpplsp.buckd
+
+# Android Studio
+.project
+.settings
+.classpath
+
+# Watchman
+.watchmanconfig
+
+# Android
+.idea
+.gradle
+local.properties
+*.iml
+/packages/react-native/android/*
+!/packages/react-native/android/README.md
+
+# Node
+node_modules
+*.log
+.nvm
+package-lock.json
+
+# OS X
+.DS_Store
+
+# Test generated files
+/packages/react-native/ReactAndroid/src/androidTest/assets/AndroidTestBundle.js
+*.js.meta
+
+/coverage
+/third-party
+
+# Test Reports
+/reports
+
+# Stack Dumps generated when programs crash (Ex. bash.exe.stackdump on Win)
+*.stackdump
+
+# Root dir shouldn't have Xcode project
+/*.xcodeproj
+
+# ReactCommon subdir shouldn't have Xcode project
+/packages/react-native/ReactCommon/**/*.xcodeproj
+
+# Libs that shouldn't have Xcode project
+/packages/react-native/Libraries/FBLazyVector/**/*.xcodeproj
+/packages/react-native/Libraries/Required/**/*.xcodeproj
+/packages/react-native/React/CoreModules/**/*.xcodeproj
+/packages/react-native/React/FBReactNativeSpec/**/*.xcodeproj
+/packages/react-native-codegen/**/*.xcodeproj
+/packages/rn-tester/**/*.xcodeproj
+
+# Ruby Gems (Bundler)
+/packages/react-native/vendor
+/packages/react-native/template/vendor
+.ruby-version
+/**/.ruby-version
+vendor/
+
+# iOS / CocoaPods
+/packages/react-native/template/ios/build/
+/packages/react-native/template/ios/Pods/
+/packages/react-native/template/ios/Podfile.lock
+/packages/rn-tester/Gemfile.lock
+/packages/**/RCTLegacyInteropComponents.mm
+
+# Ignore RNTester specific Pods, but keep the __offline_mirrors__ here.
+/packages/rn-tester/Pods/*
+!/packages/rn-tester/Pods/__offline_mirrors_hermes__
+!/packages/rn-tester/Pods/__offline_mirrors_jsc__
+
+# @react-native/codegen
+/packages/react-native/React/FBReactNativeSpec/FBReactNativeSpec
+/packages/react-native-codegen/lib
+/packages/react-native-codegen/tmp/
+/packages/react-native/ReactCommon/react/renderer/components/rncore/
+/packages/rn-tester/NativeModuleExample/ScreenshotManagerSpec*
+/**/RCTThirdPartyFabricComponentsProvider.*
+
+# @react-native/codegen-typescript-test
+/packages/react-native-codegen-typescript-test/lib
+
+# Additional SDKs
+/packages/react-native/sdks/download
+/packages/react-native/sdks/hermes
+/packages/react-native/sdks/hermesc
+/packages/react-native/sdks/hermes-engine/hermes-engine-from-local-source-dir.tar.gz
+
+# Visual studio
+.vscode
+.vs
+
+# Android memory profiler files
+*.hprof
+
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
+
+# E2E files
+/packages/rn-tester-e2e/apps/*.apk
+/packages/rn-tester-e2e/apps/*.app
+
+# CircleCI
+.circleci/generated_config.yml
+
+>>>>>>> 5de0287e0a95a854dc93fc846e7048725173cb69
