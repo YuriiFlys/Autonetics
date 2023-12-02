@@ -1,217 +1,147 @@
 import * as React from "react";
-import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, Pressable } from "react-native";
-import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
+import { Image } from 'expo-image';
+import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView } from "react-native";
+import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const SignUpMenu = () => {
-    const navigator = useNavigation();
+  const navigator = useNavigation();
+  const passwordRef = React.useRef();
   return (
-    <View style={[styles.signupmenu, styles.iconLayout]}>
+    <KeyboardAvoidingView style={styles.signupmenu} behavior="position"
+    keyboardVerticalOffset={-100}
+     enabled>
+      <Text style={styles.welcomeTo}>Sign Up</Text>
       <Image
-        style={[styles.logoIcon, styles.logoIconLayout]}
-        contentFit="cover"
+        style={styles.logoIcon}
+        contentFit="contain"
         source={require("../assets/logo1.png")}
       />
-      <Text
-        style={[styles.welcomeTo, styles.welcomeToTypo]}
-      >{`Welcome to `}</Text>
-      <Text style={[styles.autonetics, styles.welcomeToTypo]}>Autonetics!</Text>
-      <View style={[styles.signupButton, styles.signupShadowBox]}>
-        <View style={styles.signupButtonChild} />
-        <View style={styles.signupButtonItem} />
-        <Text style={[styles.phoneNumber, styles.passPosition]}>
-          Phone number
-        </Text>
+      <View style={styles.phoneNumber}>
+        <Text style={styles.phoneNumbertext}>Номер телефону</Text>
+        <TextInput style={styles.field}
+         onSubmitEditing={() => passwordRef.current.focus()}
+         blurOnSubmit={false}
+         />
       </View>
-      <View style={[styles.signupButton1, styles.signupShadowBox]}>
-        <View style={styles.signupButtonChild} />
-        <View style={styles.signupButtonItem} />
-        <Text style={[styles.enterPass, styles.passPosition]}>
-          Enter password
-        </Text>
+      <View style={styles.enterPass}>
+        <Text style={styles.enterPasstext}>Введіть пароль</Text>
+        <TextInput style={styles.field} secureTextEntry 
+        ref={passwordRef}
+        />
+      </View>
+      <View style={styles.repeatPass}>
+        <Text style={styles.repeatPasstext}>Повторіть пароль</Text>
+        <TextInput style={styles.field} secureTextEntry 
+        ref={passwordRef}
+        />
       </View>
       <Pressable
-        style={[styles.signupButton2, styles.signupmenuShadowBox]}
-        onPress={() => {}}
+        style={styles.register}
+        onPress={() => navigator.navigate("MainMenu")}
       >
-        <Text style={styles.register}>Register</Text>
+        <Text style={styles.registerText}>Register</Text>
       </Pressable>
-      <View style={[styles.signupButton3, styles.signupShadowBox]}>
-        <View style={styles.signupButtonChild} />
-        <View style={styles.signupButtonItem} />
-        <Text style={[styles.repeatPass, styles.passPosition]}>
-          Repeat the password
-        </Text>
-      </View>
       <Pressable style={styles.vector} onPress={() => navigator.navigate("StartMenu")}>
         <Image
-          style={[styles.icon, styles.iconLayout]}
-          contentFit="cover"
+          style={styles.vector}
+          contentFit="contain"
           source={require("../assets/vector.png")}
         />
       </Pressable>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
-  iconLayout: {
-    overflow: "hidden",
-    width: "100%",
-  },
-  logoIconLayout: {
-    width: 205,
-    left: 113,
-  },
-  welcomeToTypo: {
-    textAlign: "left",
-    fontFamily: FontFamily.palanquinDarkRegular,
-    fontSize: FontSize.size_21xl,
-    position: "absolute",
-  },
-  signupShadowBox: {
-    height: 48,
-    width: 223,
-    backgroundColor: Color.colorGray,
-    left: 104,
-    position: "absolute",
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
-  },
-  passPosition: {
-    height: 30,
-    color: Color.colorDarkslategray_100,
-    left: 6,
-    top: 9,
-    fontSize: FontSize.size_xl,
-    textAlign: "left",
-    fontFamily: FontFamily.palanquinDarkRegular,
-    position: "absolute",
-  },
-  signupmenuShadowBox: {
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
-  },
-  logoIcon: {
-    top: 216,
-    height: 250,
-    position: "absolute",
-  },
   welcomeTo: {
-    top: 144,
-    color: "#354962",
-    left: 104,
-    textAlign: "left",
+    marginTop: '25%',
+    textAlign: "center",
     fontFamily: FontFamily.palanquinDarkRegular,
     fontSize: FontSize.size_21xl,
+    color: "#23334A",
   },
   autonetics: {
-    top: 466,
-    color: "#223145",
-    height: 64,
-    width: 205,
-    left: 113,
+    textAlign: "center",
+    fontFamily: FontFamily.palanquinDarkRegular,
+    fontSize: FontSize.size_21xl,
+    color: "#23334A",
   },
-  signupButtonChild: {
-    top: 0,
-    left: -2,
-    backgroundColor: Color.colorGainsboro,
-    borderStyle: "solid",
+  logoIcon: {
+    alignSelf: 'center',
+    height: '28%',
+    width: '50%',
+  },
+  field: {
+    marginTop: '2%',
+    alignSelf: 'center',
+    borderRadius: Border.br_8xs,
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
-    width: 229,
-    height: 52,
     borderRadius: Border.br_3xs,
-    position: "absolute",
+    height: '17%',
+    width: '80%',
+    backgroundColor: Color.colorLightcyan,
+    fontFamily: FontFamily.palanquinDarkRegular,
+    paddingLeft: '2%',
+    paddingRight: '2%',
   },
-  signupButtonItem: {
-    top: 1,
-    left: -1,
-    borderRadius: Border.br_4xs,
-    backgroundColor: Color.colorWhite,
-    width: 227,
-    height: 50,
-    position: "absolute",
-  },
-  phoneNumber: {
-    width: 141,
-  },
-  signupButton: {
-    top: 579,
-    borderRadius: Border.br_3xs,
-  },
-  enterPass: {
-    width: 140,
-  },
-  signupButton1: {
-    top: 639,
-  },
-  register: {
-    top: 4,
-    left: 19,
-    color: Color.colorWhite,
-    textAlign: "center",
-    width: 76,
-    height: 26,
+  phoneNumbertext: {
+    marginLeft: '10%',
+    color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
-    position: "absolute",
   },
-  signupButton2: {
-    marginLeft: -57,
-    top: 759,
-    left: "50%",
-    backgroundColor: "#2469a2",
-    width: 114,
-    height: 45,
-    borderRadius: Border.br_3xs,
-    position: "absolute",
+  enterPasstext: {
+    marginLeft: '10%',
+    textAlign: 'left',
+    color: Color.colorDarkslategray_200,
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.palanquinDarkRegular,
+  },
+  enterPass: {
+    marginTop: '-26%',
   },
   repeatPass: {
-    width: 190,
+    marginTop: '-30%',
   },
-  signupButton3: {
-    top: 699,
+  phoneNumber: {
+    marginTop: '2%',
   },
-  icon: {
-    height: "100%",
-    maxWidth: "100%",
-    maxHeight: "100%",
+  register: {
+    marginTop: '-20%',
+    alignSelf: 'center',
+    height: '5%',
+    width: '50%',
+    backgroundColor: "#2469A2",
+    borderRadius: Border.br_3xs,
+    justifyContent: 'center',
+  },
+  registerText: {
+    textAlign: 'center',
+    color: Color.colorLightcyan,
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.palanquinDarkRegular,
+  },
+  repeatPasstext: {
+    marginLeft: '10%',
+    textAlign: 'left',
+    color: Color.colorDarkslategray_200,
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.palanquinDarkRegular,
   },
   vector: {
-    left: "6.98%",
-    top: "4.83%",
-    right: "85.81%",
-    bottom: "93.03%",
-    width: "7.21%",
-    height: "2.15%",
-    position: "absolute",
+    marginTop: '2%',
+    alignSelf: 'center',
+    height: '30%',
+    width: '30%',
+    position: 'absolute',
+    top: '1%',
+    left: '5%',
   },
   signupmenu: {
-    backgroundColor: "#e0fafd",
     flex: 1,
-    height: 932,
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
+    backgroundColor: Color.colorLightcyan,
+    justifyContent: 'flex-start',
   },
 });
 

@@ -1,168 +1,138 @@
 import * as React from "react";
-import { Image } from "expo-image";
+import * as Device from 'expo-device';
 import { useNavigation } from "@react-navigation/native";
+import { Image } from 'expo-image';
+
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
+import { TextInput, KeyboardAvoidingView } from "react-native";
 
 const LoginMenu = () => {
-    const navigator = useNavigation();
+  const navigator = useNavigation();
+  const passwordRef = React.useRef();
   return (
-    <View style={[styles.loginmenu, styles.iconLayout]}>
-      <Pressable
-        style={[styles.submit, styles.submitLayout]}
-        onPress={() => navigator.navigate("MainMenu")}
-      >
-        <Image
-          style={[styles.submitChild, styles.submitLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-4.png")}
-        />
-        <Text style={[styles.submit1, styles.textTypo]}>Submit</Text>
-      </Pressable>
-      <View style={[styles.password, styles.emailLayout]}>
-        <View style={styles.field} />
-        <Text style={[styles.text, styles.textTypo]}>Пароль</Text>
-      </View>
-      <View style={[styles.email, styles.emailLayout]}>
-        <View style={styles.field} />
-        <Text style={[styles.text, styles.textTypo]}>Email</Text>
-      </View>
-      <Text style={[styles.logIn, styles.textTypo]}>Log in</Text>
+    <KeyboardAvoidingView style={styles.loginmenu} behavior="position"
+    keyboardVerticalOffset={-100}
+     enabled>
+      <Text style={styles.logIn}>Log in</Text>
       <Image
         style={styles.logoIcon}
-        contentFit="cover"
+        contentFit="contain"
         source={require("../assets/logo1.png")}
       />
-      <Text style={[styles.forgotPassword, styles.textTypo]}>
-        Forgot password?
-      </Text>
+      <View style={styles.email}>
+        <Text style={styles.emailtext}>Email</Text>
+        <TextInput style={styles.field}
+         onSubmitEditing={() => passwordRef.current.focus()}
+         blurOnSubmit={false}
+         />
+      </View>
+      <View style={styles.password}>
+        <Text style={styles.passwordtext}>Пароль</Text>
+        <TextInput style={styles.field} secureTextEntry 
+        ref={passwordRef}
+        />
+      </View>
+      <Pressable
+        style={styles.submit}
+        onPress={() => navigator.navigate("MainMenu")}
+      >
+        <Text style={styles.submitText}>Submit</Text>
+      </Pressable>
+      <Text style={styles.forgotPassword}>Forgot password?</Text>
       <Pressable style={styles.vector} onPress={() => navigator.navigate("StartMenu")}>
         <Image
-          style={[styles.icon, styles.iconLayout]}
-          contentFit="cover"
+          style={styles.vector}
+          contentFit="contain"
           source={require("../assets/vector.png")}
         />
       </Pressable>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  iconLayout: {
-    overflow: "hidden",
-    width: "100%",
-  },
-  submitLayout: {
-    height: 46,
-    width: 178,
-    position: "absolute",
-  },
-  textTypo: {
-    textAlign: "left",
+  logIn: {
+    marginTop: '25%',
+    textAlign: "center",
     fontFamily: FontFamily.palanquinDarkRegular,
-    position: "absolute",
+    fontSize: FontSize.size_21xl,
+    color: "#23334A",
   },
-  emailLayout: {
-    height: 61,
-    left: 66,
-    width: 297,
-    position: "absolute",
-  },
-  submitChild: {
-    top: 0,
-    left: 0,
-  },
-  submit1: {
-    top: 5,
-    left: 56,
-    color: "#fff",
-    fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
-  },
-  submit: {
-    top: 650,
-    left: 126,
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
+  logoIcon: {
+    alignSelf: 'center',
+    height: '28%',
+    width: '50%',
+    marginBottom: '10%',
   },
   field: {
-    top: 40,
+    marginTop: '2%',
+    alignSelf: 'center',
     borderRadius: Border.br_8xs,
-    borderStyle: "solid",
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
-    height: 21,
-    width: 297,
-    left: 0,
-    position: "absolute",
+    borderRadius: Border.br_3xs,
+    height: '17%',
+    width: '80%',
     backgroundColor: Color.colorLightcyan,
+    fontFamily: FontFamily.palanquinDarkRegular,
+    paddingLeft: '2%',
+    paddingRight: '2%',
   },
-  text: {
-    top: 4,
+  emailtext: {
+    marginLeft: '10%',
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
-    left: 0,
+  },
+  passwordtext: {
+    marginLeft: '10%',
+    textAlign: 'left',
+    color: Color.colorDarkslategray_200,
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.palanquinDarkRegular,
   },
   password: {
-    top: 489,
+    marginTop: '-20%',
   },
   email: {
-    top: 428,
+    marginTop: '2%',
   },
-  logIn: {
-    top: 97,
-    left: 160,
-    fontSize: 40,
-    color: "#223145",
+  submit: {
+    marginTop: '-20%',
+    alignSelf: 'center',
+    height: '5%',
+    width: '50%',
+    backgroundColor: "#2469A2",
+    borderRadius: Border.br_3xs,
+    justifyContent: 'center',
   },
-  logoIcon: {
-    top: 189,
-    left: 129,
-    width: 172,
-    height: 220,
-    position: "absolute",
+  submitText: {
+    textAlign: 'center',
+    color: Color.colorLightcyan,
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.palanquinDarkRegular,
   },
   forgotPassword: {
-    top: 712,
-    left: 159,
+    marginTop: '2%',
+    alignSelf: 'center',
     fontSize: 14,
     color: "#25364c",
   },
-  icon: {
-    height: "100%",
-    maxWidth: "100%",
-    maxHeight: "100%",
-  },
   vector: {
-    left: "6.98%",
-    top: "4.83%",
-    right: "85.81%",
-    bottom: "93.03%",
-    width: "7.21%",
-    height: "2.15%",
-    position: "absolute",
+    marginTop: '2%',
+    alignSelf: 'center',
+    height: '30%',
+    width: '30%',
+    position: 'absolute',
+    top: '1%',
+    left: '5%',
   },
   loginmenu: {
     flex: 1,
-    height: 932,
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
     backgroundColor: Color.colorLightcyan,
-    width: "100%",
+    justifyContent: 'flex-start',
   },
 });
-export default LoginMenu;
 
+export default LoginMenu;
