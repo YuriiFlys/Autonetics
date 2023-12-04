@@ -35,7 +35,7 @@ const LoginMenu = () => {
       </View>
       <Pressable
         style={styles.submit}
-        onPress={() => navigator.navigate("MainMenu")}
+        onPress={() => navigator.navigate('MyTabs', { screen: 'Головне меню' })}
       >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>

@@ -1,15 +1,17 @@
 const Stack = createNativeStackNavigator();
 import * as React from "react";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import  {NavigationContainer}  from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import StartMenu from "./screens/StartMenu";
 import LoginMenu from "./screens/LoginMenu";
 import SignupMenu from "./screens/SignupMenu";
-import MainMenu from "./screens/MainMenu";
+import MyTabs from "./screens/MyTabs";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, TouchableOpacity, LogBox } from "react-native";
 
+LogBox.ignoreAllLogs();
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
 
@@ -42,8 +44,8 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="MainMenu"
-              component={MainMenu}
+              name="MyTabs"
+              component={MyTabs}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

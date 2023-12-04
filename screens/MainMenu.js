@@ -2,8 +2,10 @@ import * as React from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { useNavigation } from "@react-navigation/native";
 
 const MainMenu = () => {
+  const navigator = useNavigation();
   return (
     <View style={styles.view}>
       <View style={[styles.view1, styles.iconPosition]}>
@@ -80,7 +82,7 @@ const MainMenu = () => {
         </Pressable>
         <Pressable
           style={[styles.qrCode, styles.view6Layout]}
-          onPress={() => {}}
+          onPress={() => navigator.navigate("Scanner")}
         >
           <View style={[styles.child3, styles.child3Position]} />
           <Text style={[styles.qr, styles.qrTypo]}>QR Код магазину</Text>
