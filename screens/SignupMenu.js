@@ -38,7 +38,7 @@ const SignUpMenu = () => {
       </View>
       <Pressable
         style={styles.register}
-        onPress={() => navigator.navigate("MainMenu")}
+        onPress={() => navigator.navigate('BottomMenu', { screen: 'Home' })}
       >
         <Text style={styles.registerText}>Register</Text>
       </Pressable>

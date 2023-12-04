@@ -1,17 +1,19 @@
 // MyTabs.js
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import MainMenu from './MainMenu';
 import Scanner from './Scanner';
 import Map from './Map';
 
 const Tab = createMaterialTopTabNavigator();
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', // встановіть колір фону тут
+    backgroundColor: '#fff',
   },
 });
 
@@ -23,7 +25,7 @@ export default function MyTabs() {
           tabBarInactiveTintColor: '#000000',
           tabBarActiveTintColor: '#23333A',
           tabBarIndicatorStyle: { backgroundColor: '#000000' },
-          tabBarStyle: { backgroundColor: '#fff', top:'19%' },
+          tabBarStyle: { backgroundColor: '#fff', top:screenHeight*0.15, height: screenHeight*0.07, width: screenWidth},
         }}
       >
         <Tab.Screen name="Скан QR-коду" component={Scanner} />

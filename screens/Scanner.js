@@ -23,17 +23,13 @@ export default function Scanner() {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
-  const startScanning = () => {
-    setScanned(true); // Встановлюємо scanned в true після натискання кнопки
-  };
+  
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-
-  console.log('Scanned:', scanned); // Display the value of scanned in the console
 
   return (
     <View style={[styles.container]}>
@@ -61,12 +57,7 @@ export default function Scanner() {
         contentFit="contain"
         source={require("../assets/logo1.png")}
       />
-      <View style={styles.bottomRectangle}>
-  <Image source={require("../assets/home.png")} style={styles.icon} />
-  <Image source={require("../assets/interest.png")} style={styles.icon} />
-  <Image source={require("../assets/shoppingbasket.png")} style={styles.icon} />
-  <Image source={require("../assets/user.png")} style={styles.icon} />
-      </View>
+      
     </View>
   );
 }
@@ -82,7 +73,7 @@ const styles = StyleSheet.create({
   },
   scanText: {
     position: 'absolute',
-    top: screenHeight*0.05,
+    top: screenHeight*0.02,
     fontFamily: 'PalanquinDark-Regular',
     fontSize: 20,
     color: '#404040',
@@ -92,7 +83,7 @@ const styles = StyleSheet.create({
     height: screenWidth*0.15,
     width: screenWidth*0.15,
     position: 'absolute',
-    top: screenHeight*0.04,
+    top: screenHeight*0.01,
     left: screenWidth*0.05,
   },
   topRectangle: {

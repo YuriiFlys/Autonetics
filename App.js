@@ -7,7 +7,7 @@ import StartMenu from "./screens/StartMenu";
 import LoginMenu from "./screens/LoginMenu";
 import SignupMenu from "./screens/SignupMenu";
 import MyTabs from "./screens/MyTabs";
-
+import BottomMenu from "./screens/BottomMenu";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity, LogBox } from "react-native";
 
@@ -46,6 +46,11 @@ const App = () => {
             <Stack.Screen
               name="MyTabs"
               component={MyTabs}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="BottomMenu"
+              component={BottomMenu}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

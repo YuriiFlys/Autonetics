@@ -8,6 +8,7 @@ const MainMenu = () => {
   const navigator = useNavigation();
   return (
     <View style={styles.view}>
+      
       <View style={[styles.view1, styles.iconPosition]}>
         <View style={[styles.child, styles.childShadowBox]} />
         <Pressable
@@ -100,6 +101,7 @@ const MainMenu = () => {
       <Text style={[styles.text11, styles.textTypo]}>450м</Text>
       <Text style={[styles.text12, styles.textTypo]}>450м</Text>
       <Text style={[styles.text13, styles.textTypo]}>450м</Text>
+      
     </View>
   );
 };
