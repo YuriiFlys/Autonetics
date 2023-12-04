@@ -10,6 +10,7 @@ const screenHeight = Dimensions.get('window').height;
 const SignUpMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
+  const repeatpasswordRef= React.useRef();
   return (
     <KeyboardAvoidingView style={styles.signupmenu} behavior="position"
     keyboardVerticalOffset={-screenHeight*0.15}
@@ -31,12 +32,13 @@ const SignUpMenu = () => {
         <Text style={styles.enterPasstext}>Введіть пароль</Text>
         <TextInput style={styles.field} secureTextEntry 
         ref={passwordRef}
+        onSubmitEditing={() => repeatpasswordRef.current.focus()}
         />
       </View>
       <View style={styles.repeatPass}>
         <Text style={styles.repeatPasstext}>Повторіть пароль</Text>
         <TextInput style={styles.field} secureTextEntry 
-        ref={passwordRef}
+        ref={repeatpasswordRef}
         />
       </View>
       <Pressable
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
-    height: screenHeight * 0.03,
+    height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
     backgroundColor: Color.colorLightcyan,
     fontFamily: FontFamily.palanquinDarkRegular,
@@ -113,8 +115,8 @@ const styles = StyleSheet.create({
   register: {
     marginTop: screenHeight * 0.05,
     alignSelf: 'center',
-    height: screenHeight*0.05,
-    width: screenWidth*0.5,
+    height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
+    width: screenHeight < 600 ? screenWidth*0.5 : screenWidth*0.5,
     backgroundColor: "#2469A2",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',

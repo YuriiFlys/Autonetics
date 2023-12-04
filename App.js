@@ -27,7 +27,7 @@ const App = () => {
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled:false }}>
             <Stack.Screen
               name="StartMenu"
               component={StartMenu}

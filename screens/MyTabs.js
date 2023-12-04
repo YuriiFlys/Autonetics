@@ -21,11 +21,13 @@ export default function MyTabs() {
   return (
     <View style={styles.container}>
       <Tab.Navigator
+        initialRouteName="Головне меню"
         screenOptions={{
           tabBarInactiveTintColor: '#000000',
           tabBarActiveTintColor: '#23333A',
           tabBarIndicatorStyle: { backgroundColor: '#000000' },
-          tabBarStyle: { backgroundColor: '#fff', top:screenHeight*0.15, height: screenHeight*0.07, width: screenWidth},
+          tabBarLabelStyle: { fontSize: 12 },
+          tabBarStyle: { backgroundColor: '#fff', top:screenHeight*0.15, height: screenHeight < 600 ? screenHeight*0.08 : screenHeight*0.06, width: screenWidth,marginTop:screenHeight*0.03 },
         }}
       >
         <Tab.Screen name="Скан QR-коду" component={Scanner} />

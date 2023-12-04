@@ -51,7 +51,7 @@ export default function Scanner() {
         )}
       </View>
       <View style={styles.topRectangle}/>
-      <Text style={styles.scanText}>Скан QR-коду</Text>
+      <Text style={styles.labelText}>Скан QR-коду</Text>
       <Image
         style={styles.logoIcon}
         contentFit="contain"
@@ -71,7 +71,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     position: 'relative',
   },
-  scanText: {
+  scannerwindow: {
+    position: 'absolute',
+    width: screenWidth*0.8,
+    height: screenHeight*0.4,
+    backgroundColor: 'transparent',
+    borderWidth: 5,
+    borderColor: 'white',
+    alignSelf: 'center',
+    top: screenHeight*0.25,
+  },
+  labelText: {
     position: 'absolute',
     top: screenHeight*0.02,
     fontFamily: 'PalanquinDark-Regular',

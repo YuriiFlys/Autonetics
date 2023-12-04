@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   loginButton: {
     marginTop: screenHeight * 0.01,
     alignSelf: 'center',
-    height: screenHeight * 0.06,
-    width: screenWidth * 0.5,
+    height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
+    width: screenHeight < 600 ? screenWidth*0.5 : screenWidth*0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
   signupButton: {
     alignSelf: 'center',
     marginTop: screenHeight * 0.02,
-    height: screenHeight * 0.06,
-    width: screenWidth * 0.5,
+    height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
+    width: screenHeight < 600 ? screenWidth*0.5 : screenWidth*0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',

@@ -23,6 +23,7 @@ export default function BottomMenu() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -34,7 +35,7 @@ export default function BottomMenu() {
             iconName = focused
               ? require('../assets/interest.png')
               : require('../assets/interest.png');
-          } else if (route.name === 'Basket') {
+          } else if (route.name === 'Cart') {
             iconName = focused
               ? require('../assets/shoppingbasket.png')
               : require('../assets/shoppingbasket.png');
@@ -51,7 +52,7 @@ export default function BottomMenu() {
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Promotions" component={Promotions} options={{ headerShown: false }} />
-      <Tab.Screen name="Basket" component={Basket} options={{ headerShown: false }} />
+      <Tab.Screen name="Cart" component={Basket} options={{ headerShown: false }} />
       <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
