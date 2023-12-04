@@ -2,8 +2,11 @@ import * as React from "react";
 import * as Device from 'expo-device';
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
+
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 const StartMenu = () => {
   const navigation = useNavigation();
@@ -38,29 +41,29 @@ const StartMenu = () => {
 const styles = StyleSheet.create({
   logoIcon: {
     alignSelf: 'center',
-    marginTop: '5%',
-    height: '35%',
-    width: '60%',
+    marginTop: screenHeight * 0.02,
+    height: screenHeight * 0.3,
+    width: screenWidth * 0.6,
   },
   welcomeTo: {
-    marginTop: '25%',
+    marginTop: screenHeight * 0.1,
     textAlign: "center",
     fontFamily: FontFamily.palanquinDarkRegular,
     fontSize: FontSize.size_21xl,
     color: "#354962",
   },
   autonetics: {
-    marginTop: '5%',
+    marginTop: screenHeight * 0.01,
     textAlign: "center",
     fontFamily: FontFamily.palanquinDarkRegular,
     fontSize: FontSize.size_21xl,
     color: "#354962",
   },
   loginButton: {
-    marginTop: '5%',
+    marginTop: screenHeight * 0.01,
     alignSelf: 'center',
-    height: 52,
-    width: '50%',
+    height: screenHeight * 0.06,
+    width: screenWidth * 0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
@@ -73,9 +76,9 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     alignSelf: 'center',
-    marginTop: '5%',
-    height: 52,
-    width: '50%',
+    marginTop: screenHeight * 0.02,
+    height: screenHeight * 0.06,
+    width: screenWidth * 0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',

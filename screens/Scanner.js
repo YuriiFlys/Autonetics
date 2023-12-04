@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenWidth*0.15,
-    width: screenWidth*0.15,
+    height: screenWidth*0.12,
+    width: screenWidth*0.12,
     position: 'absolute',
     top: screenHeight*0.01,
     left: screenWidth*0.05,

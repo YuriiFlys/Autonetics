@@ -5,14 +5,17 @@ import { Image } from 'expo-image';
 
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import { TextInput, KeyboardAvoidingView } from "react-native";
+import { TextInput, KeyboardAvoidingView, Dimensions } from "react-native";
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const LoginMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
   return (
     <KeyboardAvoidingView style={styles.loginmenu} behavior="position"
-    keyboardVerticalOffset={-100}
+    keyboardVerticalOffset={-screenHeight*0.2}
      enabled>
       <Text style={styles.logIn}>Log in</Text>
       <Image
@@ -53,7 +56,7 @@ const LoginMenu = () => {
 
 const styles = StyleSheet.create({
   logIn: {
-    marginTop: '25%',
+    marginTop: screenHeight*0.1,
     textAlign: "center",
     fontFamily: FontFamily.palanquinDarkRegular,
     fontSize: FontSize.size_21xl,
@@ -61,72 +64,75 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     alignSelf: 'center',
-    height: '28%',
-    width: '50%',
-    marginBottom: '10%',
+    height: screenHeight*0.25,
+    width: screenWidth*0.5,
   },
   field: {
-    marginTop: '2%',
+    marginTop: screenHeight*0.01,
     alignSelf: 'center',
     borderRadius: Border.br_8xs,
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
-    height: '17%',
-    width: '80%',
+    height: screenHeight*0.03,
+    width: screenWidth*0.8,
     backgroundColor: Color.colorLightcyan,
     fontFamily: FontFamily.palanquinDarkRegular,
-    paddingLeft: '2%',
-    paddingRight: '2%',
+    paddingLeft: screenWidth*0.02,
+    paddingRight: screenWidth*0.02,
   },
   emailtext: {
-    marginLeft: '10%',
+    marginLeft: screenWidth*0.1,
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },
   passwordtext: {
-    marginLeft: '10%',
+    marginLeft: screenWidth*0.1,
     textAlign: 'left',
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },
   password: {
-    marginTop: '-20%',
+    marginTop: screenHeight*0.01,
   },
   email: {
-    marginTop: '2%',
+    marginTop: screenHeight*0.01,
   },
   submit: {
-    marginTop: '-20%',
+    marginTop: screenHeight*0.05,
     alignSelf: 'center',
-    height: '5%',
-    width: '50%',
+    height: screenHeight*0.05,
+    width: screenWidth*0.5,
     backgroundColor: "#2469A2",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
   },
   submitText: {
     textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     color: Color.colorLightcyan,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },
   forgotPassword: {
-    marginTop: '2%',
+    marginTop: screenHeight*0.01,
     alignSelf: 'center',
     fontSize: 14,
     color: "#25364c",
   },
   vector: {
-    marginTop: '2%',
+    marginTop: screenHeight*0.01,
     alignSelf: 'center',
-    height: '30%',
-    width: '30%',
+    height: screenHeight*0.05,
+    width: screenHeight*0.05,
     position: 'absolute',
-    top: '1%',
-    left: '5%',
+    top: screenHeight*0.02,
+    left: screenWidth*0.02,
   },
   loginmenu: {
     flex: 1,
