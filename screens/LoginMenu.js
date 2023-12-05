@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Device from 'expo-device';
 import { useNavigation } from "@react-navigation/native";
 import { Image } from 'expo-image';
 

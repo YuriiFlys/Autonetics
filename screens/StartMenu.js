@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Device from 'expo-device';
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
@@ -11,7 +10,6 @@ const screenHeight = Dimensions.get("window").height;
 const StartMenu = () => {
   const navigation = useNavigation();
   return (
-    console.log(Device.modelName),
     <View style={styles.startmenu}>
       <Text style={styles.welcomeTo}>{`Welcome to `}</Text>
       <Image

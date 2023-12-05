@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -11,15 +11,17 @@ const MainMenu = () => {
   const navigator = useNavigation();
   return (
     <View style={[styles.container]}>
-
           <View style={styles.topRectangle}/>
           <Text style={styles.labelText}>Головне меню</Text>
-          <Image
-            style={styles.logoIcon}
-            contentFit="contain"
-            source={require("../assets/logo1.png")}
-          />
-
+          <TouchableOpacity
+      style={styles.logoIcon}
+      onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
+  <Image
+    style={styles.logoIcon}
+    contentFit="contain"
+    source={require("../assets/logo1.png")}
+  />
+</TouchableOpacity>
         </View>
   );
 };
@@ -35,18 +37,18 @@ const styles = StyleSheet.create({
   },
   labelText: {
     position: 'absolute',
-    top: screenHeight*0.02,
+    top: screenHeight*0.01,
     fontFamily: 'PalanquinDark-Regular',
-    fontSize: 20,
+    fontSize: 18,
     color: '#404040',
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenWidth*0.12,
-    width: screenWidth*0.12,
+    height: screenWidth*0.13,
+    width: screenWidth*0.13,
     position: 'absolute',
-    top: screenHeight*0.01,
-    left: screenWidth*0.05,
+    top: screenHeight*0,
+    left: screenWidth*0.04,
   },
   topRectangle: {
     position: 'absolute',

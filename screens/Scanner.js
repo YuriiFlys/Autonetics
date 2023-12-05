@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'expo-image';
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-
+import { useNavigation } from '@react-navigation/native';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(true);
-
+  const navigator = useNavigation();
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -21,7 +21,7 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    alert(`${data}`);
   };
   
   if (hasPermission === null) {
@@ -52,12 +52,15 @@ export default function Scanner() {
       </View>
       <View style={styles.topRectangle}/>
       <Text style={styles.labelText}>Скан QR-коду</Text>
-      <Image
-        style={styles.logoIcon}
-        contentFit="contain"
-        source={require("../assets/logo1.png")}
-      />
-      
+      <TouchableOpacity
+      style={styles.logoIcon}
+      onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
+  <Image
+    style={styles.logoIcon}
+    contentFit="contain"
+    source={require("../assets/logo1.png")}
+  />
+</TouchableOpacity>
     </View>
   );
 }
@@ -83,18 +86,18 @@ const styles = StyleSheet.create({
   },
   labelText: {
     position: 'absolute',
-    top: screenHeight*0.02,
+    top: screenHeight*0.01,
     fontFamily: 'PalanquinDark-Regular',
-    fontSize: 20,
+    fontSize: 18,
     color: '#404040',
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenWidth*0.12,
-    width: screenWidth*0.12,
+    height: screenWidth*0.13,
+    width: screenWidth*0.13,
     position: 'absolute',
-    top: screenHeight*0.01,
-    left: screenWidth*0.05,
+    top: screenHeight*0,
+    left: screenWidth*0.04,
   },
   topRectangle: {
     position: 'absolute',
