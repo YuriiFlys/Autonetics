@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MainMenu from './MainMenu';
 import Scanner from './Scanner';
 import Map from './Map';
+import Logo from './Logo'
 
 const Tab = createMaterialTopTabNavigator();
 const screenWidth = Dimensions.get('window').width;
@@ -19,6 +20,7 @@ const styles = StyleSheet.create({
 
 export default function MyTabs() {
   return (
+    
     <View style={styles.container}>
       <Tab.Navigator
         initialRouteName="Головне меню"
@@ -34,6 +36,7 @@ export default function MyTabs() {
         <Tab.Screen name="Головне меню" component={MainMenu} />
         <Tab.Screen name="Карта" component={Map} />
       </Tab.Navigator>
+      <Logo/>
     </View>
   );
 }

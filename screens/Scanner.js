@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'expo-image';
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Pressable } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(true);
+  const [isScanning, setIsScanning] = useState(false);
+  const isFocused = useIsFocused();
   const navigator = useNavigation();
+  
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -21,7 +24,21 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`${data}`);
+    setIsScanning(false);
+    if (Linking.canOpenURL(data)) {
+      Linking.openURL(data);
+    } else {
+      alert('Scanned data is not a valid URL: ' + data);
+    }
+  };
+
+  const startScan = () => {
+    setIsScanning(!isScanning);
+    if (isScanning) {
+      setScanned(true);
+    } else {
+      setScanned(false);
+    }
   };
   
   if (hasPermission === null) {
@@ -32,11 +49,13 @@ export default function Scanner() {
   }
 
   return (
-    <View style={[styles.container]}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
+    <View style={styles.container}>
+      {isFocused && (
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={styles.scannerwindow}
+        />
+      )}
       <View style={styles.frame}>
         <View style={styles.topLeftCorner} />
         <View style={styles.topRightCorner} />
@@ -44,26 +63,20 @@ export default function Scanner() {
         <View style={styles.bottomRightCorner} />
       </View>
       <View>
-        {scanned && (
-          <TouchableOpacity style={[styles.button]} onPress={() => setScanned(false)}>
-            <View style={styles.innerCircle} />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity 
+          style={[styles.button, isScanning ? styles.scanningButton : null]}
+          onPress={startScan}
+        >
+          <View style={styles.innerCircle} />
+        </TouchableOpacity>
       </View>
       <View style={styles.topRectangle}/>
       <Text style={styles.labelText}>Скан QR-коду</Text>
-      <TouchableOpacity
-      style={styles.logoIcon}
-      onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
-  <Image
-    style={styles.logoIcon}
-    contentFit="contain"
-    source={require("../assets/logo1.png")}
-  />
-</TouchableOpacity>
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -75,15 +88,20 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   scannerwindow: {
+    flex: 1,
     position: 'absolute',
-    width: screenWidth*0.8,
-    height: screenHeight*0.4,
+    width: screenWidth*1.2,
+    height: screenHeight,
     backgroundColor: 'transparent',
     borderWidth: 5,
     borderColor: 'white',
     alignSelf: 'center',
-    top: screenHeight*0.25,
+    top: 0,
   },
+  scanningButton: {
+    backgroundColor: 'red',
+  },
+  
   labelText: {
     position: 'absolute',
     top: screenHeight*0.01,
@@ -124,7 +142,7 @@ const styles = StyleSheet.create({
   icon: {
     width: screenWidth*0.10,
     aspectRatio: 1,
-    resizeMode: 'contain',
+    contentFit: 'contain',
   },
   frame: {
     position: 'absolute',

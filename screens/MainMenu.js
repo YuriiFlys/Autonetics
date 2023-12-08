@@ -13,15 +13,6 @@ const MainMenu = () => {
     <View style={[styles.container]}>
           <View style={styles.topRectangle}/>
           <Text style={styles.labelText}>Головне меню</Text>
-          <TouchableOpacity
-      style={styles.logoIcon}
-      onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
-  <Image
-    style={styles.logoIcon}
-    contentFit="contain"
-    source={require("../assets/logo1.png")}
-  />
-</TouchableOpacity>
         </View>
   );
 };
