@@ -9,6 +9,7 @@ import Animated, {
   useDerivedValue,
   runOnJS,
 } from "react-native-reanimated";
+import * as Location from 'expo-location';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -43,6 +44,11 @@ const Map = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const translateY = useSharedValue(screenHeight);
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   useEffect(() => {
     if (selectedPlace) {
@@ -54,6 +60,24 @@ const Map = () => {
     }
   }, [selectedPlace]);
 
+  const getLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Дозвіл на доступ до місцезнаходження був відхилений');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    } catch (error) {
+      console.error('Помилка отримання місцезнаходження:', error);
+    }
+  };
+
   const handleMarkerPress = (place) => {
     setSelectedPlace(place);
   };
@@ -62,6 +86,18 @@ const Map = () => {
     translateY.value = withSpring(screenHeight, {}, () => {
       runOnJS(setSelectedPlace)(null);
     });
+  };
+
+  const centerMapOnUser = () => {
+    getLocation();
+    if (userLocation) {
+      mapRef.current?.animateToRegion({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    }
   };
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -79,12 +115,13 @@ const Map = () => {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsUserLocation={true}
-        region={{
+        initialRegion={{
           latitude: userLocation?.latitude || 0,
           longitude: userLocation?.longitude || 0,
-          latitudeDelta: 0.9,
-          longitudeDelta: 0.9,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
+        ref={mapRef}
       >
         {data.map((place) => (
           <Marker
@@ -109,6 +146,9 @@ const Map = () => {
           </View>
         </Animated.View>
       )}
+      <TouchableOpacity style={styles.centerButton} onPress={centerMapOnUser}>
+        <Text style={{ color: "#fff" }}>Центрувати карту</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -175,6 +215,15 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     backgroundColor: "transparent",
+  },
+  centerButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#007BFF",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
 });
 
