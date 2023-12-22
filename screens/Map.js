@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+  useDerivedValue,
+  runOnJS,
+} from "react-native-reanimated";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -9,9 +16,9 @@ const screenHeight = Dimensions.get("window").height;
 const data = [
   { 
     id: 1, 
-    name: "Магазин Атб",
-    street: "Вулиця Шевченка, 2а",
-    distance: "500м",
+    name: "АШАН",
+    street: "Вул Університетська, 1",
+    distance: "200м",
     imageSource: require('../assets/atb500.png'),
     coordinate: {
       latitude: 49.842606,
@@ -35,14 +42,33 @@ const Map = () => {
   const navigation = useNavigation();
   const [userLocation, setUserLocation] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const translateY = useSharedValue(screenHeight);
+
+  useEffect(() => {
+    if (selectedPlace) {
+      translateY.value = withSpring(0);
+    } else {
+      translateY.value = withSpring(screenHeight, {}, () => {
+        runOnJS(setSelectedPlace)(null);
+      });
+    }
+  }, [selectedPlace]);
 
   const handleMarkerPress = (place) => {
     setSelectedPlace(place);
   };
 
   const closeInfo = () => {
-    setSelectedPlace(null);
+    translateY.value = withSpring(screenHeight, {}, () => {
+      runOnJS(setSelectedPlace)(null);
+    });
   };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: translateY.value }],
+    };
+  });
 
   return (
     <View style={styles.container}>
@@ -70,7 +96,7 @@ const Map = () => {
       </MapView>
 
       {selectedPlace && (
-        <View style={styles.shop}>
+        <Animated.View style={[styles.shop, animatedStyle]}>
           <Image source={selectedPlace.imageSource} style={styles.image} />
           <View style={styles.textContainer}>
             <Text style={styles.shopName}>{selectedPlace.name}</Text>
@@ -81,7 +107,7 @@ const Map = () => {
               <Image source={require('../assets/cross.png')} />
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
       )}
     </View>
   );
@@ -148,7 +174,7 @@ const styles = StyleSheet.create({
     color: "#808080",
   },
   closeButton: {
-    backgroundColor: "transparent", 
+    backgroundColor: "transparent",
   },
 });
 
