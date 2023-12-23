@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, FlatList } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, FlatList, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
@@ -78,6 +78,19 @@ const MainMenu = () => {
       <View style={styles.topRectangle}>
         <Text style={styles.labelText}>Головне меню</Text>
       </View>
+      <View style={{flexDirection: "row",     marginTop: 20,}}>
+        <TextInput 
+            style={styles.field} 
+          />
+          <View style={styles.buttonContainer}>
+            <Button 
+            style={styles.buttonSearch}
+            title="Пошук"
+            color="white"
+            />
+            {/* <Text>Пошук</Text>  */}
+          </View>
+      </View>
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
@@ -146,6 +159,34 @@ const styles = StyleSheet.create({
     color: '#808080',
     marginRight: 10,
     marginBottom: 5,
+  },
+  field:{
+    borderWidth: 2,
+    borderColor: "#B6B6B6",
+    borderRadius: 16,
+    height: screenHeight * 0.05,
+    width: screenWidth * 0.7,
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "space-between",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  buttonContainer:{
+    marginLeft: 10,
+    width: screenWidth * 0.2,
+    height: screenHeight * 0.05,
+    backgroundColor: "#26364D",
+    borderRadius: 16,
+    paddingTop: 5,
+    alignItems: "center",
+    position: "relative",
+  },
+  buttonSearch:{
+    flex: 1,
+    borderRadius: 16,
+    backgroundColor: "#26364D",
+    alignItems: "center", 
   },
 });
 
