@@ -3,27 +3,16 @@ import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-nati
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-
+import Logo from '../components/Logo';
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Profile = () => {
   const navigator = useNavigation();
   return (
-    <View style={[styles.container]}>
-
-          <View style={styles.topRectangle}/>
-          <Text style={styles.labelText}>Особистий кабінет </Text>
-          <TouchableOpacity
-      style={styles.logoIcon}
-      onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
-  <Image
-    style={styles.logoIcon}
-    contentFit="contain"
-    source={require("../assets/logo1.png")}
-  />
-</TouchableOpacity>
-        </View>
+    <View>
+      <Logo name={"Профіль"} />
+    </View>
   );
 };
 const styles = StyleSheet.create({
