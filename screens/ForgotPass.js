@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
   field: {
     marginTop: screenHeight*0.01,
     alignSelf: 'center',
-    borderRadius: Border.br_8xs,
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
     marginTop: screenHeight*0.02,
     alignSelf: 'center',
     height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
-    width: screenHeight < 600 ? screenWidth*0.5 : screenWidth*0.5,
+    width: screenWidth*0.5,
     backgroundColor: "#2469A2",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',

@@ -1,6 +1,7 @@
 /* fonts */
 export const FontFamily = {
   palanquinDarkRegular: "PalanquinDark-Regular",
+  comissionerBold: "Commissioner-Medium",
 };
 /* font sizes */
 export const FontSize = {
