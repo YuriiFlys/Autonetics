@@ -156,7 +156,7 @@ workspace.xml
 *.bmp
 # *.png
 #*.jpg
-*.jpeg
+#*.jpeg
 
 # Ignore doc/notes.txt, but not doc/info/arch.txt
 # doc/*.txt
