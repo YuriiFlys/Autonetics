@@ -3,14 +3,48 @@ import { useNavigation } from "@react-navigation/native";
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView, Dimensions } from "react-native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-
+import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
+
 
 const SignUpMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
   const repeatpasswordRef= React.useRef();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [repeatPassword, setRepeatPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const auth = FIREBASE_AUTH;
+  const handleRegister = async () => {
+    if (password !== repeatPassword) {
+      setErrorMessage('Паролі не співпадають');
+      return;
+    }
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigator.navigate('BottomMenu', { screen: 'Home' });
+    } catch (error) {
+      console.error(error);
+      let errorMessage = '';
+      switch (error.code) {
+        case 'auth/invalid-email':
+          errorMessage = 'Неправильний формат електронної пошти';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Пароль повинен містити принаймні 6 символів';
+          break;
+        default:
+          errorMessage = 'Сталася помилка під час реєстрації';
+      }
+      setErrorMessage(errorMessage);
+    }
+  };
+  
+
   return (
     <KeyboardAvoidingView style={styles.signupmenu} behavior="position"
     keyboardVerticalOffset={-screenHeight*0.15}
@@ -22,28 +56,41 @@ const SignUpMenu = () => {
         source={require("../assets/logo1.png")}
       />
       <View style={styles.phoneNumber}>
-        <Text style={styles.phoneNumbertext}>Номер телефону</Text>
-        <TextInput style={styles.field}
-         onSubmitEditing={() => passwordRef.current.focus()}
-         blurOnSubmit={false}
-         />
+        <Text style={styles.phoneNumbertext}>Введіть Email</Text>
+        <TextInput 
+          style={styles.field}
+          onChangeText={setEmail}
+          onSubmitEditing={() => passwordRef.current.focus()}
+          blurOnSubmit={false}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
       </View>
       <View style={styles.enterPass}>
         <Text style={styles.enterPasstext}>Введіть пароль</Text>
-        <TextInput style={styles.field} secureTextEntry 
-        ref={passwordRef}
-        onSubmitEditing={() => repeatpasswordRef.current.focus()}
+        <TextInput 
+          style={styles.field} 
+          secureTextEntry 
+          ref={passwordRef}
+          onChangeText={setPassword}
+          textContentType='oneTimeCode'
+          onSubmitEditing={() => repeatpasswordRef.current.focus()}
         />
       </View>
       <View style={styles.repeatPass}>
         <Text style={styles.repeatPasstext}>Повторіть пароль</Text>
-        <TextInput style={styles.field} secureTextEntry 
-        ref={repeatpasswordRef}
+        <TextInput 
+          style={styles.field} 
+          secureTextEntry 
+          ref={repeatpasswordRef}
+          onChangeText={setRepeatPassword}
+          textContentType='oneTimeCode'
         />
+        {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
       </View>
       <Pressable
         style={styles.register}
-        onPress={() => navigator.navigate('BottomMenu', { screen: 'Home' })}
+        onPress={handleRegister}
       >
         <Text style={styles.registerText}>Register</Text>
       </Pressable>
@@ -57,6 +104,7 @@ const SignUpMenu = () => {
     </KeyboardAvoidingView>
   );
 };
+
 const styles = StyleSheet.create({
   signUp: {
     marginTop: screenHeight * 0.1,
@@ -112,8 +160,14 @@ const styles = StyleSheet.create({
   phoneNumber: {
     marginTop: screenHeight * 0.01,
   },
+  errormessage:{
+    color: 'red',
+    fontFamily: FontFamily.palanquinDarkRegular,
+    marginTop: screenHeight*0.01,
+    textAlign: 'center',
+  },
   register: {
-    marginTop: screenHeight * 0.05,
+    marginTop: screenHeight * 0.03,
     alignSelf: 'center',
     height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
     width: screenHeight < 600 ? screenWidth*0.5 : screenWidth*0.5,

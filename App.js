@@ -8,6 +8,7 @@ import LoginMenu from "./screens/LoginMenu";
 import SignupMenu from "./screens/SignupMenu";
 import MyTabs from "./screens/MyTabs";
 import BottomMenu from "./screens/BottomMenu";
+import ForgotPass from "./screens/ForgotPass";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity, LogBox } from "react-native";
 
@@ -53,6 +54,11 @@ const App = () => {
               component={BottomMenu}
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+            name="ForgotPass"
+            component={ForgotPass}
+            options={{ headerShown: false }}
+            />      
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
