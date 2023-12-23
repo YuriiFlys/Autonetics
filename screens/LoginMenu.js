@@ -75,7 +75,7 @@ const LoginMenu = () => {
       </View>
       <Pressable
         style={styles.submit}
-        onPress={handleLogin}
+        onPress={() => navigator.navigate('BottomMenu', { screen: 'Home' })}
       >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
