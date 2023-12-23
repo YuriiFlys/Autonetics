@@ -14,11 +14,15 @@ const Promotions = () => {
   const MainWidget = ({ name, price, image, brand, description }) => {
     return (
       <View style={styles.mainWidgetView}>
-        <Text style={styles.widgetName}>{name}</Text>
-        <Text style={styles.widgetPrice}>{price}</Text>
-        <Image source={image} style={styles.widgetProductImage} />
-        <Image source={brand} style={styles.widgetBrandLogo} />
-        <Text style={styles.widgetDescription}>{description}</Text>
+        <View style={styles.widgetInfoRow}>
+          <Text style={styles.widgetProductMainInfo}>{name}</Text>
+          <Text style={styles.widgetProductMainInfo}>{price}</Text>
+        </View>
+        <View style={styles.widgetImageRow}>
+          <Image source={image} style={styles.widgetProductImage} />
+          <Image source={brand} style={styles.widgetProductBrandLogo} />
+        </View>
+        <Text style={styles.widgetProductDescription}>{description}</Text>
       </View>
     );
   }
@@ -35,9 +39,10 @@ const Promotions = () => {
         />
       </TouchableOpacity>
       <MainWidget
-        name={"Банани"}
+        name={"Банани "}
         price={"47.59₴"}
-        image={require("../assets/atb500.png")}
+        image={require("../assets/bananas.jpeg")}
+        brand={require("../assets/atb500.png")}
         description={"Банани Іспанія"}
       />
     </View>
@@ -87,6 +92,48 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.05,
     backgroundColor: 'lightgrey',
     borderRadius: 20,
+    overflow: 'hidden',
+  },
+  widgetInfoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    position: 'absolute',
+    top: '5%',
+    left: 0,
+    right: 0,
+  },
+  widgetProductMainInfo: {
+    fontFamily: "PalanquinDark-Regular",
+    fontSize: 24,
+    color: "#404040",
+  },
+  widgetImageRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    top: '15%',
+    left: 0,
+    right: 0,
+    height: screenHeight * 0.25,
+    width: screenWidth * 0.75,
+  },
+  widgetProductImage: {
+    width: '70%',
+    height: '50%',
+    objectFit: 'contain',
+  },
+  
+  widgetProductBrandLogo: {
+    width: '30%',
+    height: '30%',
+    objectFit: 'contain',
+  },
+  widgetProductDescription: {
+    position: 'absolute',
+    top: '0%',
+    fontFamily: "PalanquinDark-Regular",
+    fontSize: 18,
+    color: "#404040",
   }
+
 });
 export default Promotions;
