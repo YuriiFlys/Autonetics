@@ -10,7 +10,6 @@ export const FontSize = {
 };
 /* Colors */
 export const Color = {
-  colorLightcyan: "#e0fafd",
   colorDarkslategray_100: "#23334a",
   colorDarkslategray_200: "#213045",
   colorGray: "rgba(255, 255, 255, 0)",
@@ -18,6 +17,11 @@ export const Color = {
   colorWhite: "#fff",
   colorGainsboro: "#d9d9d9",
   colorSteelblue: "#2469a2",
+
+  // our colors
+  colorDarkBlue: "#26364D",
+  colorLightCyan: "#e0fafd",
+  colorLightGray: "#B6B6B6",
 };
 /* border radiuses */
 export const Border = {
