@@ -24,12 +24,9 @@ function getInitials(name) {
 const Promotions = () => {
   const navigator = useNavigation();
   const userName = "Rostyslav Pasternak";
-  const ButtonMenu = ({ image, name, navigator }) => {
+  const ButtonMenu = ({ image, name, navig }) => {
     return (
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => navigator}
-      >
+      <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
         <Image style={styles.buttonIcon} source={image} />
         <Text style={styles.buttonName}>{name}</Text>
         <Image
@@ -54,25 +51,25 @@ const Promotions = () => {
         <ButtonMenu
           image={require("../assets/Profile/User.png")}
           name={"Особисті дані"}
-          navigator={navigator.navigate("ProfileSettings")}
+          navig={() => console.log("Особисті дані")}
         />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/History.png")}
           name={"Історія"}
-          navigator={navigator.navigate("Cart", { screen: "History" })}
+          navig={() => navigator.navigate("Cart", { screen: "Історія" })}
         />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/Help.png")}
           name={"Допомога"}
-          navigator={navigator.navigate("Help")}
+          navig={() => console.log("Допомога")}
         />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/Settings.svg")}
           name={"Налаштування"}
-          navigator={navigator.navigate("Settings")}
+          navig={() => console.log("Налаштування")}
         />
         <GrayLine />
       </View>
@@ -97,7 +94,6 @@ const styles = StyleSheet.create({
     width: screenWidth,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: screenHeight * 0.02,
     marginBottom: screenHeight * 0.02,
   },
   userIcon: {
