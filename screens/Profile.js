@@ -10,6 +10,7 @@ import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
+import GrayLine from "../components/GrayLine";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -22,9 +23,22 @@ function getInitials(name) {
 const Promotions = () => {
   const navigator = useNavigation();
   const userName = "Rostyslav Pasternak";
+  const ButtonMenu = ({ image, name }) => {
+    return (
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Image style={styles.buttonIcon} source={image} />
+        <Text style={styles.buttonName}>{name}</Text>
+        <Image
+          style={styles.buttonArrow}
+          source={require("../assets/Profile/arrow.svg")}
+        />
+        {/* <Image style={styles.buttonIcon} source={image} /> */}
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    <View>
+    <View style={{ backgroundColor: "white", flex: 1 }}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
         <View style={styles.userData}>
@@ -33,63 +47,50 @@ const Promotions = () => {
           </View>
           <Text style={styles.userName}>{userName}</Text>
         </View>
+        <GrayLine />
+        <ButtonMenu
+          image={require("../assets/Profile/User.png")}
+          name={"Особисті дані"}
+        />
+        <GrayLine />
+        <ButtonMenu
+          image={require("../assets/Profile/History.png")}
+          name={"Історія"}
+        />
+        <GrayLine />
+        <ButtonMenu
+          image={require("../assets/Profile/Help.png")}
+          name={"Допомога"}
+        />
+        <GrayLine />
+        <ButtonMenu
+          image={require("../assets/Profile/Settings.svg")}
+          name={"Налаштування"}
+        />
+        <GrayLine />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFF",
-    position: "relative",
-  },
-  labelText: {
-    position: "absolute",
-    top: screenHeight * 0.1,
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#404040",
-  },
-
-  logoIcon: {
-    alignSelf: "center",
-    height: screenWidth * 0.1299,
-    width: screenWidth * 0.1299,
-    position: "absolute",
-    top: screenHeight * 0.0446,
-    left: screenWidth * 0.04,
-  },
-  topRectangle: {
-    position: "absolute",
-    height: screenHeight * 0.15,
-    width: screenWidth,
-    top: 0,
-    backgroundColor: "#fff",
-    alignItems: "center",
-  },
   mainContainer: {
-    position: "absolute",
-    top: screenHeight * 0.15,
+    marginTop: screenHeight * 0.16,
     height: screenHeight * 0.85,
     width: screenWidth,
-    backgroundColor: "#fff",
     alignItems: "center",
   },
   userData: {
     width: screenWidth,
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    top: screenHeight * 0.03,
+    marginTop: screenHeight * 0.02,
+    marginBottom: screenHeight * 0.02,
   },
   userIcon: {
     width: screenWidth * 0.25,
     height: screenWidth * 0.25,
-    borderRadius: 100,
+    borderRadius: 1000,
     backgroundColor: Color.colorLightCyan,
     left: screenWidth * 0.1,
     borderWidth: 2,
@@ -109,6 +110,31 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     color: Color.colorDarkBlue,
+    flex: 4,
+  },
+  buttonContainer: {
+    marginTop: screenHeight * 0.01,
+    marginBottom: screenHeight * 0.01,
+    width: screenWidth * 0.85,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  buttonIcon: {
+    width: screenWidth * 0.1,
+    height: screenWidth * 0.1,
+  },
+  buttonName: {
+    fontSize: FontSize.normal,
+    fontFamily: FontFamily.normal,
+    color: Color.colorDarkBlue,
+    flex: 4,
+    marginLeft: screenWidth * 0.05,
+    fontWeight: "bold",
+  },
+  buttonArrow: {
+    width: screenWidth * 0.05,
+    height: screenWidth * 0.05,
   },
 });
 export default Promotions;
