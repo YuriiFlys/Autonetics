@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     color: Color.colorDarkBlue,
   },
   userName: {
-    flex: 1,
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 20,
