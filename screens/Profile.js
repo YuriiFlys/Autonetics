@@ -23,9 +23,12 @@ function getInitials(name) {
 const Promotions = () => {
   const navigator = useNavigation();
   const userName = "Rostyslav Pasternak";
-  const ButtonMenu = ({ image, name }) => {
+  const ButtonMenu = ({ image, name, navigator }) => {
     return (
-      <TouchableOpacity style={styles.buttonContainer}>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => navigator}
+      >
         <Image style={styles.buttonIcon} source={image} />
         <Text style={styles.buttonName}>{name}</Text>
         <Image
@@ -51,21 +54,25 @@ const Promotions = () => {
         <ButtonMenu
           image={require("../assets/Profile/User.png")}
           name={"Особисті дані"}
+          navigator={navigator.navigate("ProfileSettings")}
         />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/History.png")}
           name={"Історія"}
+          navigator={navigator.navigate("History")}
         />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/Help.png")}
           name={"Допомога"}
+          navigator={navigator.navigate("Help")}
         />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/Settings.svg")}
           name={"Налаштування"}
+          navigator={navigator.navigate("Settings")}
         />
         <GrayLine />
       </View>
@@ -76,7 +83,7 @@ const Promotions = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     marginTop: screenHeight * 0.16,
-    height: screenHeight * 0.85,
+    height: screenHeight,
     width: screenWidth,
     alignItems: "center",
   },
