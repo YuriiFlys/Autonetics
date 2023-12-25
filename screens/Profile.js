@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  SafeAreaView,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -35,13 +36,12 @@ const Promotions = () => {
           style={styles.buttonArrow}
           source={require("../assets/Profile/arrow.svg")}
         />
-        {/* <Image style={styles.buttonIcon} source={image} /> */}
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={{ backgroundColor: "white", flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
         <View style={styles.userData}>
@@ -60,7 +60,7 @@ const Promotions = () => {
         <ButtonMenu
           image={require("../assets/Profile/History.png")}
           name={"Історія"}
-          navigator={navigator.navigate("History")}
+          navigator={navigator.navigate("Cart", { screen: "History" })}
         />
         <GrayLine />
         <ButtonMenu
@@ -76,13 +76,19 @@ const Promotions = () => {
         />
         <GrayLine />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "#FFF",
+    position: "relative",
+  },
   mainContainer: {
-    marginTop: screenHeight * 0.16,
     height: screenHeight,
     width: screenWidth,
     alignItems: "center",

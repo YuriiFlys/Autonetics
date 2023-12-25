@@ -85,9 +85,6 @@ const MainMenu = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topRectangle}>
-        <Text style={styles.labelText}>Головне меню</Text>
-      </View>
       <View style={{ flexDirection: "row", marginTop: 20 }}>
         <TextInput style={styles.field} />
         <View style={styles.buttonContainer}>
@@ -115,23 +112,13 @@ const MainMenu = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFF",
   },
   labelText: {
-    position: "absolute",
-    top: screenHeight * 0.01,
     fontFamily: "PalanquinDark-Regular",
     fontSize: 18,
     color: "#404040",
-  },
-  topRectangle: {
-    height: screenHeight * 0.15,
-    width: screenWidth,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "green",
   },
   shopContainer: {},
   shop: {

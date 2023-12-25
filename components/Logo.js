@@ -1,65 +1,72 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
-import {Image} from 'expo-image'
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+} from "react-native";
+import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-
+import { Colors } from "react-native/Libraries/NewAppScreen";
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems:'center',
-        backgroundColor: 'transparent',
-        position: 'relative',
-      },
-      labelText: {
-        position: 'absolute',
-        top: screenHeight*0.1,
-        fontFamily: 'PalanquinDark-Regular',
-        fontSize: 18,
-        color: '#404040',
-      },
-      
-      logoIcon: {
-        alignSelf: 'center',
-        height: screenWidth*0.1299,
-        width: screenWidth*0.1299,
-        position: 'absolute',
-        top: screenHeight*0.0446,
-        left: screenWidth*0.04,
-      },
-      topRectangle: {
-        position: 'absolute',
-        height: screenHeight*0.15,
-        width: screenWidth,
-        top: 0,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-    
-      },
-  });
-  
-  const Logo = ({name}) => {
-    const navigator = useNavigation();
-    return (
+  container: {
+    width: screenWidth,
+    height: screenHeight * 0.1,
+    justifyContent: "space-around",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  logoIcon: {
+    flex: 1,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.1,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  labelText: {
+    fontSize: 20,
+    color: Colors.colorDarkBlue,
+    flexWrap: "nowrap",
+  },
+  containerText: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  containerLogo: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+const Logo = ({ name, style }) => {
+  const navigator = useNavigation();
+  return (
     <View style={[styles.container]}>
-        <View style={styles.topRectangle}/>
-        <Text style={styles.labelText}>{name}</Text>
-        <TouchableOpacity
-          style={styles.logoIcon}
-          onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
+      <TouchableOpacity
+        style={styles.logoIcon}
+        onPress={() => navigator.navigate("Home", { screen: "Головне меню" })}
+      >
+        <View style={styles.containerLogo}>
           <Image
             style={styles.logoIcon}
             contentFit="contain"
             source={require("../assets/logo1.png")}
           />
-        </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+      <View style={styles.containerText}>
+        <Text style={[styles.labelText, style]}>{name}</Text>
+      </View>
+      <View style={styles.logoIcon}></View>
     </View>
+  );
+};
 
-    );
-  };
-  
-  export default Logo;
+export default Logo;

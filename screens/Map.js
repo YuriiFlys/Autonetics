@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
@@ -9,33 +16,33 @@ import Animated, {
   useDerivedValue,
   runOnJS,
 } from "react-native-reanimated";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const data = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     name: "АШАН",
     street: "Вул Університетська, 1",
     distance: "200м",
-    imageSource: require('../assets/atb500.png'),
+    imageSource: require("../assets/atb500.png"),
     coordinate: {
       latitude: 49.842606,
       longitude: 24.025363,
-    }
+    },
   },
-  { 
-    id: 2, 
+  {
+    id: 2,
     name: "Магазин Атб",
     street: "Вулиця Шевченка, 2а",
     distance: "500м",
-    imageSource: require('../assets/atb500.png'), 
+    imageSource: require("../assets/atb500.png"),
     coordinate: {
       latitude: 49.839426,
       longitude: 24.022695,
-    }
+    },
   },
 ];
 
@@ -63,8 +70,8 @@ const Map = () => {
   const getLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Дозвіл на доступ до місцезнаходження був відхилений');
+      if (status !== "granted") {
+        console.log("Дозвіл на доступ до місцезнаходження був відхилений");
         return;
       }
 
@@ -74,7 +81,7 @@ const Map = () => {
         longitude: location.coords.longitude,
       });
     } catch (error) {
-      console.error('Помилка отримання місцезнаходження:', error);
+      console.error("Помилка отримання місцезнаходження:", error);
     }
   };
 
@@ -108,9 +115,6 @@ const Map = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topRectangle}>
-        <Text style={styles.labelText}>Карта</Text>
-      </View>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
@@ -141,7 +145,7 @@ const Map = () => {
           </View>
           <View>
             <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
-              <Image source={require('../assets/cross.png')} />
+              <Image source={require("../assets/cross.png")} />
             </TouchableOpacity>
           </View>
         </Animated.View>

@@ -1,9 +1,17 @@
 import * as React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import Logo from '../components/Logo';
+import Logo from "../components/Logo";
+import { SafeAreaFrameContext } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -25,19 +33,10 @@ const Promotions = () => {
         <Text style={styles.widgetProductDescription}>{description}</Text>
       </View>
     );
-  }
+  };
   return (
-    <View style={[styles.container]}>
-      <Text style={styles.labelText}>Акції</Text>
-      <TouchableOpacity
-        style={styles.logoIcon}
-        onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
-        <Image
-          style={styles.logoIcon}
-          contentFit="contain"
-          source={require("../assets/logo1.png")}
-        />
-      </TouchableOpacity>
+    <SafeAreaView style={[styles.container]}>
+      <Logo name={"Акції"} />
       <MainWidget
         name={"Банани "}
         price={"47.59₴"}
@@ -45,60 +44,57 @@ const Promotions = () => {
         brand={require("../assets/atb500.png")}
         description={"Банани Іспанія"}
       />
-    </View>
+    </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    position: 'relative',
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "#FFF",
+    position: "relative",
   },
   labelText: {
-    position: 'absolute',
+    position: "absolute",
     top: screenHeight * 0.1,
-    fontFamily: 'PalanquinDark-Regular',
+    fontFamily: "PalanquinDark-Regular",
     fontSize: 18,
-    color: '#404040',
+    color: "#404040",
   },
 
   logoIcon: {
-    alignSelf: 'center',
+    alignSelf: "center",
     height: screenWidth * 0.1299,
     width: screenWidth * 0.1299,
-    position: 'absolute',
+    position: "absolute",
     top: screenHeight * 0.0446,
     left: screenWidth * 0.04,
   },
   topRectangle: {
-    position: 'absolute',
+    position: "absolute",
     height: screenHeight * 0.15,
     width: screenWidth,
     top: 0,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-
+    backgroundColor: "#fff",
+    alignItems: "center",
   },
   mainWidgetView: {
     height: screenWidth * 0.4,
     width: screenWidth * 0.9,
-    position: 'absolute',
+    position: "absolute",
     top: screenHeight * 0.2,
     left: screenWidth * 0.05,
-    backgroundColor: 'lightgrey',
+    backgroundColor: "lightgrey",
     borderRadius: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   widgetInfoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    position: 'absolute',
-    top: '5%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    position: "absolute",
+    top: "5%",
     left: 0,
     right: 0,
   },
@@ -108,32 +104,31 @@ const styles = StyleSheet.create({
     color: "#404040",
   },
   widgetImageRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    top: '15%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    top: "15%",
     left: 0,
     right: 0,
     height: screenHeight * 0.25,
     width: screenWidth * 0.75,
   },
   widgetProductImage: {
-    width: '70%',
-    height: '50%',
-    objectFit: 'contain',
+    width: "70%",
+    height: "50%",
+    objectFit: "contain",
   },
-  
+
   widgetProductBrandLogo: {
-    width: '30%',
-    height: '30%',
-    objectFit: 'contain',
+    width: "30%",
+    height: "30%",
+    objectFit: "contain",
   },
   widgetProductDescription: {
-    position: 'absolute',
-    top: '0%',
+    position: "absolute",
+    top: "0%",
     fontFamily: "PalanquinDark-Regular",
     fontSize: 18,
     color: "#404040",
-  }
-
+  },
 });
 export default Promotions;
