@@ -7,7 +7,7 @@ const screenHeight = Dimensions.get("window").height;
 
 const MainMenu = () => {
   const navigator = useNavigation();
-
+  
   const keyExtractor = (item, index) => index.toString();
 
   const data = [

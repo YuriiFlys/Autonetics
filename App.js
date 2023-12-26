@@ -1,6 +1,5 @@
 const Stack = createNativeStackNavigator();
 import * as React from "react";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import  {NavigationContainer}  from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import StartMenu from "./screens/StartMenu";
@@ -9,8 +8,9 @@ import SignupMenu from "./screens/SignupMenu";
 import MyTabs from "./screens/MyTabs";
 import BottomMenu from "./screens/BottomMenu";
 import ForgotPass from "./screens/ForgotPass";
+import WelcomeScreen from "./screens/WelcomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity, LogBox } from "react-native";
+import { LogBox } from "react-native";
 
 LogBox.ignoreAllLogs();
 const App = () => {
@@ -57,6 +57,11 @@ const App = () => {
             <Stack.Screen
             name="ForgotPass"
             component={ForgotPass}
+            options={{ headerShown: false }}
+            />
+            <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
             options={{ headerShown: false }}
             />      
           </Stack.Navigator>

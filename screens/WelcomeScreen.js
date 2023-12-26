@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { TextInput, KeyboardAvoidingView, Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { FIREBASE_AUTH } from '../FirebaseConfig';
-import { sendPasswordResetEmail } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
@@ -13,43 +13,58 @@ const screenHeight = Dimensions.get('window').height;
 
 
 
-const ForgotPass = () => {
-  const navigator = useNavigation();
-  const [email, setEmail] = React.useState('');
-
-  const handleForgotPassword = async () => {
-    try {
-      await sendPasswordResetEmail(FIREBASE_AUTH, email);
-      alert('Будь ласка, перевірте свою електронну пошту...');
-    } catch (error) {
-      console.error(error);
-      // Обробка помилок відновлення паролю
-    }
-  };
+const WelcomeScreen = () => {
+    const [name, setName] = React.useState('');
+    const [surname, setSurname] = React.useState('');
+    const surnameRef = React.useRef();
+    const auth = FIREBASE_AUTH;
+    const navigator = useNavigation();
+    const handleUpdate = async () => {
+      try {
+        const user = auth.currentUser;
+        await updateProfile(user, { displayName: `${name} ${surname}` });
+        navigator.navigate('BottomMenu', { screen: 'Home' });
+        console.log('Ім\'я та прізвище оновлено');
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
   return (
     <KeyboardAvoidingView style={styles.forgotPass} behavior="position"
     keyboardVerticalOffset={-screenHeight*0.2}
      enabled>
-      <Text style={styles.logIn}>Recover password</Text>
+      <Text style={styles.logIn}>Update Information</Text>
       <Image
         style={styles.logoIcon}
         contentFit="contain"
         source={require("../assets/logo1.png")}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        
+        <View>
       <View style={styles.email}>
-        <Text style={styles.emailtext}>Введіть Email для відновлення паролю</Text>
+        <Text style={styles.emailtext}>Введіть ім'я</Text>
         <TextInput 
           style={styles.field}
-          onChangeText={setEmail}
+          placeholder="Ім'я"
+          onSubmitEditing={() => surnameRef.current.focus()}
+          onChangeText={setName}
         />
+      </View>
+      <View style={styles.email}>
+        <Text style={styles.emailtext}>Введіть прізвище</Text>
+        <TextInput
+            style={styles.field}
+            placeholder="Прізвище"
+            onChangeText={setSurname}
+            ref={surnameRef}
+            />
+      </View>
       </View>
         </TouchableWithoutFeedback>
       <Pressable
         style={styles.submit}
-        onPress={handleForgotPassword}
+        onPress={handleUpdate}
       >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
@@ -76,8 +91,8 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenHeight*0.3,
-    width: screenWidth*0.6,
+    height: screenHeight*0.35,
+    width: screenWidth*0.7,
   },
   field: {
     marginTop: screenHeight*0.01,
@@ -143,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPass;
+export default WelcomeScreen;

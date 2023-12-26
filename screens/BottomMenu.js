@@ -9,6 +9,8 @@ import Profile from './Profile';
 
 const Tab = createBottomTabNavigator();
 
+
+
 function HomeScreen() {
   const navigation = useNavigation();
 
@@ -28,23 +30,14 @@ export default function BottomMenu() {
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = focused
-              ? require('../assets/home.png')
-              : require('../assets/home.png');
+            iconName = require('../assets/home.png');
           } else if (route.name === 'Promotions') {
-            iconName = focused
-              ? require('../assets/interest.png')
-              : require('../assets/interest.png');
+            iconName = require('../assets/interest.png');
           } else if (route.name === 'Cart') {
-            iconName = focused
-              ? require('../assets/shoppingbasket.png')
-              : require('../assets/shoppingbasket.png');
+            iconName = require('../assets/shoppingbasket.png');
           } else if (route.name === 'Profile') {
-            iconName = focused
-              ? require('../assets/user.png')
-              : require('../assets/user.png');
+            iconName = require('../assets/user.png');
           }
-          
           
           return <Image source={iconName} style={{width: size, height: size}} />;
         },

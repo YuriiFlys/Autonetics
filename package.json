@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.5.1",
+    "@react-native-community/datetimepicker": "^7.6.2",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
@@ -22,6 +23,7 @@
     "@react-navigation/routers": "^6.1.0",
     "@react-navigation/stack": "^6.3.20",
     "@types/react": "~18.2.14",
+    "date-fns": "^3.0.6",
     "expo": "^49.0.0",
     "expo-barcode-scanner": "^12.7.0",
     "expo-camera": "~13.4.4",
@@ -34,6 +36,7 @@
     "firebase": "^10.7.1",
     "react": "18.2.0",
     "react-native": "0.72.6",
+    "react-native-date-picker": "^4.3.5",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-maps": "^1.8.4",
     "react-native-qrcode-svg": "^6.2.0",

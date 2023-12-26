@@ -1,16 +1,14 @@
 import * as React from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { Image } from "expo-image";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import Logo from '../components/Logo';
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Promotions = () => {
   const navigator = useNavigation();
-  const bottomSheetRef = React.useRef(null);
   const MainWidget = ({ name, price, image, brand, description }) => {
     return (
       <View style={styles.mainWidgetView}>
@@ -28,7 +26,7 @@ const Promotions = () => {
   }
   return (
     <View style={[styles.container]}>
-      <Text style={styles.labelText}>Акції</Text>
+      <Text style={styles.labelText}>Акції </Text>
       <TouchableOpacity
         style={styles.logoIcon}
         onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
