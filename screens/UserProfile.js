@@ -330,7 +330,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems:'center',
     backgroundColor: '#FFF',
     position: 'relative',
     alignItems: 'center',
