@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Image } from 'expo-image';
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useNavigation, useIsFocused } from '@react-navigation/native';

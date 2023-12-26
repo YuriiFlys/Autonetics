@@ -1,9 +1,10 @@
 import * as React from "react";
+import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import { TextInput, KeyboardAvoidingView, Dimensions } from "react-native";
+import { TextInput, KeyboardAvoidingView, Dimensions,TouchableWithoutFeedback, Keyboard } from "react-native";
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { signInWithEmailAndPassword } from "firebase/auth";
 const screenWidth = Dimensions.get('window').width;
@@ -42,7 +43,21 @@ const LoginMenu = () => {
       setErrorMessage(errorMessage);
     }
   };
-  
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        const [firstName, lastName] = user.displayName.split(' ');
+        console.log('Успішний вхід в систему');
+        console.log('Ім\'я користувача: ', firstName);
+        console.log('Прізвище користувача: ', lastName);
+      }
+    });
+
+    // Прибираємо слухача, коли компонент демонтується
+    return unsubscribe;
+  }, []);
+
 
   return (
     <KeyboardAvoidingView style={styles.loginmenu} behavior="position"
@@ -54,6 +69,8 @@ const LoginMenu = () => {
         contentFit="contain"
         source={require("../assets/logo1.png")}
       />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
       <View style={styles.email}>
         <Text style={styles.emailtext}>Email</Text>
         <TextInput 
@@ -73,9 +90,12 @@ const LoginMenu = () => {
         />
         {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
       </View>
+      </View>
+      </TouchableWithoutFeedback>
       <Pressable
         style={styles.submit}
-        onPress={() => navigator.navigate('BottomMenu', { screen: 'Home' })}
+        // onPress={() => navigator.navigate('BottomMenu', { screen: 'Home' })}
+        onPress={handleLogin}
       >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>

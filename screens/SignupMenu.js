@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView,TouchableWithoutFeedback, Keyboard, Dimensions } from "react-native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -26,7 +26,7 @@ const SignUpMenu = () => {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigator.navigate('BottomMenu', { screen: 'Home' });
+      navigator.navigate("Welcome");
     } catch (error) {
       console.error(error);
       let errorMessage = '';
@@ -36,6 +36,9 @@ const SignUpMenu = () => {
           break;
         case 'auth/weak-password':
           errorMessage = 'Пароль повинен містити принаймні 6 символів';
+          break;
+        case 'auth/email-already-in-use':
+          errorMessage = 'Електронна пошта вже використовується';
           break;
         default:
           errorMessage = 'Сталася помилка під час реєстрації';
@@ -47,6 +50,7 @@ const SignUpMenu = () => {
 
   return (
     <KeyboardAvoidingView style={styles.signupmenu} behavior="position"
+    
     keyboardVerticalOffset={-screenHeight*0.15}
      enabled>
       <Text style={styles.signUp}>Sign Up</Text>
@@ -55,6 +59,8 @@ const SignUpMenu = () => {
         contentFit="contain"
         source={require("../assets/logo1.png")}
       />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
       <View style={styles.phoneNumber}>
         <Text style={styles.phoneNumbertext}>Введіть Email</Text>
         <TextInput 
@@ -88,6 +94,8 @@ const SignUpMenu = () => {
         />
         {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
       </View>
+      </View>
+      </TouchableWithoutFeedback>
       <Pressable
         style={styles.register}
         onPress={handleRegister}
