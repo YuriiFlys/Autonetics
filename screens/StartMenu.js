@@ -38,7 +38,7 @@ const StartMenu = () => {
 
 const styles = StyleSheet.create({
   logoIcon: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: screenHeight * 0.02,
     height: screenHeight * 0.3,
     width: screenWidth * 0.6,
@@ -64,33 +64,33 @@ const styles = StyleSheet.create({
     width: screenWidth*0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   text: {
-    textAlign: 'center',
-    color: Color.colorLightcyan,
+    textAlign: "center",
+    color: Color.colorLightCyan,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },
   signupButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: screenHeight * 0.02,
     height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
     width: screenWidth*0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   signUp: {
-    textAlign: 'center',
-    color: Color.colorLightcyan,
+    textAlign: "center",
+    color: Color.colorLightCyan,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },
   startmenu: {
     flex: 1,
-    backgroundColor: Color.colorLightcyan,
-    justifyContent: 'flex-start',
+    backgroundColor: Color.colorLightCyan,
+    justifyContent: "flex-start",
   },
 });
 
