@@ -91,7 +91,7 @@ const MainMenu = () => {
           <Text
             style={styles.buttonSearch}
             onPress={() => {
-              null;
+              console.log("Пошук");
             }}
           >
             Пошук
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   labelText: {
-    fontFamily: "PalanquinDark-Regular",
+    // fontFamily: "PalanquinDark-Regular",
     fontSize: 18,
     color: "#404040",
     backgroundColor: "green",
