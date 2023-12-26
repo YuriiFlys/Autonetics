@@ -2,13 +2,15 @@ import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import MyTabs from './MyTabs';
 import Promotions from './Promotions';
 import Basket from './Basket';
 import Profile from './Profile';
+import UserProfile from './UserProfile';
 
 const Tab = createBottomTabNavigator();
-
+const ProfileStack = createStackNavigator();
 
 
 function HomeScreen() {
@@ -19,6 +21,14 @@ function HomeScreen() {
   }, []);
 
   return <MyTabs />;
+}
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="ProfileHome" component={Profile} options={{headerShown: false}} />
+      <ProfileStack.Screen name="UserProfile" component={UserProfile} options={{headerShown:false}} />
+    </ProfileStack.Navigator>
+  );
 }
 
 export default function BottomMenu() {
@@ -46,7 +56,7 @@ export default function BottomMenu() {
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Promotions" component={Promotions} options={{ headerShown: false }} />
       <Tab.Screen name="Cart" component={Basket} options={{ headerShown: false }} />
-      <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
+      <Tab.Screen name="Profile" component={ProfileStackScreen} options={{headerShown: false}} />
     </Tab.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions, TextInput } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions, TextInput, Modal,Button } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -11,6 +11,7 @@ import { doc, setDoc, getDoc} from 'firebase/firestore';
 import { useRef } from "react";
 import {format} from 'date-fns';
 import { TouchableWithoutFeedback,Keyboard } from "react-native";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -18,10 +19,13 @@ const screenHeight = Dimensions.get("window").height;
 
 const UserProfile = () => {
   const navigator = useNavigation();
+  const [initials, setInitials] = useState('');
   const fullnameRef = React.useRef();
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState(' ');
+  const [gender,setGender]=useState('Не вказано');
+  const [modalVisible, setModalVisible] = useState(false);
   const dayRef = useRef();
   const monthRef = useRef();
   const yearRef = useRef();
@@ -29,7 +33,12 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const auth = FIREBASE_AUTH;
   const firestore = FIREBASE_DB;
-  
+
+  function getInitials(fullName) {
+    const names = fullName.split(' ');
+    let initials = names.map(name => name.charAt(0).toUpperCase());
+    return initials.join('');
+  }
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -44,6 +53,7 @@ const UserProfile = () => {
           setDay(birthdate.day);
           setMonth(birthdate.month);
           setYear(birthdate.year);
+          setGender(userData.gender);
         } else {
           console.log("No such document!");
         }
@@ -51,6 +61,11 @@ const UserProfile = () => {
       });
     }
   }, []);
+  useEffect(() => {
+    if(fullnameRef.current){
+      setInitials(getInitials(fullnameRef.current));
+    }
+  }, [fullnameRef.current]);
 
   const handleSave = useCallback(() => {
     const user = auth.currentUser;
@@ -60,8 +75,8 @@ const UserProfile = () => {
       }).then(() => {
         const userDoc = doc(firestore, 'users', user.email);
         const birthdate = { day: day, month: month, year: year };
-
-        setDoc(userDoc, { email: user.email, fullname: fullnameRef.current, birthdate: birthdate }, { merge: true })
+        
+        setDoc(userDoc, { email: user.email, fullname: fullnameRef.current, birthdate: birthdate, gender: gender }, { merge: true })
           .then(() => {
             getUpdatedUserDataFromFirestore(userDoc);
           })
@@ -71,7 +86,7 @@ const UserProfile = () => {
       });
     }
     setIsEditing(false);
-  }, [fullnameRef, day, month, year]);
+  }, [fullnameRef, day, month, year, gender]);
 
   const getUpdatedUserDataFromFirestore = (userDoc) => {
     getDoc(userDoc).then((docSnap) => {
@@ -83,6 +98,7 @@ const UserProfile = () => {
         setDay(birthdate.day);
         setMonth(birthdate.month);
         setYear(birthdate.year);
+        setGender(userData.gender)
       } else {
         console.log("No such document!");
       }
@@ -107,13 +123,58 @@ const UserProfile = () => {
       setYear(num);
     }
   }, []);
-
-
-
-
-  const MainInfo=({widgetname, sex})=>{
+  const GenderModal = ({ modalVisible, setModalVisible, setGender }) => {
+    const handleGenderSelect = (selectedGender) => {
+      setGender(selectedGender);
+      setModalVisible(false);
+    };
+  
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalLabel}>Оберіть стать</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleGenderSelect('Не вказано')}
+            >
+              <Text style={styles.modalText}>Не вказано</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleGenderSelect('Чоловіча')}
+            >
+              <Text style={styles.modalText}>Чоловіча</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleGenderSelect('Жіноча')}
+            >
+              <Text style={styles.modalText}>Жіноча</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalText}>Скасувати</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+    );
+  };
+  
+  
+  const MainInfo=({widgetname})=>{
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>       
       <View style={styles.mainWidgetView}>
         <View style={styles.widgetInfoRow}>
         <View style={styles.mainWidgetLabel}>
@@ -130,7 +191,7 @@ const UserProfile = () => {
             style={styles.MainWidgetText}
             defaultValue={fullnameRef.current}
             onChangeText={handleFullnameChange}
-            onSubmitEditing={handleSave}
+            
             />
         ) : (
           <Text style={styles.MainWidgetText} onPress={handleEdit}>{fullnameRef.current}</Text>
@@ -202,19 +263,11 @@ const UserProfile = () => {
             </Text>
           )}
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText}>{"Стать "}</Text>
-          {isEditing ? (
-            
-          <TextInput
-            style={styles.MainWidgetText}
-            defaultValue={"Чоловіча"}
-            onChangeText={handleFullnameChange}
-            onSubmitEditing={handleSave}
-            />
-            
-        ) : (
-          <Text style={styles.MainWidgetText} onPress={handleEdit}>{"Чоловіча"}</Text>
-        )}
+          <Text style={styles.MainWidgetText}>Стать</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text style ={styles.MainWidgetText}>{gender}</Text>
+            </TouchableOpacity>
+            <GenderModal modalVisible={modalVisible} setModalVisible={setModalVisible} setGender={setGender} />
         </View>
         <Text style={styles.MainWidgetText}
         onPress={handleSave}>{"Зберегти зміни "}</Text>
@@ -241,10 +294,10 @@ const UserProfile = () => {
       </View>
     );
   }
-
   return (
-    <View style ={[styles.container]}>
+    <View style ={styles.container}>
       <Text style={styles.labelText}>Профіль </Text>
+      
       <TouchableOpacity
         style={styles.logoIcon}
         onPress={() => navigator.navigate('Home', { screen: 'Головне меню' })}>
@@ -254,17 +307,22 @@ const UserProfile = () => {
           source={require("../assets/logo1.png")}
         />
       </TouchableOpacity>
+      <View style={styles.userIcon}>
+          <Text style={styles.userIconText}>{initials}
+        </Text>
+        </View> 
       <MainInfo
         widgetname={"Персональні дані"}
         fullname={fullnameRef}
-        sex={"Чоловіча"}
       />
       <ContactsWidget
         widgetname={"Контакти"}
         phone={"+380123456789"}
         email={email}
       />
+      
     </View>
+    
   );
 };
 const styles = StyleSheet.create({
@@ -275,6 +333,8 @@ const styles = StyleSheet.create({
     alignItems:'center',
     backgroundColor: '#FFF',
     position: 'relative',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   labelText: {
     position: 'absolute',
@@ -295,6 +355,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 10,
   },
+  userIcon: {
+    position: 'absolute',
+    width: screenWidth * 0.35,
+    height: screenWidth * 0.35,
+    borderRadius: 1000,
+    backgroundColor: Color.colorLightCyan,
+    
+    borderWidth: 2,
+    top: screenHeight * 0.16,
+    borderColor: Color.colorLightGray,
+    justifyContent: "center",
+    alignItems: "center",
+
+  },
+  userIconText: {
+    textAlign: "center",
+    fontSize: 30,
+    fontWeight: "bold",
+    color: Color.colorDarkBlue,
+  },
   mainWidgetView: {
     height: screenWidth * 0.7,
     width: screenWidth * 0.9,
@@ -307,6 +387,37 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     overflow: 'hidden',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,.5)',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    height: screenHeight * 0.4,
+    width: screenWidth * 0.6,
+  },
+  modalButton: {
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  modalLabel: {
+    fontSize: 20,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#404040',
   },
   widgetProfileName: {
     fontFamily: FontFamily.palanquinDarkRegular,

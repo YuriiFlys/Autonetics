@@ -13,7 +13,6 @@ export const Color = {
   colorDarkslategray_100: "#23334a",
   colorDarkslategray_200: "#213045",
   colorGray: "rgba(255, 255, 255, 0)",
-  colorDarkslategray_100: "#23334a",
   colorWhite: "#fff",
   colorGainsboro: "#d9d9d9",
   colorSteelblue: "#2469a2",

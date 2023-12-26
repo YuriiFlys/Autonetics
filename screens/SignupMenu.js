@@ -49,10 +49,9 @@ const SignUpMenu = () => {
   
 
   return (
-    <KeyboardAvoidingView style={styles.signupmenu} behavior="position"
-    
-    keyboardVerticalOffset={-screenHeight*0.15}
-     enabled>
+    <KeyboardAvoidingView style={styles.signupmenu} behavior="position" 
+      keyboardVerticalOffset={-screenHeight*0.15}
+      enabled>
       <Text style={styles.signUp}>Sign Up</Text>
       <Image
         style={styles.logoIcon}
@@ -60,7 +59,8 @@ const SignUpMenu = () => {
         source={require("../assets/logo1.png")}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+      <View>
+    <View>
       <View style={styles.phoneNumber}>
         <Text style={styles.phoneNumbertext}>Введіть Email</Text>
         <TextInput 
@@ -71,8 +71,8 @@ const SignUpMenu = () => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-      </View>
-      <View style={styles.enterPass}>
+        </View>
+        <View style={styles.enterPass}>
         <Text style={styles.enterPasstext}>Введіть пароль</Text>
         <TextInput 
           style={styles.field} 
@@ -82,8 +82,8 @@ const SignUpMenu = () => {
           textContentType='oneTimeCode'
           onSubmitEditing={() => repeatpasswordRef.current.focus()}
         />
-      </View>
-      <View style={styles.repeatPass}>
+        </View>
+        <View style={styles.repeatPass}>
         <Text style={styles.repeatPasstext}>Повторіть пароль</Text>
         <TextInput 
           style={styles.field} 
@@ -93,6 +93,7 @@ const SignUpMenu = () => {
           textContentType='oneTimeCode'
         />
         {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
+        </View>
       </View>
       </View>
       </TouchableWithoutFeedback>
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
   field: {
     marginTop: screenHeight * 0.01,
     alignSelf: 'center',
-    borderRadius: Border.br_8xs,
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.03,
     alignSelf: 'center',
     height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
-    width: screenHeight < 600 ? screenWidth*0.5 : screenWidth*0.5,
+    width: screenWidth*0.5,
     backgroundColor: "#2469A2",
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
   },
   registerText: {
     textAlign: 'center',
-    color: Color.colorLightcyan,
+    color: 'white',
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },

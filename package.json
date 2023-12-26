@@ -12,6 +12,7 @@
     "@gorhom/bottom-sheet": "^4.5.1",
     "@react-native-community/datetimepicker": "^7.6.2",
     "@react-native-google-signin/google-signin": "^11.0.0",
+    "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/core": "^6.2.1",
     "@react-navigation/drawer": "^6.4.1",

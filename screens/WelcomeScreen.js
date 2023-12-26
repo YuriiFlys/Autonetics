@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, useEffect } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { TextInput, KeyboardAvoidingView, Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
+import { doc, setDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -18,6 +19,7 @@ const WelcomeScreen = () => {
     const [surname, setSurname] = React.useState('');
     const surnameRef = React.useRef();
     const auth = FIREBASE_AUTH;
+    const firestore = FIREBASE_DB;
     const navigator = useNavigation();
     const handleUpdate = async () => {
       try {
@@ -25,11 +27,15 @@ const WelcomeScreen = () => {
         await updateProfile(user, { displayName: `${name} ${surname}` });
         navigator.navigate('BottomMenu', { screen: 'Home' });
         console.log('Ім\'я та прізвище оновлено');
+        const userDocRef = doc(firestore, 'users', user.email);
+        const birthdate = {day: 1, month: 1, year: 1900};
+        const gender = 'Не вказано';
+        await setDoc(userDocRef, { fullname: `${name} ${surname}`, email: user.email, birthdate: birthdate, gender: gender });
       } catch (error) {
         console.error(error);
       }
     };
-
+    
   return (
     <KeyboardAvoidingView style={styles.forgotPass} behavior="position"
     keyboardVerticalOffset={-screenHeight*0.2}
@@ -138,7 +144,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    color: Color.colorLightcyan,
+    color: "#fff",
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.palanquinDarkRegular,
   },

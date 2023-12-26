@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { TextInput, KeyboardAvoidingView, Dimensions,TouchableWithoutFeedback, Keyboard } from "react-native";
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 import { signInWithEmailAndPassword } from "firebase/auth";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -47,8 +47,7 @@ const LoginMenu = () => {
       if (user) {
         const [firstName, lastName] = user.displayName.split(' ');
         console.log('Успішний вхід в систему');
-        console.log('Ім\'я користувача: ', firstName);
-        console.log('Прізвище користувача: ', lastName);
+        console.log(`Вітаємо, ${firstName} ${lastName}!`);
       }
     });
 
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
   field: {
     marginTop: screenHeight * 0.01,
     alignSelf: "center",
-    borderRadius: Border.br_8xs,
+    
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.02,
     alignSelf: "center",
     height: screenHeight < 600 ? screenHeight * 0.06 : screenHeight * 0.05,
-    width: screenHeight < 600 ? screenWidth * 0.5 : screenWidth * 0.5,
+    width: screenWidth * 0.5,
     backgroundColor: "#2469A2",
     borderRadius: Border.br_3xs,
     justifyContent: "center",

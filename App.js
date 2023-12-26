@@ -9,6 +9,7 @@ import MyTabs from "./screens/MyTabs";
 import BottomMenu from "./screens/BottomMenu";
 import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
+import UserProfile from "./screens/UserProfile";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
 
@@ -62,6 +63,11 @@ const App = () => {
             <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
+            options={{ headerShown: false }}
+            />
+            <Stack.Screen
+            name="UserProfile"
+            component={UserProfile}
             options={{ headerShown: false }}
             />      
           </Stack.Navigator>
