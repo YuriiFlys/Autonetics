@@ -1,6 +1,6 @@
 const Stack = createNativeStackNavigator();
 import * as React from "react";
-import  {NavigationContainer}  from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import StartMenu from "./screens/StartMenu";
 import LoginMenu from "./screens/LoginMenu";
@@ -10,6 +10,7 @@ import BottomMenu from "./screens/BottomMenu";
 import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import UserProfile from "./screens/UserProfile";
+import SalesScreen from "./screens/SalesScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
 
@@ -29,7 +30,9 @@ const App = () => {
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled:false }}>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false, gestureEnabled: false }}
+          >
             <Stack.Screen
               name="StartMenu"
               component={StartMenu}
@@ -56,20 +59,25 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-            name="ForgotPass"
-            component={ForgotPass}
-            options={{ headerShown: false }}
+              name="ForgotPass"
+              component={ForgotPass}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
-            name="Welcome"
-            component={WelcomeScreen}
-            options={{ headerShown: false }}
+              name="Welcome"
+              component={WelcomeScreen}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
-            name="UserProfile"
-            component={UserProfile}
-            options={{ headerShown: false }}
-            />      
+              name="UserProfile"
+              component={UserProfile}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SalesScreen"
+              component={SalesScreen}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
