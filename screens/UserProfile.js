@@ -15,10 +15,10 @@ import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
-import { updateProfile } from "firebase/auth";
+import { updateProfile, updateEmail, sendEmailVerification } from "firebase/auth";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { useRef } from "react";
 import { format } from "date-fns";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
@@ -34,15 +34,16 @@ const UserProfile = () => {
   const [day, setDay] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState(" ");
-  const [gender, setGender] = useState("Не вказано");
+  const [gender, setGender] = useState("Не вказано ");
   const [modalVisible, setModalVisible] = useState(false);
   const dayRef = useRef();
   const monthRef = useRef();
   const yearRef = useRef();
-  const [email, setEmail] = useState("");
+  const emailRef = useRef();
   const [isEditing, setIsEditing] = useState(false);
   const auth = FIREBASE_AUTH;
   const firestore = FIREBASE_DB;
+  
 
   function getInitials(fullName) {
     const names = fullName.split(" ");
@@ -58,7 +59,7 @@ const UserProfile = () => {
         if (docSnap.exists()) {
           const userData = docSnap.data();
           fullnameRef.current = userData.fullname;
-          setEmail(userData.email);
+          emailRef.current = userData.email;
           const birthdate = userData.birthdate;
           setDay(birthdate.day);
           setMonth(birthdate.month);
@@ -78,40 +79,78 @@ const UserProfile = () => {
 
   const handleSave = useCallback(() => {
     const user = auth.currentUser;
+    const oldEmail = user.email;
     if (user) {
-      updateProfile(user, {
-        displayName: fullnameRef.current,
-      }).then(() => {
-        const userDoc = doc(firestore, "users", user.email);
-        const birthdate = { day: day, month: month, year: year };
+      if (oldEmail !== emailRef.current) {
+        
+        updateEmail(user, emailRef.current).then(() => {
+            
+            const newUserDoc = doc(firestore, "users", emailRef.current);
+            const birthdate = { day: day, month: month, year: year };
+  
+            setDoc(
+              newUserDoc,
+              {
+                email: emailRef.current,
+                fullname: fullnameRef.current,
+                birthdate: birthdate,
+                gender: gender,
+              },
+              { merge: true }
+            )
+              .then(() => {
+                getUpdatedUserDataFromFirestore(newUserDoc);
 
-        setDoc(
-          userDoc,
-          {
-            email: user.email,
-            fullname: fullnameRef.current,
-            birthdate: birthdate,
-            gender: gender,
-          },
-          { merge: true }
-        )
-          .then(() => {
-            getUpdatedUserDataFromFirestore(userDoc);
-          })
-          .catch((error) => {
-            console.error("Error updating document: ", error);
+                const oldUserDoc = doc(firestore, "users", oldEmail);
+                deleteDoc(oldUserDoc);
+                
+              })
+              .catch((error) => {
+                console.error("Error updating document: ", error);
+              });
+  
+          }).catch((error) => {
+            console.log(error);
           });
-      });
+        
+      } else {
+        updateProfile(user, {
+          displayName: fullnameRef.current,
+          email: emailRef.current,
+        }).then(() => {
+          const userDoc = doc(firestore, "users", emailRef.current);
+          const birthdate = { day: day, month: month, year: year };
+  
+          setDoc(
+            userDoc,
+            {
+              email: emailRef.current,
+              fullname: fullnameRef.current,
+              birthdate: birthdate,
+              gender: gender,
+            },
+            { merge: true }
+          )
+            .then(() => {
+              getUpdatedUserDataFromFirestore(userDoc);
+            })
+            .catch((error) => {
+              console.error("Error updating document: ", error);
+            });
+        });
+      }
     }
+    
     setIsEditing(false);
-  }, [fullnameRef, day, month, year, gender]);
-
+  }, [fullnameRef, emailRef, day, month, year, gender]);
+  
+  
   const getUpdatedUserDataFromFirestore = (userDoc) => {
     getDoc(userDoc).then((docSnap) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         fullnameRef.current = userData.fullname;
-        setEmail(userData.email);
+        emailRef.current = userData.email;
         const birthdate = userData.birthdate;
         setDay(birthdate.day);
         setMonth(birthdate.month);
@@ -127,8 +166,12 @@ const UserProfile = () => {
     setIsEditing(true);
   };
 
-  const handleFullnameChange = useCallback((text) => {
-    fullnameRef.current = text;
+  const handleFullnameChange = useCallback((fullname) => {
+    fullnameRef.current = fullname;
+  }, []);
+
+  const handleEmailChange = useCallback((email) => {
+    emailRef.current = email;
   }, []);
 
   const handleDateChange = useCallback((text, type) => {
@@ -159,28 +202,28 @@ const UserProfile = () => {
             <Text style={styles.modalLabel}>Оберіть стать</Text>
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={() => handleGenderSelect("Не вказано")}
+              onPress={() => handleGenderSelect("Не вказано ")}
             >
-              <Text style={styles.modalText}>Не вказано</Text>
+              <Text style={styles.modalText}>Не вказано </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={() => handleGenderSelect("Чоловіча")}
+              onPress={() => handleGenderSelect("Чоловіча ")}
             >
-              <Text style={styles.modalText}>Чоловіча</Text>
+              <Text style={styles.modalText}>Чоловіча </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={() => handleGenderSelect("Жіноча")}
+              onPress={() => handleGenderSelect("Жіноча ")}
             >
-              <Text style={styles.modalText}>Жіноча</Text>
+              <Text style={styles.modalText}>Жіноча </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.modalText}>Скасувати</Text>
+              <Text style={styles.modalText}>Скасувати </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -203,6 +246,13 @@ const UserProfile = () => {
                 source={require("../assets/account.png")}
               />
               <Text style={styles.widgetProfileName}>{widgetname}</Text>
+              <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
+              <Image
+                style={styles.editIcon}
+                contentFit="contain"
+                source={require("../assets/Profile/Settings.svg")}
+              />
+              </TouchableOpacity>
             </View>
             <View style={styles.sepLine}></View>
             <Text style={styles.MainWidgetText}>{"Ім'я та прізвище"}</Text>
@@ -213,7 +263,7 @@ const UserProfile = () => {
                 onChangeText={handleFullnameChange}
               />
             ) : (
-              <Text style={styles.MainWidgetText} onPress={handleEdit}>
+              <Text style={styles.MainWidgetText}>
                 {fullnameRef.current}
               </Text>
             )}
@@ -272,24 +322,39 @@ const UserProfile = () => {
                 />
               </View>
             ) : (
-              <Text style={styles.MainWidgetText} onPress={handleEdit}>
+              <Text style={styles.MainWidgetText}>
                 {format(new Date(year, month - 1, day), "dd.MM.yyyy")}
               </Text>
             )}
             <View style={styles.sepLine}></View>
-            <Text style={styles.MainWidgetText}>Стать</Text>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <Text style={styles.MainWidgetText}>{gender}</Text>
-            </TouchableOpacity>
-            <GenderModal
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-              setGender={setGender}
-            />
+            <Text style={styles.MainWidgetText}>{"Стать "}</Text>
+            
+            {isEditing ? (
+              <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <Text style={[styles.MainWidgetText]}>{gender}</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={{ flexDirection: "column" }}>
+              <Text style={[styles.MainWidgetText]}>{gender}</Text>
+              </View>
+            )}
+          {isEditing && (
+            <View style={styles.sepLine}></View>)}
+          {isEditing && (
+              <TouchableOpacity styles={styles.saveIcon} onPress={handleSave}>
+                <Image
+                  style={styles.saveIcon}
+                  contentFit="contain"
+                  source={require("../assets/tick.svg")}
+                />
+              </TouchableOpacity>
+            )}
+          <GenderModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            setGender={setGender}
+          />
           </View>
-          <Text style={styles.MainWidgetText} onPress={handleSave}>
-            Зберегти зміни
-          </Text>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -307,9 +372,21 @@ const UserProfile = () => {
             <Text style={styles.widgetProfileName}>{widgetname}</Text>
           </View>
           <View style={styles.sepLine}></View>
+          <Text style={styles.MainWidgetText}>{"Номер телефону"}</Text>
           <Text style={styles.MainWidgetText}>{phone}</Text>
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText}>{email}</Text>
+          <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
+          {isEditing ? (
+          <TextInput
+            style={styles.MainWidgetText}
+            defaultValue={emailRef.current}
+            onChangeText={handleEmailChange}
+          />
+        ) : (
+          <Text style={styles.MainWidgetText}>
+            {emailRef.current}
+          </Text>
+        )}
         </View>
       </View>
     );
@@ -331,9 +408,9 @@ const UserProfile = () => {
           </View>
           <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
           <ContactsWidget
-            widgetname={"Контакти"}
+            widgetname={"Контакти "}
             phone={"+380123456789"}
-            email={email}
+            email={emailRef.current}
           />
         </View>
       </ScrollView>
@@ -349,7 +426,6 @@ const styles = StyleSheet.create({
   },
   datepicker: {
     flexDirection: "row",
-    marginLeft: 10,
   },
   userIcon: {
     width: screenWidth * 0.35,
@@ -369,6 +445,7 @@ const styles = StyleSheet.create({
   },
   mainWidgetView: {
     marginTop: screenHeight * 0.02,
+    padding: 10,
     width: screenWidth * 0.9,
     justifyContent: "center",
     backgroundColor: "#fff",
@@ -420,11 +497,19 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_l,
     color: Color.black,
     textAlign: "left",
-    marginLeft: 10,
   },
   mainWidgetLabel: {
     flexDirection: "row",
-    marginLeft: 10,
+  },
+  editIcon: {
+    height: screenWidth * 0.09,
+    width: screenWidth * 0.09,
+    left: screenWidth * 0.09,
+  },
+  saveIcon: {
+    height: screenWidth * 0.09,
+    width: screenWidth * 0.09,
+    left: screenWidth * 0.72,
   },
   dateplaceholder: {
     fontFamily: FontFamily.palanquinDarkRegular,
@@ -441,7 +526,6 @@ const styles = StyleSheet.create({
   sepLine: {
     borderBottomColor: "#E5E5E5",
     borderBottomWidth: 1,
-    marginLeft: 10,
     marginRight: 10,
     marginTop: 5,
     marginBottom: 5,
@@ -449,6 +533,7 @@ const styles = StyleSheet.create({
   ContactsWidgetView: {
     marginTop: screenHeight * 0.02,
     justifyContent: "center",
+    padding: 10,
     width: screenWidth * 0.9,
     backgroundColor: "#fff",
     borderColor: "#lightgrey",
