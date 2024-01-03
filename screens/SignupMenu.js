@@ -62,7 +62,7 @@ const SignUpMenu = () => {
       <View>
     <View>
       <View style={styles.phoneNumber}>
-        <Text style={styles.phoneNumbertext}>Введіть Email</Text>
+        <Text style={styles.phoneNumbertext}>Email</Text>
         <TextInput 
           style={styles.field}
           onChangeText={setEmail}
@@ -73,7 +73,7 @@ const SignUpMenu = () => {
         />
         </View>
         <View style={styles.enterPass}>
-        <Text style={styles.enterPasstext}>Введіть пароль</Text>
+        <Text style={styles.enterPasstext}>Пароль</Text>
         <TextInput 
           style={styles.field} 
           secureTextEntry 
@@ -84,7 +84,7 @@ const SignUpMenu = () => {
         />
         </View>
         <View style={styles.repeatPass}>
-        <Text style={styles.repeatPasstext}>Повторіть пароль</Text>
+        <Text style={styles.repeatPasstext}>Підтвердіть пароль</Text>
         <TextInput 
           style={styles.field} 
           secureTextEntry 
@@ -117,14 +117,9 @@ const SignUpMenu = () => {
 const styles = StyleSheet.create({
   signUp: {
     marginTop: screenHeight * 0.1,
+    marginBottom: screenHeight * 0.05,
     textAlign: "center",
-    fontFamily: FontFamily.palanquinDarkRegular,
-    fontSize: FontSize.size_21xl,
-    color: "#23334A",
-  },
-  autonetics: {
-    textAlign: "center",
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
     color: "#23334A",
   },
@@ -142,7 +137,7 @@ const styles = StyleSheet.create({
     height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
     backgroundColor: Color.colorLightcyan,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth*0.02,
     paddingRight: screenWidth*0.02,
   },
@@ -150,14 +145,14 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.1,
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
   },
   enterPasstext: {
     marginLeft: screenWidth * 0.1,
     textAlign: 'left',
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
   },
   enterPass: {
     marginTop: screenHeight * 0.01,
@@ -170,7 +165,7 @@ const styles = StyleSheet.create({
   },
   errormessage:{
     color: 'red',
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
     marginTop: screenHeight*0.01,
     textAlign: 'center',
   },
@@ -187,14 +182,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
   },
   repeatPasstext: {
     marginLeft: screenWidth * 0.1,
     textAlign: 'left',
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
   },
   vector: {
     marginTop: screenHeight * 0.01,
@@ -207,7 +202,7 @@ const styles = StyleSheet.create({
   },
   signupmenu: {
     flex: 1,
-    backgroundColor: Color.colorLightcyan,
+    backgroundColor: Color.colorLightCyan,
     justifyContent: 'flex-start',
   },
 });

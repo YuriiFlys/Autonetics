@@ -122,8 +122,9 @@ const LoginMenu = () => {
 const styles = StyleSheet.create({
   logIn: {
     marginTop: screenHeight * 0.1,
+    marginBottom: screenHeight * 0.05,
     textAlign: "center",
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
     color: "#23334A",
   },
@@ -135,14 +136,13 @@ const styles = StyleSheet.create({
   field: {
     marginTop: screenHeight * 0.01,
     alignSelf: "center",
-    
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
     height: screenHeight < 600 ? screenHeight * 0.04 : screenHeight * 0.03,
     width: screenWidth * 0.8,
     backgroundColor: Color.colorLightCyan,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth * 0.02,
     paddingRight: screenWidth * 0.02,
   },
@@ -150,14 +150,14 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.1,
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
   },
   passwordtext: {
     marginLeft: screenWidth * 0.1,
     textAlign: "left",
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
   },
   password: {
     marginTop: screenHeight * 0.01,
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   errormessage: {
     color: "red",
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
     marginTop: screenHeight * 0.01,
     textAlign: "center",
   },
@@ -188,11 +188,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: Color.colorLightCyan,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
   },
   forgotPassword: {
     marginTop: screenHeight * 0.01,
     alignSelf: "center",
+    fontFamily: FontFamily.CommissioneRegular,
     fontSize: 14,
     color: "#25364c",
   },

@@ -37,10 +37,8 @@ const WelcomeScreen = () => {
     };
     
   return (
-    <KeyboardAvoidingView style={styles.forgotPass} behavior="position"
-    keyboardVerticalOffset={-screenHeight*0.2}
-     enabled>
-      <Text style={styles.logIn}>Update Information</Text>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
+      <Text style={styles.logIn}>Welcome!</Text>
       <Image
         style={styles.logoIcon}
         contentFit="contain"
@@ -74,13 +72,7 @@ const WelcomeScreen = () => {
       >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
-      <Pressable style={styles.vector} onPress={() => navigator.navigate("Login")}>
-        <Image
-          style={styles.vector}
-          contentFit="contain"
-          source={require("../assets/vector.png")}
-        />
-      </Pressable>
+      
     </KeyboardAvoidingView>
   );
 };
@@ -90,15 +82,16 @@ const WelcomeScreen = () => {
 const styles = StyleSheet.create({
   logIn: {
     marginTop: screenHeight*0.1,
+    marginBottom: screenHeight*0.05,
     textAlign: "center",
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
     color: "#23334A",
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenHeight*0.35,
-    width: screenWidth*0.7,
+    height: screenHeight*0.25,
+    width: screenWidth*0.5,
   },
   field: {
     marginTop: screenHeight*0.01,
@@ -109,7 +102,7 @@ const styles = StyleSheet.create({
     height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
     backgroundColor: Color.colorLightcyan,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth*0.02,
     paddingRight: screenWidth*0.02,
   },
@@ -117,7 +110,7 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth*0.1,
     color: Color.colorDarkslategray_200,
     fontSize: 16,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
   },
   
   email: {
@@ -125,7 +118,7 @@ const styles = StyleSheet.create({
   },
   errormessage:{
     color: 'red',
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
     marginTop: screenHeight*0.01,
     textAlign: 'center',
   },
@@ -146,7 +139,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: "#fff",
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
   },
   vector: {
     marginTop: screenHeight*0.01,

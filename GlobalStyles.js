@@ -1,7 +1,32 @@
-/* fonts */
+import * as Font from "expo-font";
+export default async function Fonts() {
+  let fontsLoaded = await Font.loadAsync({
+    CommissioneBold: require("./assets/fonts/Commissioner-Bold.ttf"),
+    CommisioneExtraBold: require("./assets/fonts/Commissioner-ExtraBold.ttf"),
+    CommissioneLight: require("./assets/fonts/Commissioner-Light.ttf"),
+    CommissioneExtraLight: require("./assets/fonts/Commissioner-ExtraLight.ttf"),
+    CommissioneRegular: require("./assets/fonts/Commissioner-Regular.ttf"),
+    CommissioneSemiBold: require("./assets/fonts/Commissioner-SemiBold.ttf"),
+    CommissioneThin: require("./assets/fonts/Commissioner-Thin.ttf"),
+    CommissioneMedium: require("./assets/fonts/Commissioner-Medium.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+  return fontsLoaded;
+}
+
 export const FontFamily = {
-  palanquinDarkRegular: "PalanquinDark-Regular",
-  comissionerBold: "Commissioner-Medium",
+  CommissioneExtraBold: "CommissioneExtraBold",
+  CommissioneBold: "CommissioneBold",
+  CommissioneLight: "CommissioneLight",
+  CommissioneExtraLight: "CommissioneExtraLight",
+  CommissioneRegular: "CommissioneRegular",
+  CommissioneSemiBold: "CommissioneSemiBold",
+  CommissioneThin: "CommissioneThin",
+  CommissioneMedium: "CommissioneMedium",
+  palanquinDarkRegular: "PalanquinDark-Regular"
 };
 /* font sizes */
 export const FontSize = {

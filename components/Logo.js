@@ -10,6 +10,7 @@ import {
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { FontFamily } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontSize: 20,
+    fontFamily: FontFamily.CommissioneBold,
     color: Colors.colorDarkBlue,
     flexWrap: "nowrap",
   },

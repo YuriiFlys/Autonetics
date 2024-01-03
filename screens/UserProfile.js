@@ -15,13 +15,13 @@ import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
-import { updateProfile, updateEmail, sendEmailVerification } from "firebase/auth";
+import { updateProfile, updateEmail} from "firebase/auth";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { useRef } from "react";
 import { format } from "date-fns";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
 import Logo from "../components/Logo";
 
 const screenWidth = Dimensions.get("window").width;
@@ -258,12 +258,12 @@ const UserProfile = () => {
             <Text style={styles.MainWidgetText}>{"Ім'я та прізвище"}</Text>
             {isEditing ? (
               <TextInput
-                style={styles.MainWidgetText}
+                style={styles.EditedText}
                 defaultValue={fullnameRef.current}
                 onChangeText={handleFullnameChange}
               />
             ) : (
-              <Text style={styles.MainWidgetText}>
+              <Text style={styles.EditedText}>
                 {fullnameRef.current}
               </Text>
             )}
@@ -322,7 +322,7 @@ const UserProfile = () => {
                 />
               </View>
             ) : (
-              <Text style={styles.MainWidgetText}>
+              <Text style={styles.EditedText}>
                 {format(new Date(year, month - 1, day), "dd.MM.yyyy")}
               </Text>
             )}
@@ -331,11 +331,11 @@ const UserProfile = () => {
             
             {isEditing ? (
               <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={[styles.MainWidgetText]}>{gender}</Text>
+                <Text style={[styles.EditedText]}>{gender}</Text>
               </TouchableOpacity>
             ) : (
               <View style={{ flexDirection: "column" }}>
-              <Text style={[styles.MainWidgetText]}>{gender}</Text>
+              <Text style={[styles.EditedText]}>{gender}</Text>
               </View>
             )}
           {isEditing && (
@@ -378,12 +378,12 @@ const UserProfile = () => {
           <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
           {isEditing ? (
           <TextInput
-            style={styles.MainWidgetText}
+            style={styles.EditedText}
             defaultValue={emailRef.current}
             onChangeText={handleEmailChange}
           />
         ) : (
-          <Text style={styles.MainWidgetText}>
+          <Text style={styles.EditedText}>
             {emailRef.current}
           </Text>
         )}
@@ -391,6 +391,24 @@ const UserProfile = () => {
       </View>
     );
   };
+
+  const SignOut = () => {
+    const handleSignOut = () => {
+      auth.signOut().then(() => {
+        navigator.navigate("StartMenu");
+      });
+    }
+    return (
+        <TouchableOpacity
+          style={styles.SignOutView}
+          onPress={handleSignOut}
+        >
+          <Text style={styles.SignOutText}>Вийти з аккаунту</Text>
+        </TouchableOpacity>
+      
+    );
+  };
+
   const scrollViewRef = useRef();
 
   const scrollToBottom = () => {
@@ -399,6 +417,7 @@ const UserProfile = () => {
     }
   };
   return (
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
@@ -412,9 +431,11 @@ const UserProfile = () => {
             phone={"+380123456789"}
             email={emailRef.current}
           />
+          <SignOut />
         </View>
       </ScrollView>
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
@@ -442,6 +463,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: Color.colorDarkBlue,
+    fontFamily: FontFamily.CommissioneBold,
   },
   mainWidgetView: {
     marginTop: screenHeight * 0.02,
@@ -449,10 +471,29 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.9,
     justifyContent: "center",
     backgroundColor: "#fff",
-    borderColor: "#lightgrey",
+    borderColor: "grey",
     borderWidth: 1,
     borderRadius: 20,
     overflow: "hidden",
+  },
+  SignOutView: {
+    marginTop: screenHeight * 0.02,
+    padding: 10,
+    width: screenWidth * 0.9,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    borderColor: "red",
+    borderWidth: 1,
+    borderRadius: 20,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  SignOutText: {
+    fontFamily: FontFamily.CommissioneBold,
+    fontSize: FontSize.size_xl,
+    color: "red",
+    textAlign: "center",
   },
   modalContainer: {
     flex: 1,
@@ -477,23 +518,31 @@ const styles = StyleSheet.create({
   },
   modalLabel: {
     fontSize: 20,
+    fontFamily: FontFamily.CommissioneBold,
     marginBottom: 20,
     textAlign: "center",
   },
   modalText: {
     fontSize: 18,
+    fontFamily: FontFamily.CommissioneBold,
     textAlign: "center",
     color: "#404040",
   },
   widgetProfileName: {
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_xl,
     color: Color.black,
     textAlign: "left",
     marginLeft: 10,
   },
   MainWidgetText: {
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
+    fontSize: FontSize.size_l,
+    color: Color.black,
+    textAlign: "left",
+  },
+  EditedText:{
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_l,
     color: Color.black,
     textAlign: "left",
@@ -512,13 +561,13 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.72,
   },
   dateplaceholder: {
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_l,
     color: Color.grey,
     textAlign: "left",
   },
   dateSeparator: {
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_l,
     color: Color.black,
     textAlign: "left",
@@ -536,7 +585,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: screenWidth * 0.9,
     backgroundColor: "#fff",
-    borderColor: "#lightgrey",
+    borderColor: "grey",
     borderWidth: 1,
     borderRadius: 20,
     overflow: "hidden",

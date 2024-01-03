@@ -1,7 +1,6 @@
 const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { useFonts } from "expo-font";
 import StartMenu from "./screens/StartMenu";
 import LoginMenu from "./screens/LoginMenu";
 import SignupMenu from "./screens/SignupMenu";
@@ -18,20 +17,12 @@ LogBox.ignoreAllLogs();
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
 
-  const [fontsLoaded, error] = useFonts({
-    "PalanquinDark-Regular": require("./assets/fonts/PalanquinDark-Regular.ttf"),
-  });
-
-  if (!fontsLoaded && !error) {
-    return null;
-  }
-
   return (
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator
-            screenOptions={{ headerShown: false, gestureEnabled: false }}
+            screenOptions={{ headerShown: false, gestureEnabled: false, animation: 'none' }}
           >
             <Stack.Screen
               name="StartMenu"

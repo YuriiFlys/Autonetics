@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.5.1",
+    "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/datetimepicker": "^7.6.2",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-native-picker/picker": "^2.6.1",
@@ -26,6 +27,7 @@
     "@types/react": "~18.2.14",
     "date-fns": "^3.0.6",
     "expo": "^49.0.0",
+    "expo-app-loading": "^2.1.1",
     "expo-barcode-scanner": "^12.7.0",
     "expo-camera": "~13.4.4",
     "expo-device": "~5.4.0",

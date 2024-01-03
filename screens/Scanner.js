@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Linking,
+  Alert
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
@@ -32,11 +33,13 @@ export default function Scanner() {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setIsScanning(false);
-    if (Linking.canOpenURL(data)) {
-      Linking.openURL(data);
-    } else {
-      alert("Scanned data is not a valid URL: " + data);
-    }
+    const isUrl = /^(http|https):\/\/[^ "]+$/.test(data);
+
+  if (isUrl && Linking.canOpenURL(data)) {
+    Linking.openURL(data).catch(err => console.error('Failed to open URL: ', err));
+  } else {
+    Alert.alert(data)
+  }
   };
 
   const startScan = () => {

@@ -23,7 +23,6 @@ const ForgotPass = () => {
       alert('Будь ласка, перевірте свою електронну пошту...');
     } catch (error) {
       console.error(error);
-      // Обробка помилок відновлення паролю
     }
   };
 
@@ -40,7 +39,7 @@ const ForgotPass = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         
       <View style={styles.email}>
-        <Text style={styles.emailtext}>Введіть Email для відновлення паролю</Text>
+        <Text style={styles.emailtext}>Введіть Email для відновлення</Text>
         <TextInput 
           style={styles.field}
           onChangeText={setEmail}
@@ -69,8 +68,9 @@ const ForgotPass = () => {
 const styles = StyleSheet.create({
   logIn: {
     marginTop: screenHeight*0.1,
+    marginBottom: screenHeight*0.05,
     textAlign: "center",
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
     color: "#23334A",
   },
@@ -88,15 +88,15 @@ const styles = StyleSheet.create({
     height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
     backgroundColor: Color.colorLightcyan,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth*0.02,
     paddingRight: screenWidth*0.02,
   },
   emailtext: {
     marginLeft: screenWidth*0.1,
     color: Color.colorDarkslategray_200,
-    fontSize: 16,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontSize: 20,
+    fontFamily: FontFamily.CommissioneBold,
   },
   
   email: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   errormessage:{
     color: 'red',
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
     marginTop: screenHeight*0.01,
     textAlign: 'center',
   },
@@ -123,9 +123,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    color: Color.colorLightcyan,
+    color: Color.colorLightCyan,
     fontSize: FontSize.size_xl,
-    fontFamily: FontFamily.palanquinDarkRegular,
+    fontFamily: FontFamily.CommissioneRegular,
   },
   vector: {
     marginTop: screenHeight*0.01,
