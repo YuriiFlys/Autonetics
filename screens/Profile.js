@@ -10,12 +10,9 @@ import {
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect } from "react";
-import { FIREBASE_DB, FIREBASE_AUTH } from "../FirebaseConfig";
-import { doc } from "firebase/firestore";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
-import { onSnapshot } from "firebase/firestore";
+import { getUserName } from "./LoginMenu";
 
 
 const screenWidth = Dimensions.get("window").width;
@@ -29,7 +26,8 @@ function getInitials(name) {
 
 const Promotions = () => {
   const navigator = useNavigation();
-    const [userName, setUserName] = React.useState(" ");
+  const [userName, setUserName] = React.useState("");
+  getUserName().then((name) => setUserName(name));
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
@@ -42,17 +40,7 @@ const Promotions = () => {
       </TouchableOpacity>
     );
   };
-  useEffect(() => {
-    const user = FIREBASE_AUTH.currentUser;
-    const userDoc = doc(FIREBASE_DB, 'users', user.email);
-  
-    const unsubscribe = onSnapshot(userDoc, (doc) => {
-      const data = doc.data();
-      setUserName(data.fullname);
-    });
-  
-    return unsubscribe;
-  }, []);
+ 
   
   return (
     <SafeAreaView style={styles.container}>

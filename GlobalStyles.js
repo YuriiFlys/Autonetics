@@ -9,6 +9,7 @@ export default async function Fonts() {
     CommissioneSemiBold: require("./assets/fonts/Commissioner-SemiBold.ttf"),
     CommissioneThin: require("./assets/fonts/Commissioner-Thin.ttf"),
     CommissioneMedium: require("./assets/fonts/Commissioner-Medium.ttf"),
+    palanquinDarkRegular: require("./assets/fonts/PalanquinDark-Regular.ttf"),
   });
 
   if (!fontsLoaded) {

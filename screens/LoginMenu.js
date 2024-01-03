@@ -6,9 +6,25 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { TextInput, KeyboardAvoidingView, Dimensions,TouchableWithoutFeedback, Keyboard } from "react-native";
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
+import { doc, onSnapshot } from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+
+
+
+export async function getUserName() {
+  const user = FIREBASE_AUTH.currentUser;
+  const userDoc = doc(FIREBASE_DB, 'users', user.email);
+
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onSnapshot(userDoc, (doc) => {
+      const data = doc.data();
+      resolve(data.fullname);
+    });
+  });
+}
 
 const LoginMenu = () => {
   const navigator = useNavigation();
@@ -41,20 +57,6 @@ const LoginMenu = () => {
       setErrorMessage(errorMessage);
     }
   };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        const [firstName, lastName] = user.displayName.split(' ');
-        console.log('Успішний вхід в систему');
-        console.log(`Вітаємо, ${firstName} ${lastName}!`);
-      }
-    });
-
-    // Прибираємо слухача, коли компонент демонтується
-    return unsubscribe;
-  }, []);
-
 
   return (
     <KeyboardAvoidingView
@@ -94,7 +96,6 @@ const LoginMenu = () => {
       </TouchableWithoutFeedback>
       <Pressable
         style={styles.submit}
-        // onPress={() => navigator.navigate('BottomMenu', { screen: 'Home' })}
         onPress={handleLogin}
       >
         <Text style={styles.submitText}>Submit</Text>
