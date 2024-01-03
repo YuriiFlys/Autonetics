@@ -7,7 +7,7 @@ import {
   Dimensions,
   FlatList,
   TextInput,
-  Button,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import GrayLine from "../components/GrayLine";
@@ -17,7 +17,7 @@ const screenHeight = Dimensions.get("window").height;
 
 const MainMenu = () => {
   const navigator = useNavigation();
-  
+
   const keyExtractor = (item, index) => index.toString();
 
   const data = [
@@ -73,30 +73,34 @@ const MainMenu = () => {
   ];
 
   const renderItem = ({ item }) => (
-    <View style={styles.shop}>
+    <TouchableOpacity
+      style={styles.shop}
+      onPress={() => {
+        console.log(item.name);
+        navigator.navigate("SalesScreen", { shopName: item.name });
+      }}
+    >
       <Image source={item.imageSource} style={styles.image} />
       <View style={styles.textContainer}>
         <Text style={styles.shopName}>{item.name}</Text>
         <Text style={styles.street}>{item.street}</Text>
       </View>
       <Text style={styles.distanceText}>{item.distance}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", marginTop: 20 }}>
         <TextInput style={styles.field} />
-        <View style={styles.buttonContainer}>
-          <Text
-            style={styles.buttonSearch}
-            onPress={() => {
-              console.log("Пошук");
-            }}
-          >
-            Пошук
-          </Text>
-        </View>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => {
+            console.log("Пошук");
+          }}
+        >
+          <Text style={styles.buttonSearch}>Пошук</Text>
+        </TouchableOpacity>
       </View>
       <GrayLine style={{ marginTop: 20, marginBottom: 20 }} />
       <FlatList
@@ -115,7 +119,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   labelText: {
-    // fontFamily: "PalanquinDark-Regular",
     fontSize: 18,
     color: "#404040",
     backgroundColor: "green",
