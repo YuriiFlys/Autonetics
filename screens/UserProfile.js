@@ -490,7 +490,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     overflow: "hidden",
-    justifyContent: "center",
     alignItems: "center",
   },
   SignOutText: {
