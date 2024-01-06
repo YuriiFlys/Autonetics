@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  useEffect,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -40,17 +39,7 @@ const Promotions = () => {
       </TouchableOpacity>
     );
   };
-  useEffect(() => {
-    const user = FIREBASE_AUTH.currentUser;
-    const userDoc = doc(FIREBASE_DB, "users", user.email);
-
-    const unsubscribe = onSnapshot(userDoc, (doc) => {
-      const data = doc.data();
-      setUserName(data.fullname);
-    });
-
-    return unsubscribe;
-  }, []);
+  
 
   return (
     <SafeAreaView style={styles.container}>

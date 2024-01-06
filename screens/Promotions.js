@@ -62,8 +62,6 @@ const styles = StyleSheet.create({
   },
   mainWidgetView: {
     flexDirection: "column",
-    flexDirection: "column",
-    height: screenWidth * 0.7,
     width: screenWidth * 0.9,
     backgroundColor: "lightgrey",
     borderRadius: 20,
