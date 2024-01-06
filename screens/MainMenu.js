@@ -102,7 +102,7 @@ const MainMenu = () => {
           <Text style={styles.buttonSearch}>Пошук</Text>
         </TouchableOpacity>
       </View>
-      <GrayLine style={{ marginTop: 20, marginBottom: 20 }} />
+      <GrayLine style={{ marginTop: 20 }} />
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingLeft: 10,
     paddingRight: 10,
-    marginBottom: 20,
+    marginTop: 20,
   },
   image: {
     width: screenWidth * 0.18,
