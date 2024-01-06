@@ -19,6 +19,8 @@ import { updateProfile, updateEmail} from "firebase/auth";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRef } from "react";
 import { format } from "date-fns";
 import { TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
@@ -34,8 +36,10 @@ const UserProfile = () => {
   const [day, setDay] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState(" ");
+  const phoneRef = useRef("123456789");
   const [gender, setGender] = useState("Не вказано ");
   const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState(null);
   const dayRef = useRef();
   const monthRef = useRef();
   const yearRef = useRef();
@@ -60,11 +64,13 @@ const UserProfile = () => {
           const userData = docSnap.data();
           fullnameRef.current = userData.fullname;
           emailRef.current = userData.email;
+          phoneRef.current = userData.phone.substring(4);
           const birthdate = userData.birthdate;
           setDay(birthdate.day);
           setMonth(birthdate.month);
           setYear(birthdate.year);
           setGender(userData.gender);
+          setImage(userData.profileImage);
         } else {
           console.log("No such document!");
         }
@@ -82,37 +88,33 @@ const UserProfile = () => {
     const oldEmail = user.email;
     if (user) {
       if (oldEmail !== emailRef.current) {
-        
         updateEmail(user, emailRef.current).then(() => {
-            
-            const newUserDoc = doc(firestore, "users", emailRef.current);
-            const birthdate = { day: day, month: month, year: year };
+          const newUserDoc = doc(firestore, "users", emailRef.current);
+          const birthdate = { day: day, month: month, year: year };
   
-            setDoc(
-              newUserDoc,
-              {
-                email: emailRef.current,
-                fullname: fullnameRef.current,
-                birthdate: birthdate,
-                gender: gender,
-              },
-              { merge: true }
-            )
-              .then(() => {
-                getUpdatedUserDataFromFirestore(newUserDoc);
-
-                const oldUserDoc = doc(firestore, "users", oldEmail);
-                deleteDoc(oldUserDoc);
-                
-              })
-              .catch((error) => {
-                console.error("Error updating document: ", error);
-              });
+          setDoc(
+            newUserDoc,
+            {
+              email: emailRef.current,
+              fullname: fullnameRef.current,
+              phone: "+380" + phoneRef.current,
+              birthdate: birthdate,
+              gender: gender,
+            },
+            { merge: true }
+          )
+          .then(() => {
+            getUpdatedUserDataFromFirestore(newUserDoc);
   
-          }).catch((error) => {
-            console.log(error);
+            const oldUserDoc = doc(firestore, "users", oldEmail);
+            deleteDoc(oldUserDoc);
+          })
+          .catch((error) => {
+            console.error("Error updating document: ", error);
           });
-        
+        }).catch((error) => {
+          console.log(error);
+        });
       } else {
         updateProfile(user, {
           displayName: fullnameRef.current,
@@ -126,23 +128,71 @@ const UserProfile = () => {
             {
               email: emailRef.current,
               fullname: fullnameRef.current,
+              phone: "+380" + phoneRef.current,
               birthdate: birthdate,
               gender: gender,
             },
             { merge: true }
           )
-            .then(() => {
-              getUpdatedUserDataFromFirestore(userDoc);
-            })
-            .catch((error) => {
-              console.error("Error updating document: ", error);
-            });
+          .then(() => {
+            getUpdatedUserDataFromFirestore(userDoc);
+          })
+          .catch((error) => {
+            console.error("Error updating document: ", error);
+          });
         });
       }
+  
+      if (image) {
+        const storage = getStorage();
+        const storageRef = ref(storage, 'images/' + emailRef.current);
+  
+        fetch(image)
+          .then(res => res.blob())
+          .then(blob => {
+            uploadBytes(storageRef, blob).then(snapshot => {
+              getDownloadURL(snapshot.ref).then(url => {
+                const userDoc = doc(firestore, "users", emailRef.current);
+                setDoc(
+                  userDoc,
+                  {
+                    profileImage: url,
+                  },
+                  { merge: true }
+                );
+              });
+            });
+          });
+      }
+    }
+  
+    setIsEditing(false);
+  }, [fullnameRef, emailRef, day, month, year, gender, image]);
+  
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      delete result.canceled;
+      const response = await fetch(result.assets[0].uri);
+      const blob = await response.blob();
+      const storage = getStorage();
+      const storageRef = ref(storage, 'images/' + emailRef.current + '/profile.jpg');
+      const snapshot = await uploadBytes(storageRef, blob);
+      const url = await getDownloadURL(snapshot.ref);
+    
+      setImage(url);
+    
+      const userDoc = doc(firestore, "users", emailRef.current);
+      setDoc(userDoc, { profileImage: url }, { merge: true })
     }
     
-    setIsEditing(false);
-  }, [fullnameRef, emailRef, day, month, year, gender]);
+  };
   
   
   const getUpdatedUserDataFromFirestore = (userDoc) => {
@@ -168,6 +218,9 @@ const UserProfile = () => {
 
   const handleFullnameChange = useCallback((fullname) => {
     fullnameRef.current = fullname;
+  }, []);
+  const handlePhoneChange = useCallback((phone) => {
+    phoneRef.current = phone;
   }, []);
 
   const handleEmailChange = useCallback((email) => {
@@ -359,7 +412,7 @@ const UserProfile = () => {
       </TouchableWithoutFeedback>
     );
   };
-  const ContactsWidget = ({ widgetname, phone, email }) => {
+  const ContactsWidget = ({ widgetname}) => {
     return (
       <View style={styles.ContactsWidgetView}>
         <View style={styles.widgetInfoRow}>
@@ -373,7 +426,22 @@ const UserProfile = () => {
           </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Номер телефону"}</Text>
-          <Text style={styles.MainWidgetText}>{phone}</Text>
+          <View style = {styles.Phonenumber}>
+          <Text style={styles.EditedText}>{"+380"}</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.EditedText}
+              defaultValue={phoneRef.current}
+              keyboardType="numeric"
+              onChangeText={handlePhoneChange}
+              maxLength={9}
+            />
+          ) : (
+            <Text style={styles.EditedText}>
+              {phoneRef.current}
+            </Text>
+          )}
+          </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
           {isEditing ? (
@@ -422,12 +490,13 @@ const UserProfile = () => {
       <Logo name={"Профіль"} />
       <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
         <View style={styles.scrollView}>
-          <View style={styles.userIcon}>
-            <Text style={styles.userIconText}>{initials}</Text>
-          </View>
+        <View style={styles.userIcon} onTouchEnd={pickImage}>
+          {image ? ( <Image source={{ uri: image }} style={styles.userIcon} />) : 
+          <Text style={styles.userIconText}>{initials}</Text>}
+        </View>
           <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
           <ContactsWidget
-            widgetname={"Контакти "}
+            widgetname={"Контакти"}
             phone={"+380123456789"}
             email={emailRef.current}
           />
@@ -476,6 +545,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
   },
+  Phonenumber:{
+    flexDirection: "row",
+  },
   SignOutView: {
     marginTop: screenHeight * 0.02,
     padding: 10,
@@ -486,7 +558,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     overflow: "hidden",
-    justifyContent: "center",
     alignItems: "center",
   },
   SignOutText: {

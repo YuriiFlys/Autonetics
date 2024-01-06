@@ -29,6 +29,7 @@ export async function getUserName() {
 const LoginMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
+  const [userName, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -37,7 +38,9 @@ const LoginMenu = () => {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      getUserName().then((name) => setUserName(name));
       navigator.navigate("BottomMenu", { screen: "Home" });
+
     } catch (error) {
       console.error(error);
       let errorMessage = "";
@@ -77,6 +80,7 @@ const LoginMenu = () => {
         <Text style={styles.emailtext}>Email</Text>
         <TextInput
           style={styles.field}
+          autoCapitalize="none"
           onChangeText={setEmail}
           onSubmitEditing={() => passwordRef.current.focus()}
           blurOnSubmit={false}

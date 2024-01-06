@@ -21,7 +21,7 @@ const StartMenu = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return <View><Text>Loading...</Text></View>; // Ви можете замінити це на власний компонент завантаження
+    return <View><Text>Loading...</Text></View>; 
   }
 
   return (

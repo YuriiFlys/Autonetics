@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   mainWidgetView: {
-    height: screenWidth * 0.4,
+    flexDirection: "column",
+    height: screenWidth * 0.7,
     width: screenWidth * 0.9,
     position: "absolute",
     top: screenHeight * 0.2,
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
   widgetInfoRow: {
     flexDirection: "row",
     justifyContent: "space-around",
-    position: "absolute",
     top: "5%",
     left: 0,
     right: 0,
@@ -104,26 +104,27 @@ const styles = StyleSheet.create({
   widgetImageRow: {
     flexDirection: "row",
     justifyContent: "space-around",
-    top: "15%",
+    top: "5%",
     left: 0,
     right: 0,
     height: screenHeight * 0.25,
     width: screenWidth * 0.75,
   },
   widgetProductImage: {
-    width: "70%",
+    width: "50%",
     height: "50%",
-    objectFit: "contain",
+    resizeMode: "contain",
   },
 
   widgetProductBrandLogo: {
     width: "30%",
     height: "30%",
-    objectFit: "contain",
+    resizeMode: "contain",
   },
   widgetProductDescription: {
-    position: "absolute",
-    top: "0%",
+    left: screenHeight * 0.06,
+    right: 0,
+    bottom: screenHeight * 0.1,
     fontFamily: "PalanquinDark-Regular",
     fontSize: 18,
     color: "#404040",
