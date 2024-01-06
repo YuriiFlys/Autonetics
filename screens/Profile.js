@@ -65,19 +65,19 @@ const Promotions = () => {
         </View>
         <GrayLine />
         <ButtonMenu
-          image={require("../assets/Profile/User.png")}
+          image={require("../assets/Profile/user.svg")}
           name={"Особисті дані"}
           navig={() => navigator.navigate("UserProfile")}
         />
         <GrayLine />
         <ButtonMenu
-          image={require("../assets/Profile/History.png")}
+          image={require("../assets/Profile/history.svg")}
           name={"Історія"}
           navig={() => navigator.navigate("Cart", { screen: "Історія" })}
         />
         <GrayLine />
         <ButtonMenu
-          image={require("../assets/Profile/Help.png")}
+          image={require("../assets/Profile/help.svg")}
           name={"Допомога"}
           navig={() => console.log("Допомога")}
         />
