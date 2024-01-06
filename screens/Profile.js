@@ -17,7 +17,6 @@ import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
 import { onSnapshot } from "firebase/firestore";
 
-
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -29,7 +28,7 @@ function getInitials(name) {
 
 const Promotions = () => {
   const navigator = useNavigation();
-    const [userName, setUserName] = React.useState(" ");
+  const [userName, setUserName] = React.useState(" ");
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
@@ -44,16 +43,16 @@ const Promotions = () => {
   };
   useEffect(() => {
     const user = FIREBASE_AUTH.currentUser;
-    const userDoc = doc(FIREBASE_DB, 'users', user.email);
-  
+    const userDoc = doc(FIREBASE_DB, "users", user.email);
+
     const unsubscribe = onSnapshot(userDoc, (doc) => {
       const data = doc.data();
       setUserName(data.fullname);
     });
-  
+
     return unsubscribe;
   }, []);
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
@@ -160,6 +159,7 @@ const styles = StyleSheet.create({
   buttonArrow: {
     width: screenWidth * 0.05,
     height: screenWidth * 0.05,
+    resizeMode: "contain",
   },
 });
 export default Promotions;

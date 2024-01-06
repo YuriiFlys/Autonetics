@@ -84,7 +84,6 @@ const SalesScreen = () => {
         <TouchableOpacity
           onPress={() => {
             showAlert();
-            // navigator.goBack();
           }}
         >
           <Image

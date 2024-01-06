@@ -22,14 +22,20 @@ const Promotions = () => {
     return (
       <View style={styles.mainWidgetView}>
         <View style={styles.widgetInfoRow}>
-          <Text style={styles.widgetProductMainInfo}>{name}</Text>
+          <Text style={[styles.widgetProductMainInfo]}>{name}</Text>
           <Text style={styles.widgetProductMainInfo}>{price}</Text>
         </View>
         <View style={styles.widgetImageRow}>
-          <Image source={image} style={styles.widgetProductImage} />
-          <Image source={brand} style={styles.widgetProductBrandLogo} />
+          <View style={styles.widgetImageBox}>
+            <Image source={image} style={styles.widgetProductImage} />
+          </View>
+          <View style={[styles.widgetImageBox]}>
+            <Image source={brand} style={styles.widgetProductBrandLogo} />
+          </View>
         </View>
+        <View style={styles.widgetProductDescriptionContainer}>
           <Text style={styles.widgetProductDescription}>{description}</Text>
+        </View>
       </View>
     );
   };
@@ -47,59 +53,26 @@ const Promotions = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "#FFF",
-    position: "relative",
   },
-
-  labelText: {
-    position: "absolute",
-    top: screenHeight * 0.1,
-    fontFamily: FontFamily.CommissioneBold,
-    fontSize: 18,
-    color: "#404040",
-  },
-
-  logoIcon: {
-    alignSelf: "center",
-    height: screenWidth * 0.1299,
-    width: screenWidth * 0.1299,
-    position: "absolute",
-    top: screenHeight * 0.0446,
-    left: screenWidth * 0.04,
-  },
-
-  topRectangle: {
-    position: "absolute",
-    height: screenHeight * 0.15,
-    width: screenWidth,
-    top: 0,
-    backgroundColor: "#fff",
-    alignItems: "center",
-  },
-
   mainWidgetView: {
     flexDirection: "column",
     width: screenWidth * 0.9,
-    position: "absolute",
-    top: screenHeight * 0.2,
-    left: screenWidth * 0.05,
     backgroundColor: "lightgrey",
     borderRadius: 20,
     overflow: "hidden",
+    padding: 20,
+    alignItems: "center",
   },
-
   widgetInfoRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    top: "5%",
-    left: 0,
-    right: 0,
+    justifyContent: "space-between",
+    width: "90%",
   },
   widgetProductMainInfo: {
     fontFamily: FontFamily.CommissioneBold,
@@ -108,33 +81,30 @@ const styles = StyleSheet.create({
   },
   widgetImageRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    // top: "5%",
-    marginTop: 20,
-    left: 0,
-    right: 0,
-    height: screenHeight * 0.2,
-    width: screenWidth * 0.75,
+    height: screenHeight * 0.15,
+    justifyContent: "space-between",
+  },
+  widgetImageBox: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   widgetProductImage: {
-    width: "70%",
-    height: "70%",
+    flex: 1,
+    width: "150%",
     resizeMode: "contain",
   },
-
   widgetProductBrandLogo: {
-    top: "5%",
     width: "30%",
     height: "30%",
-    resizeMode: "contain",
   },
   widgetProductDescription: {
-    left: screenHeight * 0.05,
-    right: 0,
-    // bottom: screenHeight * 0.05,
     fontFamily: FontFamily.Commissione,
-    fontSize: 18,
+    fontSize: 16,
     color: "#404040",
+  },
+  widgetProductDescriptionContainer: {
+    width: "90%",
   },
 });
 export default Promotions;
