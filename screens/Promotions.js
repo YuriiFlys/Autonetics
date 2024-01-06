@@ -10,6 +10,7 @@ import {
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { SafeAreaFrameContext } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
@@ -21,14 +22,20 @@ const Promotions = () => {
     return (
       <View style={styles.mainWidgetView}>
         <View style={styles.widgetInfoRow}>
-          <Text style={styles.widgetProductMainInfo}>{name}</Text>
+          <Text style={[styles.widgetProductMainInfo]}>{name}</Text>
           <Text style={styles.widgetProductMainInfo}>{price}</Text>
         </View>
         <View style={styles.widgetImageRow}>
-          <Image source={image} style={styles.widgetProductImage} />
-          <Image source={brand} style={styles.widgetProductBrandLogo} />
+          <View style={styles.widgetImageBox}>
+            <Image source={image} style={styles.widgetProductImage} />
+          </View>
+          <View style={[styles.widgetImageBox]}>
+            <Image source={brand} style={styles.widgetProductBrandLogo} />
+          </View>
         </View>
-        <Text style={styles.widgetProductDescription}>{description}</Text>
+        <View style={styles.widgetProductDescriptionContainer}>
+          <Text style={styles.widgetProductDescription}>{description}</Text>
+        </View>
       </View>
     );
   };
@@ -52,82 +59,54 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "#FFF",
-    position: "relative",
-  },
-  labelText: {
-    position: "absolute",
-    top: screenHeight * 0.1,
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#404040",
-  },
-
-  logoIcon: {
-    alignSelf: "center",
-    height: screenWidth * 0.1299,
-    width: screenWidth * 0.1299,
-    position: "absolute",
-    top: screenHeight * 0.0446,
-    left: screenWidth * 0.04,
-  },
-  topRectangle: {
-    position: "absolute",
-    height: screenHeight * 0.15,
-    width: screenWidth,
-    top: 0,
-    backgroundColor: "#fff",
-    alignItems: "center",
   },
   mainWidgetView: {
     flexDirection: "column",
+    flexDirection: "column",
     height: screenWidth * 0.7,
     width: screenWidth * 0.9,
-    position: "absolute",
-    top: screenHeight * 0.2,
-    left: screenWidth * 0.05,
     backgroundColor: "lightgrey",
     borderRadius: 20,
     overflow: "hidden",
+    padding: 20,
+    alignItems: "center",
   },
   widgetInfoRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    top: "5%",
-    left: 0,
-    right: 0,
+    justifyContent: "space-between",
+    width: "90%",
   },
   widgetProductMainInfo: {
-    fontFamily: "PalanquinDark-Regular",
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: 24,
     color: "#404040",
   },
   widgetImageRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    top: "5%",
-    left: 0,
-    right: 0,
-    height: screenHeight * 0.25,
-    width: screenWidth * 0.75,
+    height: screenHeight * 0.15,
+    justifyContent: "space-between",
+  },
+  widgetImageBox: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   widgetProductImage: {
-    width: "50%",
-    height: "50%",
+    flex: 1,
+    width: "150%",
     resizeMode: "contain",
   },
-
   widgetProductBrandLogo: {
     width: "30%",
     height: "30%",
-    resizeMode: "contain",
   },
   widgetProductDescription: {
-    left: screenHeight * 0.06,
-    right: 0,
-    bottom: screenHeight * 0.1,
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
+    fontFamily: FontFamily.Commissione,
+    fontSize: 16,
     color: "#404040",
+  },
+  widgetProductDescriptionContainer: {
+    width: "90%",
   },
 });
 export default Promotions;

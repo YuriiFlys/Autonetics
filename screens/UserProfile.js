@@ -10,12 +10,13 @@ import {
   Button,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
-import { updateProfile, updateEmail} from "firebase/auth";
+import { updateProfile, updateEmail } from "firebase/auth";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
@@ -23,7 +24,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRef } from "react";
 import { format } from "date-fns";
-import { TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+} from "react-native";
 import Logo from "../components/Logo";
 
 const screenWidth = Dimensions.get("window").width;
@@ -47,7 +52,6 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const auth = FIREBASE_AUTH;
   const firestore = FIREBASE_DB;
-  
 
   function getInitials(fullName) {
     const names = fullName.split(" ");
@@ -122,7 +126,7 @@ const UserProfile = () => {
         }).then(() => {
           const userDoc = doc(firestore, "users", emailRef.current);
           const birthdate = { day: day, month: month, year: year };
-  
+
           setDoc(
             userDoc,
             {
@@ -300,11 +304,11 @@ const UserProfile = () => {
               />
               <Text style={styles.widgetProfileName}>{widgetname}</Text>
               <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
-              <Image
-                style={styles.editIcon}
-                contentFit="contain"
-                source={require("../assets/Profile/Settings.svg")}
-              />
+                <Image
+                  style={styles.editIcon}
+                  contentFit="contain"
+                  source={require("../assets/Profile/Settings.svg")}
+                />
               </TouchableOpacity>
             </View>
             <View style={styles.sepLine}></View>
@@ -316,9 +320,7 @@ const UserProfile = () => {
                 onChangeText={handleFullnameChange}
               />
             ) : (
-              <Text style={styles.EditedText}>
-                {fullnameRef.current}
-              </Text>
+              <Text style={styles.EditedText}>{fullnameRef.current}</Text>
             )}
             <View style={styles.sepLine}></View>
             <Text style={styles.MainWidgetText}>{"Дата народження"}</Text>
@@ -381,19 +383,18 @@ const UserProfile = () => {
             )}
             <View style={styles.sepLine}></View>
             <Text style={styles.MainWidgetText}>{"Стать "}</Text>
-            
+
             {isEditing ? (
               <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Text style={[styles.EditedText]}>{gender}</Text>
               </TouchableOpacity>
             ) : (
               <View style={{ flexDirection: "column" }}>
-              <Text style={[styles.EditedText]}>{gender}</Text>
+                <Text style={[styles.EditedText]}>{gender}</Text>
               </View>
             )}
-          {isEditing && (
-            <View style={styles.sepLine}></View>)}
-          {isEditing && (
+            {isEditing && <View style={styles.sepLine}></View>}
+            {isEditing && (
               <TouchableOpacity styles={styles.saveIcon} onPress={handleSave}>
                 <Image
                   style={styles.saveIcon}
@@ -402,11 +403,11 @@ const UserProfile = () => {
                 />
               </TouchableOpacity>
             )}
-          <GenderModal
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-            setGender={setGender}
-          />
+            <GenderModal
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+              setGender={setGender}
+            />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -445,16 +446,14 @@ const UserProfile = () => {
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
           {isEditing ? (
-          <TextInput
-            style={styles.EditedText}
-            defaultValue={emailRef.current}
-            onChangeText={handleEmailChange}
-          />
-        ) : (
-          <Text style={styles.EditedText}>
-            {emailRef.current}
-          </Text>
-        )}
+            <TextInput
+              style={styles.EditedText}
+              defaultValue={emailRef.current}
+              onChangeText={handleEmailChange}
+            />
+          ) : (
+            <Text style={styles.EditedText}>{emailRef.current}</Text>
+          )}
         </View>
       </View>
     );
@@ -465,15 +464,21 @@ const UserProfile = () => {
       auth.signOut().then(() => {
         navigator.navigate("StartMenu");
       });
-    }
+    };
+    const confirmation = () => {
+      Alert.alert("Вихід", "Чи справді ви хочете вийти?", [
+        {
+          text: "Ні",
+          onPress: () => console.log("Відміна"),
+          style: "cancel",
+        },
+        { text: "Так", onPress: () => handleSignOut() },
+      ]);
+    };
     return (
-        <TouchableOpacity
-          style={styles.SignOutView}
-          onPress={handleSignOut}
-        >
-          <Text style={styles.SignOutText}>Вийти з аккаунту</Text>
-        </TouchableOpacity>
-      
+      <TouchableOpacity style={styles.SignOutView} onPress={confirmation}>
+        <Text style={styles.SignOutText}>Вийти з аккаунту</Text>
+      </TouchableOpacity>
     );
   };
 
@@ -612,7 +617,7 @@ const styles = StyleSheet.create({
     color: Color.black,
     textAlign: "left",
   },
-  EditedText:{
+  EditedText: {
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_l,
     color: Color.black,

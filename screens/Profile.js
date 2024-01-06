@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  useEffect,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -13,7 +14,6 @@ import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
 import { getUserName } from "./LoginMenu";
-
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -40,8 +40,18 @@ const Promotions = () => {
       </TouchableOpacity>
     );
   };
- 
-  
+  useEffect(() => {
+    const user = FIREBASE_AUTH.currentUser;
+    const userDoc = doc(FIREBASE_DB, "users", user.email);
+
+    const unsubscribe = onSnapshot(userDoc, (doc) => {
+      const data = doc.data();
+      setUserName(data.fullname);
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
@@ -54,19 +64,19 @@ const Promotions = () => {
         </View>
         <GrayLine />
         <ButtonMenu
-          image={require("../assets/Profile/User.png")}
+          image={require("../assets/Profile/user.svg")}
           name={"Особисті дані"}
           navig={() => navigator.navigate("UserProfile")}
         />
         <GrayLine />
         <ButtonMenu
-          image={require("../assets/Profile/History.png")}
+          image={require("../assets/Profile/history.svg")}
           name={"Історія"}
           navig={() => navigator.navigate("Cart", { screen: "Історія" })}
         />
         <GrayLine />
         <ButtonMenu
-          image={require("../assets/Profile/Help.png")}
+          image={require("../assets/Profile/help.svg")}
           name={"Допомога"}
           navig={() => console.log("Допомога")}
         />
@@ -148,6 +158,7 @@ const styles = StyleSheet.create({
   buttonArrow: {
     width: screenWidth * 0.05,
     height: screenWidth * 0.05,
+    resizeMode: "contain",
   },
 });
 export default Promotions;
