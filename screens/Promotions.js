@@ -10,6 +10,7 @@ import {
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { SafeAreaFrameContext } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
@@ -28,7 +29,7 @@ const Promotions = () => {
           <Image source={image} style={styles.widgetProductImage} />
           <Image source={brand} style={styles.widgetProductBrandLogo} />
         </View>
-        <Text style={styles.widgetProductDescription}>{description}</Text>
+          <Text style={styles.widgetProductDescription}>{description}</Text>
       </View>
     );
   };
@@ -46,6 +47,7 @@ const Promotions = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -54,10 +56,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     position: "relative",
   },
+
   labelText: {
     position: "absolute",
     top: screenHeight * 0.1,
-    fontFamily: "PalanquinDark-Regular",
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: 18,
     color: "#404040",
   },
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
     top: screenHeight * 0.0446,
     left: screenWidth * 0.04,
   },
+
   topRectangle: {
     position: "absolute",
     height: screenHeight * 0.15,
@@ -78,8 +82,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
   },
+
   mainWidgetView: {
-    height: screenWidth * 0.4,
+    flexDirection: "column",
     width: screenWidth * 0.9,
     position: "absolute",
     top: screenHeight * 0.2,
@@ -88,43 +93,46 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
   },
+
   widgetInfoRow: {
     flexDirection: "row",
     justifyContent: "space-around",
-    position: "absolute",
     top: "5%",
     left: 0,
     right: 0,
   },
   widgetProductMainInfo: {
-    fontFamily: "PalanquinDark-Regular",
+    fontFamily: FontFamily.CommissioneBold,
     fontSize: 24,
     color: "#404040",
   },
   widgetImageRow: {
     flexDirection: "row",
     justifyContent: "space-around",
-    top: "15%",
+    // top: "5%",
+    marginTop: 20,
     left: 0,
     right: 0,
-    height: screenHeight * 0.25,
+    height: screenHeight * 0.2,
     width: screenWidth * 0.75,
   },
   widgetProductImage: {
     width: "70%",
-    height: "50%",
-    objectFit: "contain",
+    height: "70%",
+    resizeMode: "contain",
   },
 
   widgetProductBrandLogo: {
+    top: "5%",
     width: "30%",
     height: "30%",
-    objectFit: "contain",
+    resizeMode: "contain",
   },
   widgetProductDescription: {
-    position: "absolute",
-    top: "0%",
-    fontFamily: "PalanquinDark-Regular",
+    left: screenHeight * 0.05,
+    right: 0,
+    // bottom: screenHeight * 0.05,
+    fontFamily: FontFamily.Commissione,
     fontSize: 18,
     color: "#404040",
   },
