@@ -49,7 +49,7 @@ export default function BottomMenu() {
             iconName = require('../assets/user.png');
           }
           
-          return <Image source={iconName} style={{width: size, height: size}} />;
+          return <Image source={iconName} style={{width: size, height: size, resizeMode: "contain"}} />;
         },
       })}
     >

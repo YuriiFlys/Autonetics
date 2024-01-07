@@ -50,6 +50,7 @@ const UserProfile = () => {
   const yearRef = useRef();
   const emailRef = useRef();
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingContacts, setIsEditingContacts] = useState(false);
   const auth = FIREBASE_AUTH;
   const firestore = FIREBASE_DB;
 
@@ -75,6 +76,7 @@ const UserProfile = () => {
           setYear(birthdate.year);
           setGender(userData.gender);
           setImage(userData.profileImage);
+          handleEveryImageChange(userData.profileImage);
         } else {
           console.log("No such document!");
         }
@@ -147,6 +149,90 @@ const UserProfile = () => {
         });
       }
   
+      
+    }
+    setIsEditing(false);
+  }, [fullnameRef, emailRef, day, month, year, gender, image]);
+  
+  const handleContactSave = useCallback(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = doc(firestore, "users", emailRef.current);
+      setDoc(
+        userDoc,
+        {
+          phone: "+380" + phoneRef.current,
+          email: emailRef.current,
+        },
+        { merge: true }
+      )
+      .then(() => {
+        getUpdatedUserDataFromFirestore(userDoc);
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+    }
+    setIsEditingContacts(false);
+  }, [phoneRef]);
+  
+  const handleMainSave = useCallback(() => {
+    const user = auth.currentUser;
+    const oldEmail = user.email;
+    if (user) {
+      if (oldEmail !== emailRef.current) {
+        updateEmail(user, emailRef.current).then(() => {
+          const newUserDoc = doc(firestore, "users", emailRef.current);
+          const birthdate = { day: day, month: month, year: year };
+  
+          setDoc(
+            newUserDoc,
+            {
+              email: emailRef.current,
+              fullname: fullnameRef.current,
+              phone: "+380" + phoneRef.current,
+              birthdate: birthdate,
+              gender: gender,
+            },
+            { merge: true }
+          )
+          .then(() => {
+            getUpdatedUserDataFromFirestore(newUserDoc);
+  
+            const oldUserDoc = doc(firestore, "users", oldEmail);
+            deleteDoc(oldUserDoc);
+          })
+          .catch((error) => {
+            console.error("Error updating document: ", error);
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        updateProfile(user, {
+          displayName: fullnameRef.current,
+          email: emailRef.current,
+        }).then(() => {
+          const userDoc = doc(firestore, "users", emailRef.current);
+          const birthdate = { day: day, month: month, year: year };
+
+          setDoc(
+            userDoc,
+            {
+              fullname: fullnameRef.current,
+              birthdate: birthdate,
+              gender: gender,
+            },
+            { merge: true }
+          )
+          .then(() => {
+            getUpdatedUserDataFromFirestore(userDoc);
+          })
+          .catch((error) => {
+            console.error("Error updating document: ", error);
+          });
+        });
+      }
       if (image) {
         const storage = getStorage();
         const storageRef = ref(storage, 'images/' + emailRef.current);
@@ -169,16 +255,13 @@ const UserProfile = () => {
           });
       }
     }
-  
     setIsEditing(false);
-  }, [fullnameRef, emailRef, day, month, year, gender, image]);
-  
+  }, [emailRef,fullnameRef,phoneRef, day, month, gender, image]);
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
     });
 
     if (!result.canceled) {
@@ -210,6 +293,7 @@ const UserProfile = () => {
         setMonth(birthdate.month);
         setYear(birthdate.year);
         setGender(userData.gender);
+        setImage(userData.profileImage);
       } else {
         console.log("No such document!");
       }
@@ -219,6 +303,19 @@ const UserProfile = () => {
   const handleEdit = () => {
     setIsEditing(true);
   };
+  const handleContactEdit = () => {
+    setIsEditingContacts(true);
+  }
+
+  const handleEveryImageChange = useCallback((image) => {
+    if (image) {
+      const storage = getStorage();
+      const storageRef = ref(storage, 'images/' + emailRef.current + '/profile.jpg');
+      getDownloadURL(storageRef).then(url => {
+        setImage(url);
+      });
+    }
+  }, [image]);
 
   const handleFullnameChange = useCallback((fullname) => {
     fullnameRef.current = fullname;
@@ -395,7 +492,7 @@ const UserProfile = () => {
             )}
             {isEditing && <View style={styles.sepLine}></View>}
             {isEditing && (
-              <TouchableOpacity styles={styles.saveIcon} onPress={handleSave}>
+              <TouchableOpacity styles={styles.saveIcon} onPress={handleMainSave}>
                 <Image
                   style={styles.saveIcon}
                   contentFit="contain"
@@ -424,12 +521,19 @@ const UserProfile = () => {
               source={require("../assets/telephone.png")}
             />
             <Text style={styles.widgetProfileName}>{widgetname}</Text>
+            <TouchableOpacity style={styles.editIcon} onPress={handleContactEdit}>
+                <Image
+                  style={styles.editIcon}
+                  contentFit="contain"
+                  source={require("../assets/Profile/Settings.svg")}
+                />
+              </TouchableOpacity>
           </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Номер телефону"}</Text>
           <View style = {styles.Phonenumber}>
           <Text style={styles.EditedText}>{"+380"}</Text>
-          {isEditing ? (
+          {isEditingContacts ? (
             <TextInput
               style={styles.EditedText}
               defaultValue={phoneRef.current}
@@ -445,7 +549,7 @@ const UserProfile = () => {
           </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
-          {isEditing ? (
+          {isEditingContacts ? (
             <TextInput
               style={styles.EditedText}
               defaultValue={emailRef.current}
@@ -455,6 +559,16 @@ const UserProfile = () => {
             <Text style={styles.EditedText}>{emailRef.current}</Text>
           )}
         </View>
+        {isEditingContacts && <View style={styles.sepLine}></View>}
+            {isEditingContacts && (
+              <TouchableOpacity styles={styles.saveIcon} onPress={handleContactSave}>
+                <Image
+                  style={styles.saveIcon}
+                  contentFit="contain"
+                  source={require("../assets/tick.svg")}
+                />
+              </TouchableOpacity>
+            )}
       </View>
     );
   };
@@ -496,7 +610,7 @@ const UserProfile = () => {
       <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
         <View style={styles.scrollView}>
         <View style={styles.userIcon} onTouchEnd={pickImage}>
-          {image ? ( <Image source={{ uri: image }} style={styles.userIcon} />) : 
+          {image ? ( <Image source={{ uri: image }} style={styles.userIconImage} />) : 
           <Text style={styles.userIconText}>{initials}</Text>}
         </View>
           <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
@@ -531,6 +645,13 @@ const styles = StyleSheet.create({
     borderColor: Color.colorLightGray,
     justifyContent: "center",
     alignItems: "center",
+  },
+  userIconImage: {
+    width: screenWidth * 0.35,
+    height: screenWidth * 0.35,
+    borderRadius: 1000,
+    borderWidth: 2,
+    borderColor: Color.colorLightGray,
   },
   userIconText: {
     textAlign: "center",
@@ -609,7 +730,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_xl,
     color: Color.black,
     textAlign: "left",
-    marginLeft: 10,
   },
   MainWidgetText: {
     fontFamily: FontFamily.CommissioneRegular,
@@ -625,11 +745,11 @@ const styles = StyleSheet.create({
   },
   mainWidgetLabel: {
     flexDirection: "row",
+    justifyContent:"space-between",
   },
   editIcon: {
     height: screenWidth * 0.09,
     width: screenWidth * 0.09,
-    left: screenWidth * 0.09,
   },
   saveIcon: {
     height: screenWidth * 0.09,

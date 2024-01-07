@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "white",
     alignSelf: "center",
-    top: 0,
+    top: screenHeight * -0.1,
   },
   scanningButton: {
     backgroundColor: "red",

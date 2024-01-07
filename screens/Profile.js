@@ -8,11 +8,14 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Image } from "expo-image";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { Color, FontFamily, FontSize} from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { FIREBASE_AUTH, FIREBASE_DB} from "../FirebaseConfig";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
-import { getUserName } from "./LoginMenu";
+import { doc, onSnapshot } from "firebase/firestore";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -23,10 +26,18 @@ function getInitials(name) {
   return initials;
 }
 
+
+
+
+
 const Promotions = () => {
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
-  getUserName().then((name) => setUserName(name));
+  const emailRef = React.useRef("");
+  const [profileImage, setImage] = React.useState(null);
+  const auth = FIREBASE_AUTH;
+  const user = auth.currentUser;
+  emailRef.current = user.email;
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
@@ -39,15 +50,31 @@ const Promotions = () => {
       </TouchableOpacity>
     );
   };
+  async function getImageFromStorage() {
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${emailRef.current}/profile.jpg`);
+    const url = await getDownloadURL(storageRef);
+    return url;
+  }
+  React.useEffect(() => {
+    const user = FIREBASE_AUTH.currentUser;
+    const userDoc = doc(FIREBASE_DB, 'users', user.email);
+    const unsubscribe = onSnapshot(userDoc, (doc) => {
+      const data = doc.data();
+      setUserName(data.fullname);
+      setImage(data.profileImage);
+    });
+      return unsubscribe;
+  }, []);
   
-
   return (
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
         <View style={styles.userData}>
           <View style={styles.userIcon}>
-            <Text style={styles.userIconText}>{getInitials(userName)}</Text>
+            {profileImage ? ( <Image source={{ uri: profileImage }} style={styles.userIconImage} />) : 
+            <Text style={styles.userIconText}>{getInitials(userName)}</Text>}
           </View>
           <Text style={styles.userName}>{userName}</Text>
         </View>
@@ -111,6 +138,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  userIconImage: {
+    width: screenWidth * 0.25,
+    height: screenWidth * 0.25,
+    borderRadius: 1000,
+    borderWidth: 2,
+    borderColor: Color.colorLightGray,
+  },
   userIconText: {
     textAlign: "center",
     fontSize: 30,
@@ -147,7 +181,7 @@ const styles = StyleSheet.create({
   buttonArrow: {
     width: screenWidth * 0.05,
     height: screenWidth * 0.05,
-    resizeMode: "contain",
+    contentFit: "contain",
   },
 });
 export default Promotions;
