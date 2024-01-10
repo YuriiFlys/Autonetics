@@ -109,7 +109,6 @@ const SalesScreen = () => {
                 {
                   text: "Так",
                   onPress: () => {
-                    console.log;
                     const updatedData = prevData.filter(
                       (item) => item.id !== id
                     );
