@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Linking,
   Modal,
+  Button,
 } from "react-native";
 // import Modal from "react-native-modal";
 import { Image } from "expo-image";
@@ -32,6 +33,7 @@ const SalesScreen = () => {
     setSelectedProduct(productName);
     setModalVisible(!isModalVisible);
   };
+  const [count, setCount] = useState(0);
   data = [
     {
       name: "Моршинська1",
@@ -212,18 +214,33 @@ const SalesScreen = () => {
                         style={styles.modal.productimage}
                       />
                       <View style={styles.modal.productinfocontainer}>
+                        <View style={[styles.modal.productnamecontainer]}>
+                          <Text>{selectedProduct.name}</Text>
+                          <Text>{selectedProduct.price}$</Text>
+                        </View>
                         <View
                           style={[
                             styles.modal.productnamecontainer,
-                            { backgroundColor: "red" },
+                            { flexDirection: "row", justifyContent: "center" },
                           ]}
                         >
-                          <Text>{selectedProduct.name}</Text>
-                          <Text>asdsa</Text>
-                        </View>
-                        <View style={styles.modal.productnamecontainer}>
-                          <Text>asdsa</Text>
-                          <Text>asdsa</Text>
+                          <TouchableOpacity
+                            style={styles.modal.button}
+                            onPress={() => setCount(count - 1)}
+                          >
+                            <Text style={styles.modal.buttonTextPlusMinus}>
+                              -
+                            </Text>
+                          </TouchableOpacity>
+                          <Text style={styles.modal.countText}>{count}</Text>
+                          <TouchableOpacity
+                            style={styles.modal.button}
+                            onPress={() => setCount(count + 1)}
+                          >
+                            <Text style={styles.modal.buttonTextPlusMinus}>
+                              +
+                            </Text>
+                          </TouchableOpacity>
                         </View>
                       </View>
                       <TouchableOpacity onPress={() => toggleModal("")}>
@@ -458,10 +475,28 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-around",
+      width: "100%",
     },
     productnamecontainer: {
       flexDirection: "column",
       justifyContent: "space-around",
+      padding: 10,
+      paddingLeft: 20,
+      width: "50%",
+    },
+    button: {
+      justifyContent: "center",
+      alignItems: "center",
+      width: 20,
+      height: 20,
+      backgroundColor: Color.colorLightGray,
+      borderRadius: 25,
+    },
+    buttonTextPlusMinus: {},
+    countText: {
+      fontSize: FontSize.size_xl,
+      marginLeft: 10,
+      marginRight: 10,
     },
   },
 });
