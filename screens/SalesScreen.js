@@ -12,7 +12,6 @@ import {
   Modal,
   Button,
 } from "react-native";
-// import Modal from "react-native-modal";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { BarCodeScanner } from "expo-barcode-scanner";
@@ -25,47 +24,109 @@ const screenHeight = Dimensions.get("window").height;
 
 const SalesScreen = () => {
   const navigator = useNavigation();
-  // спливаюче вікно
+  // Спливаюче вікно
   const bottomSheetRef = React.useRef();
+  // модальне вікно
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState({});
   const toggleModal = (productName) => {
     setSelectedProduct(productName);
     setModalVisible(!isModalVisible);
   };
-  const [count, setCount] = useState(0);
-  data = [
+
+  // список
+  list = [
     {
+      id: 1,
       name: "Моршинська1",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
     },
     {
+      id: 2,
       name: "Моршинська2",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
     },
     {
+      id: 3,
       name: "Моршинська3",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
     },
     {
+      id: 4,
       name: "Моршинська4",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
     },
     {
+      id: 5,
       name: "Моршинська5",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
     },
     {
+      id: 6,
       name: "Моршинська6",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
     },
   ];
+  const [data, setData] = useState(list);
+  const handleIncrement = (id) => {
+    setData((prevData) => {
+      const updatedData = prevData.map((item) =>
+        item.id === id ? { ...item, number: item.number + 1 } : item
+      );
+      setSelectedProduct(updatedData.find((item) => item.id === id));
+      return updatedData;
+    });
+  };
+
+  const handleDecrement = (id) => {
+    setData((prevData) => {
+      const updatedData = prevData.map((item) => {
+        if (item.id === id) {
+          if (item.number > 1) {
+            return { ...item, number: item.number - 1 };
+          } else {
+            Alert.alert(
+              "Видалення товару",
+              "Ви впевнені, що хочете видалити товар?",
+              [
+                {
+                  text: "Ні",
+                  onPress: () => console.log("Скасування видалення товару"),
+                  style: "cancel",
+                },
+                {
+                  text: "Так",
+                  onPress: () => {
+                    console.log;
+                    const updatedData = prevData.filter(
+                      (item) => item.id !== id
+                    );
+                    setData(updatedData);
+                    toggleModal("");
+                  },
+                },
+              ]
+            );
+          }
+        }
+        return item;
+      });
+      setSelectedProduct(updatedData.find((item) => item.id === id));
+      return updatedData;
+    });
+  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -77,16 +138,22 @@ const SalesScreen = () => {
         <Text style={styles.shopName}>{item.name}</Text>
         <Text style={styles.street}>${item.price}</Text>
       </View>
-      <Image
-        style={{
-          contentFit: "contain",
-          height: screenHeight * 0.03,
-          width: screenHeight * 0.03,
-        }}
-        source={require("../assets/Profile/help.svg")}
-      />
+      <View style={styles.counterContainer}>
+        <TouchableOpacity onPress={() => handleDecrement(item.id)}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>-</Text>
+          </View>
+        </TouchableOpacity>
+        <Text style={styles.number}>{item.number}</Text>
+        <TouchableOpacity onPress={() => handleIncrement(item.id)}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>+</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
+  // Вихід
   const showAlert = () => {
     Alert.alert("Вихід", "Чи справді ви хочете вийти?", [
       {
@@ -97,6 +164,8 @@ const SalesScreen = () => {
       { text: "Так", onPress: () => navigator.goBack() },
     ]);
   };
+
+  //Камера
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(true);
   const [isScanning, setIsScanning] = useState(false);
@@ -198,13 +267,17 @@ const SalesScreen = () => {
             <View style={styles.bottomsheet_main_container}>
               <GrayLine />
               <View style={{ height: screenHeight * 0.5 }}>
-                <FlatList data={data} renderItem={renderItem} />
+                <FlatList
+                  data={data}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                />
                 <Modal
                   animationType="slide"
                   transparent={true}
                   visible={isModalVisible}
                   onRequestClose={() => {
-                    setModalVisible(false);
+                    toggleModal("");
                   }}
                 >
                   <View style={styles.modal.modalbackground}>
@@ -214,7 +287,7 @@ const SalesScreen = () => {
                         style={styles.modal.productimage}
                       />
                       <View style={styles.modal.productinfocontainer}>
-                        <View style={[styles.modal.productnamecontainer]}>
+                        <View style={styles.modal.productnamecontainer}>
                           <Text>{selectedProduct.name}</Text>
                           <Text>{selectedProduct.price}$</Text>
                         </View>
@@ -226,16 +299,18 @@ const SalesScreen = () => {
                         >
                           <TouchableOpacity
                             style={styles.modal.button}
-                            onPress={() => setCount(count - 1)}
+                            onPress={() => handleDecrement(selectedProduct.id)}
                           >
                             <Text style={styles.modal.buttonTextPlusMinus}>
                               -
                             </Text>
                           </TouchableOpacity>
-                          <Text style={styles.modal.countText}>{count}</Text>
+                          <Text style={styles.modal.countText}>
+                            {selectedProduct.number}
+                          </Text>
                           <TouchableOpacity
                             style={styles.modal.button}
-                            onPress={() => setCount(count + 1)}
+                            onPress={() => handleIncrement(selectedProduct.id)}
                           >
                             <Text style={styles.modal.buttonTextPlusMinus}>
                               +
