@@ -181,11 +181,6 @@ const styles = StyleSheet.create({
   bottomsheetcontainer: {
     alignItems: "center",
   },
-  textCartContainer: {
-    width: screenWidth * 0.7,
-    flexDirection: "row",
-    justifyContent: "center",
-  },
   bottomsheet_main_container: {
     marginTop: screenHeight * 0.045,
     alignItems: "center",
