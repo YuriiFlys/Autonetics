@@ -9,6 +9,7 @@ import {
   Alert,
   SafeAreaView,
   Linking,
+  Modal,
 } from "react-native";
 // import Modal from "react-native-modal";
 import { Image } from "expo-image";
@@ -25,6 +26,12 @@ const SalesScreen = () => {
   const navigator = useNavigation();
   // спливаюче вікно
   const bottomSheetRef = React.useRef();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const toggleModal = (productName) => {
+    setSelectedProduct(productName);
+    setModalVisible(!isModalVisible);
+  };
   data = [
     {
       name: "Моршинська1",
@@ -61,10 +68,7 @@ const SalesScreen = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.shopelement}
-      onPress={() => {
-        console.log(item.name);
-        navigator.navigate("SalesScreen", { shopName: item.name });
-      }}
+      onPress={() => toggleModal(item)}
     >
       <Image source={item.imageSource} style={styles.imageSource} />
       <View>
@@ -193,6 +197,41 @@ const SalesScreen = () => {
               <GrayLine />
               <View style={{ height: screenHeight * 0.5 }}>
                 <FlatList data={data} renderItem={renderItem} />
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={isModalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(false);
+                  }}
+                >
+                  <View style={styles.modal.modalbackground}>
+                    <View style={styles.modal.modalcontainer}>
+                      <Image
+                        source={selectedProduct.imageSource}
+                        style={styles.modal.productimage}
+                      />
+                      <View style={styles.modal.productinfocontainer}>
+                        <View
+                          style={[
+                            styles.modal.productnamecontainer,
+                            { backgroundColor: "red" },
+                          ]}
+                        >
+                          <Text>{selectedProduct.name}</Text>
+                          <Text>asdsa</Text>
+                        </View>
+                        <View style={styles.modal.productnamecontainer}>
+                          <Text>asdsa</Text>
+                          <Text>asdsa</Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity onPress={() => toggleModal("")}>
+                        <Text>Close Modal</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
               </View>
               <GrayLine />
               <View style={styles.sumContainer}>
@@ -292,7 +331,7 @@ const styles = StyleSheet.create({
   paybuttonText: {
     fontSize: 18,
     fontFamily: FontFamily.CommissioneBold,
-    color: Color.colorBlack,
+    color: Color.colorWhite,
   },
 
   container_c: {
@@ -316,48 +355,6 @@ const styles = StyleSheet.create({
   },
   scanningButton: {
     backgroundColor: "red",
-  },
-
-  labelText: {
-    position: "absolute",
-    top: screenHeight * 0.01,
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#404040",
-  },
-  logoIcon: {
-    alignSelf: "center",
-    height: screenWidth * 0.13,
-    width: screenWidth * 0.13,
-    position: "absolute",
-    top: screenHeight * 0,
-    left: screenWidth * 0.04,
-  },
-  topRectangle: {
-    position: "absolute",
-    height: screenHeight * 0.15,
-    width: screenWidth,
-    top: 0,
-    backgroundColor: "#fff",
-
-    alignItems: "center",
-  },
-  bottomRectangle: {
-    position: "absolute",
-    height: screenHeight * 0.08,
-    width: screenWidth,
-    bottom: 0,
-    backgroundColor: "#fff",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderTopColor: "#404040",
-    borderTopWidth: 2,
-  },
-  icon: {
-    width: screenWidth * 0.1,
-    aspectRatio: 1,
-    contentFit: "contain",
   },
   frame: {
     position: "absolute",
@@ -428,6 +425,44 @@ const styles = StyleSheet.create({
     height: screenWidth * 0.12,
     borderRadius: (screenWidth * 0.12) / 2,
     backgroundColor: "white",
+  },
+  buttonText: {
+    fontSize: 20,
+    color: "blue",
+    textDecorationLine: "underline",
+  },
+  modal: {
+    modalbackground: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(255, 255, 255, 0.5)", // 50% прозорий
+    },
+    modalcontainer: {
+      height: screenHeight * 0.8,
+      width: screenWidth * 0.8,
+      backgroundColor: Color.colorWhite,
+      borderWidth: 2,
+      borderColor: Color.colorDarkBlue,
+      borderRadius: 25,
+      alignItems: "center",
+      flexDirection: "column",
+    },
+    productimage: {
+      width: "100%",
+      height: screenHeight * 0.4,
+      contentFit: "contain",
+      overflow: "hidden",
+    },
+    productinfocontainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
+    },
+    productnamecontainer: {
+      flexDirection: "column",
+      justifyContent: "space-around",
+    },
   },
 });
 export default SalesScreen;
