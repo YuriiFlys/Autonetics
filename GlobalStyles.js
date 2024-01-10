@@ -27,7 +27,7 @@ export const FontFamily = {
   CommissioneSemiBold: "CommissioneSemiBold",
   CommissioneThin: "CommissioneThin",
   CommissioneMedium: "CommissioneMedium",
-  palanquinDarkRegular: "PalanquinDark-Regular"
+  palanquinDarkRegular: "PalanquinDark-Regular",
 };
 /* font sizes */
 export const FontSize = {
@@ -52,4 +52,5 @@ export const Color = {
 export const Border = {
   br_4xs: 9,
   br_3xs: 10,
+  br_20: 20,
 };

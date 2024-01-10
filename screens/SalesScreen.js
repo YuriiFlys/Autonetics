@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,7 +8,9 @@ import {
   FlatList,
   Alert,
   Button,
+  Modal,
 } from "react-native";
+// import Modal from "react-native-modal";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -20,40 +22,41 @@ const screenHeight = Dimensions.get("window").height;
 
 const SalesScreen = () => {
   const navigator = useNavigation();
+  // спливаюче вікно
   const bottomSheetRef = React.useRef();
-  const keyExtractor = (item, index) => index.toString();
   data = [
     {
-      name: "Моршинська",
+      name: "Моршинська1",
       price: 123,
       imageSource: require("../assets/Products/morshynska.png"),
     },
     {
-      name: "Моршинська",
+      name: "Моршинська2",
       price: 123,
       imageSource: require("../assets/Products/morshynska.png"),
     },
     {
-      name: "Моршинська",
+      name: "Моршинська3",
       price: 123,
       imageSource: require("../assets/Products/morshynska.png"),
     },
     {
-      name: "Моршинська",
+      name: "Моршинська4",
       price: 123,
       imageSource: require("../assets/Products/morshynska.png"),
     },
     {
-      name: "Моршинська",
+      name: "Моршинська5",
       price: 123,
       imageSource: require("../assets/Products/morshynska.png"),
     },
     {
-      name: "Моршинська",
+      name: "Моршинська6",
       price: 123,
       imageSource: require("../assets/Products/morshynska.png"),
     },
   ];
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.shopelement}
@@ -63,8 +66,18 @@ const SalesScreen = () => {
       }}
     >
       <Image source={item.imageSource} style={styles.imageSource} />
-      <Text style={styles.shopName}>{item.name}</Text>
-      <Text style={styles.street}>{item.price}</Text>
+      <View>
+        <Text style={styles.shopName}>{item.name}</Text>
+        <Text style={styles.street}>${item.price}</Text>
+      </View>
+      <Image
+        style={{
+          contentFit: "contain",
+          height: screenHeight * 0.03,
+          width: screenHeight * 0.03,
+        }}
+        source={require("../assets/Profile/help.svg")}
+      />
     </TouchableOpacity>
   );
   const showAlert = () => {
@@ -98,19 +111,35 @@ const SalesScreen = () => {
           />
         </TouchableOpacity>
       </View>
+
+      {/* спливаюче вікно */}
       <BottomSheet
         ref={bottomSheetRef}
         index={0}
         snapPoints={[screenHeight * 0.09, screenHeight * 0.85]}
       >
         <View style={styles.bottomsheetcontainer}>
-          <View style={styles.sumContainer}>
-            <Text style={styles.sumtext}>Сума</Text>
-            <Text style={[styles.sumtext, { color: "red" }]}>99.99 ₴</Text>
+          <View style={styles.bottomsheet_header_container}>
+            <Text style={styles.textCartContainer}>Ваша Козина</Text>
           </View>
           <View style={styles.bottomsheet_main_container}>
             <GrayLine />
-            <FlatList data={data} renderItem={renderItem} />
+            <View style={{ height: screenHeight * 0.5 }}>
+              <FlatList data={data} renderItem={renderItem} />
+            </View>
+            <GrayLine />
+            <View style={styles.sumContainer}>
+              <Text style={styles.sumtext}>Сума</Text>
+              <Text style={[styles.sumtext, { color: "red" }]}>99.99 ₴</Text>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => console.log("Переходимо до сплати")}
+                style={styles.paybuttoncontainer}
+              >
+                <Text style={styles.paybuttonText}>Перейти до сплати</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </BottomSheet>
@@ -146,29 +175,60 @@ const styles = StyleSheet.create({
   bottomsheetcontainer: {
     alignItems: "center",
   },
-  sumContainer: {
+  textCartContainer: {
     width: screenWidth * 0.7,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   bottomsheet_main_container: {
     marginTop: screenHeight * 0.045,
+    alignItems: "center",
   },
-  sumtext: {
-    fontSize: 23,
+  bottomsheet_header_container: {},
+  textCartContainer: {
+    fontSize: 18,
     fontFamily: FontFamily.CommissioneBold,
     color: Color.colorDarkBlue,
   },
+
   shopelement: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    width: screenWidth * 0.9,
+    justifyContent: "space-around",
+    width: screenWidth,
     height: screenHeight * 0.09,
+    marginTop: screenHeight * 0.01,
   },
   imageSource: {
-    width: screenWidth * 0.2,
-    height: screenWidth * 0.2,
+    width: screenWidth * 0.1,
+    height: "100%",
+    contentFit: "contain",
+    overflow: "hidden",
+  },
+  sumContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: screenWidth * 0.7,
+    marginTop: screenHeight * 0.05,
+  },
+  sumtext: {
+    fontSize: 18,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
+  },
+  paybuttoncontainer: {
+    width: screenWidth * 0.7,
+    height: screenHeight * 0.07,
+    backgroundColor: Color.colorDarkBlue,
+    borderRadius: Border.br_20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: screenHeight * 0.03,
+  },
+  paybuttonText: {
+    fontSize: 18,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorWhite,
   },
 });
 export default SalesScreen;
