@@ -9,6 +9,7 @@ import {
   Alert,
   Button,
   Modal,
+  SafeAreaView,
 } from "react-native";
 // import Modal from "react-native-modal";
 import { Image } from "expo-image";
@@ -92,70 +93,75 @@ const SalesScreen = () => {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <View style={styles.buttonCameraContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            showAlert();
-          }}
-        >
-          <Image
-            source={require("../assets/Camera/cross.svg")}
-            style={styles.cross}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log("Ліхатрик")}>
-          <Image
-            source={require("../assets/Camera/light.svg")}
-            style={styles.light}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* спливаюче вікно */}
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={[screenHeight * 0.09, screenHeight * 0.85]}
-      >
-        <View style={styles.bottomsheetcontainer}>
-          <View style={styles.bottomsheet_header_container}>
-            <Text style={styles.textCartContainer}>Ваша Козина</Text>
-          </View>
-          <View style={styles.bottomsheet_main_container}>
-            <GrayLine />
-            <View style={{ height: screenHeight * 0.5 }}>
-              <FlatList data={data} renderItem={renderItem} />
-            </View>
-            <GrayLine />
-            <View style={styles.sumContainer}>
-              <Text style={styles.sumtext}>Сума</Text>
-              <Text style={[styles.sumtext, { color: "red" }]}>99.99 ₴</Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => console.log("Переходимо до сплати")}
-                style={styles.paybuttoncontainer}
-              >
-                <Text style={styles.paybuttonText}>Перейти до сплати</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
+        <View style={styles.buttonCameraContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              showAlert();
+            }}
+          >
+            <Image
+              source={require("../assets/Camera/cross.svg")}
+              style={styles.cross}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log("Ліхатрик")}>
+            <Image
+              source={require("../assets/Camera/light.svg")}
+              style={styles.light}
+            />
+          </TouchableOpacity>
         </View>
-      </BottomSheet>
-    </GestureHandlerRootView>
+
+        {/* спливаюче вікно */}
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={[screenHeight * 0.15, screenHeight * 0.9]}
+        >
+          <View style={styles.bottomsheetcontainer}>
+            <View style={styles.bottomsheet_header_container}>
+              <Text style={styles.textCartContainer}>Ваша Козина</Text>
+            </View>
+            <View style={styles.bottomsheet_main_container}>
+              <GrayLine />
+              <View style={{ height: screenHeight * 0.5 }}>
+                <FlatList data={data} renderItem={renderItem} />
+              </View>
+              <GrayLine />
+              <View style={styles.sumContainer}>
+                <Text style={styles.sumtext}>Сума</Text>
+                <Text style={[styles.sumtext, { color: "red" }]}>99.99 ₴</Text>
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={() => console.log("Переходимо до сплати")}
+                  style={styles.paybuttoncontainer}
+                >
+                  <Text style={styles.paybuttonText}>Перейти до сплати</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </BottomSheet>
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
     backgroundColor: "black",
   },
+  GestureHandlerRootViewContainer: {
+    height: screenHeight,
+    width: screenWidth,
+
+    alignItems: "center",
+  },
   buttonCameraContainer: {
-    marginTop: 100,
+    marginTop: 10,
     width: screenWidth * 0.8,
     justifyContent: "space-between",
     flexDirection: "row",
@@ -184,7 +190,6 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.045,
     alignItems: "center",
   },
-  bottomsheet_header_container: {},
   textCartContainer: {
     fontSize: 18,
     fontFamily: FontFamily.CommissioneBold,

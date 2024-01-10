@@ -9,43 +9,9 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import { FontFamily } from "../GlobalStyles";
+import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-
-const styles = StyleSheet.create({
-  container: {
-    width: screenWidth,
-    height: screenHeight * 0.1,
-    justifyContent: "space-around",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  logoIcon: {
-    flex: 1,
-    width: screenWidth * 0.1,
-    height: screenHeight * 0.1,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  labelText: {
-    fontSize: 20,
-    fontFamily: FontFamily.CommissioneBold,
-    color: Colors.colorDarkBlue,
-    flexWrap: "nowrap",
-  },
-  containerText: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  containerLogo: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 const Logo = ({ name, style }) => {
   const navigator = useNavigation();
@@ -70,5 +36,37 @@ const Logo = ({ name, style }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: screenWidth,
+    height: screenHeight * 0.1,
+    justifyContent: "space-around",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  logoIcon: {
+    flex: 1,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.1,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  labelText: {
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
+  },
+  containerText: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  containerLogo: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default Logo;

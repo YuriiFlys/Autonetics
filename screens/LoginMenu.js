@@ -4,19 +4,23 @@ import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import { TextInput, KeyboardAvoidingView, Dimensions,TouchableWithoutFeedback, Keyboard } from "react-native";
-import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
+import {
+  TextInput,
+  KeyboardAvoidingView,
+  Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
 import { doc, onSnapshot } from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
-
 export async function getUserName() {
   const user = FIREBASE_AUTH.currentUser;
-  const userDoc = doc(FIREBASE_DB, 'users', user.email);
+  const userDoc = doc(FIREBASE_DB, "users", user.email);
 
   return new Promise((resolve, reject) => {
     const unsubscribe = onSnapshot(userDoc, (doc) => {
@@ -40,7 +44,6 @@ const LoginMenu = () => {
       await signInWithEmailAndPassword(auth, email, password);
       getUserName().then((name) => setUserName(name));
       navigator.navigate("BottomMenu", { screen: "Home" });
-
     } catch (error) {
       console.error(error);
       let errorMessage = "";
@@ -76,32 +79,31 @@ const LoginMenu = () => {
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-      <View style={styles.email}>
-        <Text style={styles.emailtext}>Email</Text>
-        <TextInput
-          style={styles.field}
-          autoCapitalize="none"
-          onChangeText={setEmail}
-          onSubmitEditing={() => passwordRef.current.focus()}
-          blurOnSubmit={false}
-        />
-      </View>
-      <View style={styles.password}>
-        <Text style={styles.passwordtext}>Пароль</Text>
-        <TextInput
-          style={styles.field}
-          secureTextEntry
-          ref={passwordRef}
-          onChangeText={setPassword}
-        />
-        {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
-      </View>
-      </View>
+          <View style={styles.email}>
+            <Text style={styles.emailtext}>Email</Text>
+            <TextInput
+              style={styles.field}
+              autoCapitalize="none"
+              onChangeText={setEmail}
+              onSubmitEditing={() => passwordRef.current.focus()}
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.password}>
+            <Text style={styles.passwordtext}>Пароль</Text>
+            <TextInput
+              style={styles.field}
+              secureTextEntry
+              ref={passwordRef}
+              onChangeText={setPassword}
+            />
+            {errorMessage ? (
+              <Text style={styles.errormessage}>{errorMessage}</Text>
+            ) : null}
+          </View>
+        </View>
       </TouchableWithoutFeedback>
-      <Pressable
-        style={styles.submit}
-        onPress={handleLogin}
-      >
+      <Pressable style={styles.submit} onPress={handleLogin}>
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
       <Text
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
-    color: "#23334A",
+    color: Color.colorDarkBlue,
   },
   logoIcon: {
     alignSelf: "center",
@@ -150,6 +152,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth * 0.02,
     paddingRight: screenWidth * 0.02,
+    color: Color.colorDarkBlue,
   },
   emailtext: {
     marginLeft: screenWidth * 0.1,
