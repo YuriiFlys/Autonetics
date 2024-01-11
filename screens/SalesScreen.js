@@ -12,6 +12,7 @@ import {
   Modal,
   Button,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { BarCodeScanner } from "expo-barcode-scanner";
@@ -38,7 +39,7 @@ const SalesScreen = () => {
   list = [
     {
       id: 1,
-      name: "Моршинська1",
+      name: "Моршинська1asdasdsa s asd sad asd as d asdasdsadas dasdsadasd as",
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
@@ -133,22 +134,12 @@ const SalesScreen = () => {
       onPress={() => toggleModal(item)}
     >
       <Image source={item.imageSource} style={styles.imageSource} />
-      <View>
+      <View style={styles.nameContainer}>
         <Text style={styles.shopName}>{item.name}</Text>
         <Text style={styles.street}>${item.price}</Text>
       </View>
       <View style={styles.counterContainer}>
-        <TouchableOpacity onPress={() => handleDecrement(item.id)}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>-</Text>
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.number}>{item.number}</Text>
-        <TouchableOpacity onPress={() => handleIncrement(item.id)}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>+</Text>
-          </View>
-        </TouchableOpacity>
+        <Text style={styles.productNumberText}>{item.number}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -390,14 +381,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
     width: screenWidth,
-    height: screenHeight * 0.09,
-    marginTop: screenHeight * 0.01,
+    height: screenHeight * 0.2,
   },
   imageSource: {
     width: screenWidth * 0.1,
     height: "100%",
     contentFit: "contain",
     overflow: "hidden",
+    flex: 1,
+  },
+  nameContainer: {
+    flex: 2,
+    height: "100%",
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  shopName: {
+    fontSize: FontSize.size_s,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
+  },
+
+  counterContainer: {
+    height: "100%",
+    flex: 1,
+    justifyContent: "center",
+  },
+  productNumberText: {
+    textAlign: "center",
+    textAlignVertical: "center",
   },
   sumContainer: {
     flexDirection: "row",
@@ -522,6 +534,7 @@ const styles = StyleSheet.create({
     color: "blue",
     textDecorationLine: "underline",
   },
+
   modal: {
     modalbackground: {
       flex: 1,
