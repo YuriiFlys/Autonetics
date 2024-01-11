@@ -18,13 +18,13 @@ const SalesScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
-        <Scanner /> {"Камера"}
+        <Scanner />
         <BottomSheet
           ref={bottomSheetRef}
           index={0}
           snapPoints={[screenHeight * 0.15, screenHeight * 0.9]}
         >
-          <PopupWindow /> {"Спливаюче вікно"}
+          <PopupWindow />
         </BottomSheet>
       </GestureHandlerRootView>
     </SafeAreaView>
