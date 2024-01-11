@@ -14,6 +14,7 @@ import { PanGestureHandler } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
   useAnimatedGestureHandler,
+  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -22,16 +23,6 @@ import GrayLine from "./GrayLine";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const PopupWindow = ({ style }) => {
-  const navigator = useNavigation();
-  // модальне вікно
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState({});
-  const toggleModal = (productName) => {
-    setSelectedProduct(productName);
-    setModalVisible(!isModalVisible);
-  };
-
-  // список
   list = [
     {
       id: 1,
@@ -77,69 +68,27 @@ const PopupWindow = ({ style }) => {
     },
   ];
   const [data, setData] = useState(list);
-  const handleIncrement = (id) => {
-    setData((prevData) => {
-      const updatedData = prevData.map((item) =>
-        item.id === id ? { ...item, number: item.number + 1 } : item
-      );
-      setSelectedProduct(updatedData.find((item) => item.id === id));
-      return updatedData;
-    });
-  };
+  const x = useSharedValue(0);
 
-  const handleDecrement = (id) => {
-    setData((prevData) => {
-      const updatedData = prevData.map((item) => {
-        if (item.id === id) {
-          if (item.number > 1) {
-            return { ...item, number: item.number - 1 };
-          } else {
-            Alert.alert(
-              "Видалення товару",
-              "Ви впевнені, що хочете видалити товар?",
-              [
-                {
-                  text: "Ні",
-                  onPress: () => console.log("Скасування видалення товару"),
-                  style: "cancel",
-                },
-                {
-                  text: "Так",
-                  onPress: () => {
-                    const updatedData = prevData.filter(
-                      (item) => item.id !== id
-                    );
-                    setData(updatedData);
-                    toggleModal("");
-                  },
-                },
-              ]
-            );
-          }
-        }
-        return item;
-      });
-      setSelectedProduct(updatedData.find((item) => item.id === id));
-      return updatedData;
-    });
-  };
+  const swipeAnimatedValues = useAnimatedGestureHandler({
+    onStart: () => {
+      console.log("onStart");
+    },
+    onActive: (event) => {
+      x.value = event.translationX;
+    },
+    onEnd: (event) => {
+      console.log(event);
+    },
+  });
 
-  //Анімація
-  // const swipeAnimatedValues = useAnimatedGestureHandler({
-  //   onStart: () => {
-  //     console.log("onStart");
-  //   },
-  //   onActive: () => {
-  //     console.log("onActive");
-  //   },
-  //   onEnd: (event) => {
-  //     console.log(event);
-  //   },
-  // });
+  const animatedElementStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: x.value }],
+  }));
 
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.shopelement}>
+      <Animated.View style={[styles.shopelement, animatedElementStyle]}>
         <TouchableOpacity
           style={styles.shopelement}
           onPress={() => toggleModal(item)}
@@ -153,16 +102,17 @@ const PopupWindow = ({ style }) => {
             <Text style={styles.productNumberText}>{item.number}</Text>
           </View>
         </TouchableOpacity>
-        {/* <PanGestureHandler onGestureEvent={swipeAnimatedValues}>
+        <PanGestureHandler onGestureEvent={swipeAnimatedValues}>
           <Animated.View
             style={{
               position: "absolute",
               width: screenWidth,
-              height: screenHeight * 0.1,
+              height: screenHeight * 0.2,
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
             }}
           ></Animated.View>
-        </PanGestureHandler> */}
-      </View>
+        </PanGestureHandler>
+      </Animated.View>
     );
   };
   return (
@@ -178,54 +128,6 @@ const PopupWindow = ({ style }) => {
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
           />
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={isModalVisible}
-            onRequestClose={() => {
-              toggleModal("");
-            }}
-          >
-            <View style={styles.modalbackground}>
-              <View style={styles.modalcontainer}>
-                <Image
-                  source={selectedProduct.imageSource}
-                  style={styles.productimage}
-                />
-                <View style={styles.productinfocontainer}>
-                  <View style={styles.productnamecontainer}>
-                    <Text>{selectedProduct.name}</Text>
-                    <Text>{selectedProduct.price}$</Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.productnamecontainer,
-                      { flexDirection: "row", justifyContent: "center" },
-                    ]}
-                  >
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => handleDecrement(selectedProduct.id)}
-                    >
-                      <Text style={styles.buttonTextPlusMinus}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.countText}>
-                      {selectedProduct.number}
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => handleIncrement(selectedProduct.id)}
-                    >
-                      <Text style={styles.buttonTextPlusMinus}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <TouchableOpacity onPress={() => toggleModal("")}>
-                  <Text>Close Modal</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
         </View>
         <GrayLine />
         <View style={styles.sumContainer}>
