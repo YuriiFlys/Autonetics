@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -59,6 +59,21 @@ const PopupWindow = () => {
     },
   ];
   const [data, setData] = useState(list);
+
+  const [sum, setSum] = useState(0);
+
+  const sumProduct = () => {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) {
+      sum += data[i].price * data[i].number;
+    }
+    return sum;
+  };
+
+  useEffect(() => {
+    setSum(sumProduct());
+  }, [data]);
+
   return (
     <View style={styles.bottomsheetcontainer}>
       <View style={styles.bottomsheet_header_container}>
@@ -68,7 +83,7 @@ const PopupWindow = () => {
         <GrayLine />
         <View style={{ height: screenHeight * 0.5 }}>
           <FlatList
-            data={list}
+            data={data}
             renderItem={({ item }) => <Element item={item}></Element>}
             keyExtractor={(item) => item.id.toString()}
           />
@@ -76,7 +91,7 @@ const PopupWindow = () => {
         <GrayLine />
         <View style={styles.sumContainer}>
           <Text style={styles.sumtext}>Сума</Text>
-          <Text style={[styles.sumtext, { color: "red" }]}>99.99 ₴</Text>
+          <Text style={[styles.sumtext, { color: "red" }]}>{sum} ₴</Text>
         </View>
         <View>
           <TouchableOpacity
