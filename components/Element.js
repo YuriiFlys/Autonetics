@@ -9,12 +9,13 @@ import {
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
+  Easing,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 import { Image } from "expo-image";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PanGestureHandler } from "react-native-gesture-handler";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -24,19 +25,32 @@ const Element = ({ item }) => {
   const x = useSharedValue(0);
 
   const swipeAnimatedValues = useAnimatedGestureHandler({
-    onStart: () => {
+    onStart: (event) => {
       console.log("onStart");
+      console.log(event.translationX);
     },
     onActive: (event) => {
       x.value = event.translationX;
+      console.log(event);
     },
     onEnd: (event) => {
-      console.log(event);
+      if (x.value > screenWidth / 3) {
+        x.value = withTiming(0);
+      } else {
+        x.value = withTiming(-screenWidth / 2);
+      }
     },
   });
 
   const animatedElementStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: x.value }],
+    transform: [
+      {
+        translateX: withTiming(x.value, {
+          durating: 1000,
+          easing: Easing.linear,
+        }),
+      },
+    ],
   }));
   console.log(item);
   console.log("sadasdsad");
@@ -45,7 +59,7 @@ const Element = ({ item }) => {
     <Animated.View style={[styles.shopelement, animatedElementStyle]}>
       <TouchableOpacity
         style={styles.shopelement}
-        onPress={() => toggleModal(item)}
+        onPress={() => console.log("sadasdsad")}
       >
         <Image source={item.imageSource} style={styles.imageSource} />
         <View style={styles.nameContainer}>
@@ -60,9 +74,10 @@ const Element = ({ item }) => {
         <Animated.View
           style={{
             position: "absolute",
-            width: screenWidth,
+            width: "30%",
             height: screenHeight * 0.2,
-            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            right: 0,
+            // backgroundColor: "red",
           }}
         ></Animated.View>
       </PanGestureHandler>
