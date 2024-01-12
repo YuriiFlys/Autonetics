@@ -17,7 +17,7 @@ const PopupWindow = () => {
   list = [
     {
       id: 1,
-      name: "Моршинська1asdasdsa s asd sad asd as d asdasdsadas dasdsadasd as",
+      name: "Моршинська1",
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
