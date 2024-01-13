@@ -70,17 +70,42 @@ const Element = ({ item, updateData, deleteElement }) => {
             <Image source={item.imageSource} style={styles.imageSource} />
             <View style={styles.nameContainer}>
               <Text style={styles.shopName}>{item.name}</Text>
-              <Text style={styles.street}>${item.price}</Text>
+              <Text style={styles.counterText}>Ціна: {item.price}$</Text>
             </View>
             <View style={styles.counterContainer}>
-              <Text style={styles.productNumberText}>{item.number}</Text>
+              <View style={{ flexDirection: "row", marginRight: 20 }}>
+                <Text style={styles.counterText}>Кількість: </Text>
+                <Text
+                  style={[
+                    styles.counterText,
+                    { fontFamily: FontFamily.CommissioneBold },
+                  ]}
+                >
+                  {item.number}
+                </Text>
+              </View>
+              <View
+                style={{ flexDirection: "row", marginTop: 10, marginRight: 20 }}
+              >
+                <Text style={styles.counterText}>Кількість: </Text>
+                <Text
+                  style={[
+                    styles.counterText,
+                    { fontFamily: FontFamily.CommissioneBold },
+                  ]}
+                >
+                  {item.number * item.price}$
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.hiddenButton, { backgroundColor: "yellow" }]}
+            style={[
+              styles.hiddenButton,
+              { backgroundColor: Color.colorDarkBlue },
+            ]}
             onPress={() => {
               console.log("sadasdsad");
-              // відкривається modalproduct
               setModalVisible(true);
             }}
           >
@@ -89,7 +114,7 @@ const Element = ({ item, updateData, deleteElement }) => {
           <TouchableOpacity
             style={[styles.hiddenButton, { backgroundColor: "red" }]}
           >
-            <Text style={styles.hiddenText}>Добавити один елемент</Text>
+            <Text style={styles.hiddenText}>Видалити</Text>
           </TouchableOpacity>
         </View>
         <PanGestureHandler onGestureEvent={swipeAnimatedValues}>
@@ -140,9 +165,20 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.CommissioneBold,
     color: Color.colorDarkBlue,
   },
+  counterContainer: {
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  counterText: {
+    fontSize: FontSize.size_s,
+    fontFamily: FontFamily.CommissioneMedium,
+    color: Color.colorDarkBlue,
+  },
   hiddenButton: {
     height: "100%",
-    width: screenHeight * 0.15,
+    width: screenWidth * 0.25,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "green",
@@ -150,7 +186,7 @@ const styles = StyleSheet.create({
   hiddenText: {
     fontSize: FontSize.size_s,
     fontFamily: FontFamily.CommissioneBold,
-    color: Color.colorDarkBlue,
+    color: Color.colorWhite,
   },
 });
 

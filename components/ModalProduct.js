@@ -77,28 +77,34 @@ const ModalProduct = ({
           <Image source={item.imageSource} style={styles.productimage} />
           <View style={styles.productinfocontainer}>
             <View style={styles.productnamecontainer}>
-              <Text>{item.name}</Text>
-              <Text>{item.price}$</Text>
+              <Text style={styles.productName}>{item.name}</Text>
+              <Text style={styles.productPrice}>{item.price}$</Text>
             </View>
-            <View
-              style={[
-                styles.productnamecontainer,
-                { flexDirection: "row", justifyContent: "center" },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleDecrement()}
+            <View style={[styles.productnamecontainer]}>
+              <View
+                style={[
+                  styles.productnCountContainer,
+                  {
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  },
+                ]}
               >
-                <Text style={styles.buttonTextPlusMinus}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.countText}>{quantity}</Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleIncrement()}
-              >
-                <Text style={styles.buttonTextPlusMinus}>+</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleDecrement()}
+                >
+                  <Text style={styles.buttonTextPlusMinus}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.countText}>{quantity}</Text>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleIncrement()}
+                >
+                  <Text style={styles.buttonTextPlusMinus}>+</Text>
+                </TouchableOpacity>
+              </View>
+              <Text>Сума: {item.number * item.price}</Text>
             </View>
           </View>
           <TouchableOpacity onPress={() => toggleModal("")}>
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.5)", // 50% прозорий
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   modalcontainer: {
     height: screenHeight * 0.8,
@@ -126,6 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     flexDirection: "column",
+    padding: 15,
   },
   productimage: {
     width: "100%",
@@ -134,17 +141,34 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   productinfocontainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-around",
     width: "100%",
   },
   productnamecontainer: {
-    flexDirection: "column",
-    justifyContent: "space-around",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
     paddingLeft: 20,
-    width: "50%",
+    width: "100%",
+  },
+  productName: {
+    fontFamily: FontFamily.CommissioneBold,
+    fontSize: FontSize.size_m,
+    color: Color.colorDarkBlue,
+  },
+  productPrice: {
+    fontFamily: FontFamily.CommissioneMedium,
+    fontSize: FontSize.size_m,
+    color: Color.colorDarkBlue,
+  },
+  productnCountContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    marginTop: 10,
   },
   button: {
     justifyContent: "center",
@@ -154,9 +178,11 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorLightGray,
     borderRadius: 25,
   },
-  buttonTextPlusMinus: {},
+  buttonTextPlusMinus: {
+    color: Color.colorDarkBlue,
+  },
   countText: {
-    fontSize: FontSize.size_xl,
+    fontSize: FontSize.size_m,
     marginLeft: 10,
     marginRight: 10,
   },
