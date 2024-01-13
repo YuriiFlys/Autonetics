@@ -11,6 +11,7 @@ import Element from "./Element";
 
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import GrayLine from "./GrayLine";
+import { set } from "date-fns";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const PopupWindow = () => {
@@ -20,7 +21,7 @@ const PopupWindow = () => {
       name: "Моршинська1",
       price: 123,
       imageSource: require("../assets/voda.png"),
-      number: 1,
+      number: 10,
     },
     {
       id: 2,
@@ -59,20 +60,28 @@ const PopupWindow = () => {
     },
   ];
   const [data, setData] = useState(list);
-
   const [sum, setSum] = useState(0);
+  const updateData = (id, number) => {
+    setData((prevData) => {
+      const updatedData = prevData.map((item) =>
+        item.id === id ? { ...item, number: number } : item
+      );
+      return updatedData;
+    });
+    setSum((prevSum) => {
+      const total = data.reduce((acc, item) => {
+        return acc + item.number * item.price;
+      }, 0);
 
-  const sumProduct = () => {
-    let sum = 0;
-    for (let i = 0; i < data.length; i++) {
-      sum += data[i].price * data[i].number;
-    }
-    return sum;
+      return total;
+    });
   };
-
-  useEffect(() => {
-    setSum(sumProduct());
-  }, [data]);
+  const deleteElement = (id) => {
+    setData((prevData) => {
+      const updatedData = prevData.filter((item) => item.id !== id);
+      return updatedData;
+    });
+  };
 
   return (
     <View style={styles.bottomsheetcontainer}>
@@ -84,7 +93,13 @@ const PopupWindow = () => {
         <View style={{ height: screenHeight * 0.5 }}>
           <FlatList
             data={data}
-            renderItem={({ item }) => <Element item={item}></Element>}
+            renderItem={({ item }) => (
+              <Element
+                item={item}
+                updateData={updateData}
+                deleteElement={deleteElement}
+              />
+            )}
             keyExtractor={(item) => item.id.toString()}
           />
         </View>
@@ -95,7 +110,10 @@ const PopupWindow = () => {
         </View>
         <View>
           <TouchableOpacity
-            onPress={() => console.log("Переходимо до сплати")}
+            onPress={() => {
+              console.log("Переходимо до сплати");
+              console.log(data);
+            }}
             style={styles.paybuttoncontainer}
           >
             <Text style={styles.paybuttonText}>Перейти до сплати</Text>

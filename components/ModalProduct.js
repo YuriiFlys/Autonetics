@@ -6,14 +6,23 @@ import {
   Modal,
   Text,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+import { setData } from "./PopupWindow";
+import { set } from "date-fns";
 
-const ModalProduct = ({ item, setData, isModalVisible, setModalVisible }) => {
+const ModalProduct = ({
+  item,
+  isModalVisible,
+  setModalVisible,
+  updateData,
+  deleteElement,
+}) => {
   const navigator = useNavigation();
   const [selectedProduct, setSelectedProduct] = useState({});
 
@@ -21,52 +30,37 @@ const ModalProduct = ({ item, setData, isModalVisible, setModalVisible }) => {
     setSelectedProduct(productName);
     setModalVisible(!isModalVisible);
   };
+  const [quantity, setQuantity] = useState(item.number);
 
-  const handleIncrement = (id) => {
-    setData((prevData) => {
-      const updatedData = prevData.map((item) =>
-        item.id === id ? { ...item, number: item.number + 1 } : item
-      );
-      setSelectedProduct(updatedData.find((item) => item.id === id));
-      return updatedData;
-    });
+  const handleIncrement = () => {
+    setQuantity(quantity + 1);
+    updateData(item.id, quantity + 1);
   };
 
-  const handleDecrement = (id) => {
-    setData((prevData) => {
-      const updatedData = prevData.map((item) => {
-        if (item.id === id) {
-          if (item.number > 1) {
-            return { ...item, number: item.number - 1 };
-          } else {
-            Alert.alert(
-              "Видалення товару",
-              "Ви впевнені, що хочете видалити товар?",
-              [
-                {
-                  text: "Ні",
-                  onPress: () => console.log("Скасування видалення товару"),
-                  style: "cancel",
-                },
-                {
-                  text: "Так",
-                  onPress: () => {
-                    const updatedData = prevData.filter(
-                      (item) => item.id !== id
-                    );
-                    setData(updatedData);
-                    toggleModal("");
-                  },
-                },
-              ]
-            );
-          }
-        }
-        return item;
-      });
-      setSelectedProduct(updatedData.find((item) => item.id === id));
-      return updatedData;
-    });
+  const handleDecrement = () => {
+    if (quantity - 1 > 0) {
+      setQuantity(quantity - 1);
+      updateData(item.id, quantity - 1);
+    } else {
+      Alert.alert(
+        "Видалення товару",
+        "Ви впевнені, що хочете видалити товар?",
+        [
+          {
+            text: "Ні",
+            onPress: () => console.log("Скасування видалення товару"),
+            style: "cancel",
+          },
+          {
+            text: "Так",
+            onPress: () => {
+              deleteElement(item.id);
+              toggleModal("");
+            },
+          },
+        ]
+      );
+    }
   };
 
   return (
@@ -94,14 +88,14 @@ const ModalProduct = ({ item, setData, isModalVisible, setModalVisible }) => {
             >
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleDecrement(selectedProduct.id)}
+                onPress={() => handleDecrement()}
               >
                 <Text style={styles.buttonTextPlusMinus}>-</Text>
               </TouchableOpacity>
-              <Text style={styles.countText}>{item.number}</Text>
+              <Text style={styles.countText}>{quantity}</Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleIncrement(selectedProduct.id)}
+                onPress={() => handleIncrement()}
               >
                 <Text style={styles.buttonTextPlusMinus}>+</Text>
               </TouchableOpacity>

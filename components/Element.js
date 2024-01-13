@@ -22,7 +22,7 @@ import ModalProduct from "./ModalProduct";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Element = ({ item }, { setData }) => {
+const Element = ({ item, updateData, deleteElement }) => {
   const navigator = useNavigation();
   const x = useSharedValue(0);
   const swipeAnimatedValues = useAnimatedGestureHandler({
@@ -30,6 +30,7 @@ const Element = ({ item }, { setData }) => {
     onActive: (event) => {
       x.value = event.translationX;
     },
+
     onEnd: (event) => {
       if (x.value > screenWidth / 3) {
         console.log(x.value + " > " + screenWidth / 3 + " => 0");
@@ -52,7 +53,6 @@ const Element = ({ item }, { setData }) => {
       },
     ],
   }));
-
   const [isModalVisible, setModalVisible] = useState(false);
 
   return (
@@ -63,7 +63,9 @@ const Element = ({ item }, { setData }) => {
         <View style={{ flexDirection: "row", width: screenWidth * 1.3 }}>
           <TouchableOpacity
             style={styles.shopelement}
-            onPress={() => console.log("sadasdsad")}
+            onPress={() => {
+              console.log("asd");
+            }}
           >
             <Image source={item.imageSource} style={styles.imageSource} />
             <View style={styles.nameContainer}>
@@ -87,7 +89,7 @@ const Element = ({ item }, { setData }) => {
           <TouchableOpacity
             style={[styles.hiddenButton, { backgroundColor: "red" }]}
           >
-            <Text style={styles.hiddenText}>Видалити</Text>
+            <Text style={styles.hiddenText}>Добавити один елемент</Text>
           </TouchableOpacity>
         </View>
         <PanGestureHandler onGestureEvent={swipeAnimatedValues}>
@@ -103,9 +105,10 @@ const Element = ({ item }, { setData }) => {
       </Animated.View>
       <ModalProduct
         item={item}
-        setData={setData}
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
+        updateData={updateData}
+        deleteElement={deleteElement}
       />
     </View>
   );
