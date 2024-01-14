@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,14 +7,13 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-import { setData } from "./PopupWindow";
-import { set } from "date-fns";
 
 const ModalProduct = ({
   item,
@@ -26,8 +25,7 @@ const ModalProduct = ({
   const navigator = useNavigation();
   const [selectedProduct, setSelectedProduct] = useState({});
 
-  const toggleModal = (productName) => {
-    setSelectedProduct(productName);
+  const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const [quantity, setQuantity] = useState(item.number);
@@ -42,24 +40,7 @@ const ModalProduct = ({
       setQuantity(quantity - 1);
       updateData(item.id, quantity - 1);
     } else {
-      Alert.alert(
-        "Видалення товару",
-        "Ви впевнені, що хочете видалити товар?",
-        [
-          {
-            text: "Ні",
-            onPress: () => console.log("Скасування видалення товару"),
-            style: "cancel",
-          },
-          {
-            text: "Так",
-            onPress: () => {
-              deleteElement(item.id);
-              toggleModal("");
-            },
-          },
-        ]
-      );
+      deleteElement(item.id);
     }
   };
 
@@ -72,46 +53,65 @@ const ModalProduct = ({
         toggleModal("");
       }}
     >
-      <View style={styles.modalbackground}>
-        <View style={styles.modalcontainer}>
-          <Image source={item.imageSource} style={styles.productimage} />
-          <View style={styles.productinfocontainer}>
-            <View style={styles.productnamecontainer}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productPrice}>{item.price}$</Text>
-            </View>
-            <View style={[styles.productnamecontainer]}>
-              <View
-                style={[
-                  styles.productnCountContainer,
-                  {
-                    flexDirection: "row",
-                    justifyContent: "center",
-                  },
-                ]}
-              >
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleDecrement()}
-                >
-                  <Text style={styles.buttonTextPlusMinus}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.countText}>{quantity}</Text>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleIncrement()}
-                >
-                  <Text style={styles.buttonTextPlusMinus}>+</Text>
-                </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+        <View style={styles.modalbackground}>
+          <TouchableWithoutFeedback
+            onPress={(event) => event.stopPropagation()}
+          >
+            <View style={styles.modalcontainer}>
+              <Image source={item.imageSource} style={styles.productimage} />
+              <View style={styles.productinfocontainer}>
+                <View style={styles.productnamecontainer}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>{item.price}$</Text>
+                </View>
+                <View style={[styles.productnamecontainer]}>
+                  <View
+                    style={[
+                      styles.productnCountContainer,
+                      {
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      },
+                    ]}
+                  >
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => handleDecrement()}
+                    >
+                      <Text style={styles.buttonTextPlusMinus}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.countText}>{quantity}</Text>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => handleIncrement()}
+                    >
+                      <Text style={styles.buttonTextPlusMinus}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Text>Сума: {item.number * item.price}</Text>
+                </View>
               </View>
-              <Text>Сума: {item.number * item.price}</Text>
+              <View
+                style={{
+                  height: screenHeight * 0.2,
+                  width: "100%",
+                }}
+              >
+                <Text style={styles.descriptionText}>{item.description}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => console.log("Переходимо на сторінку продукту")}
+                style={styles.moreInfoButton}
+              >
+                <Text style={styles.moreInfoText}>
+                  Перейти на сторінку Продукту
+                </Text>
+              </TouchableOpacity>
             </View>
-          </View>
-          <TouchableOpacity onPress={() => toggleModal("")}>
-            <Text>Close Modal</Text>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   modalcontainer: {
-    height: screenHeight * 0.8,
     width: screenWidth * 0.8,
     backgroundColor: Color.colorWhite,
     borderWidth: 2,
@@ -185,6 +184,25 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_m,
     marginLeft: 10,
     marginRight: 10,
+  },
+  descriptionText: {
+    fontFamily: FontFamily.CommissioneLight,
+    fontSize: FontSize.size_s,
+    color: Color.colorLightGray,
+  },
+  moreInfoButton: {
+    margin: 10,
+    width: "90%",
+    height: screenHeight * 0.1,
+    backgroundColor: Color.colorDarkBlue,
+    borderRadius: Border.br_25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  moreInfoText: {
+    fontFamily: FontFamily.CommissioneBold,
+    fontSize: FontSize.size_s,
+    color: Color.colorWhite,
   },
 });
 

@@ -87,7 +87,7 @@ const Element = ({ item, updateData, deleteElement }) => {
               <View
                 style={{ flexDirection: "row", marginTop: 10, marginRight: 20 }}
               >
-                <Text style={styles.counterText}>Кількість: </Text>
+                <Text style={styles.counterText}>Сума: </Text>
                 <Text
                   style={[
                     styles.counterText,
@@ -112,6 +112,9 @@ const Element = ({ item, updateData, deleteElement }) => {
             <Text style={styles.hiddenText}>Деталі</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => {
+              deleteElement(item.id);
+            }}
             style={[styles.hiddenButton, { backgroundColor: "red" }]}
           >
             <Text style={styles.hiddenText}>Видалити</Text>
