@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Dimensions, SafeAreaView } from "react-native";
+import { StyleSheet, Dimensions, SafeAreaView, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
@@ -15,6 +15,8 @@ const SalesScreen = () => {
   // Спливаюче вікно
   const bottomSheetRef = React.useRef();
 
+  const [paymentWindow, setpaymentWindow] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
@@ -24,8 +26,18 @@ const SalesScreen = () => {
           index={0}
           snapPoints={[screenHeight * 0.15, screenHeight * 0.9]}
         >
-          <PopupWindow />
+          <PopupWindow setpaymentWindow={setpaymentWindow} />
         </BottomSheet>
+        {paymentWindow ? (
+          <BottomSheet
+            ref={bottomSheetRef}
+            index={0}
+            snapPoints={[screenHeight * 0.9]}
+            enablePanDownToClose={true}
+          >
+            <Text>Ліхтарик в спливаючому вікні</Text>
+          </BottomSheet>
+        ) : null}
       </GestureHandlerRootView>
     </SafeAreaView>
   );

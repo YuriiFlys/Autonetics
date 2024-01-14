@@ -6,15 +6,14 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Element from "./Element";
-
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import GrayLine from "./GrayLine";
-import { set } from "date-fns";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const PopupWindow = () => {
+const PopupWindow = ({ setpaymentWindow }) => {
   list = [
     {
       id: 1,
@@ -22,6 +21,8 @@ const PopupWindow = () => {
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 10,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
       id: 2,
@@ -29,6 +30,8 @@ const PopupWindow = () => {
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
       id: 3,
@@ -36,6 +39,8 @@ const PopupWindow = () => {
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
       id: 4,
@@ -43,6 +48,8 @@ const PopupWindow = () => {
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
       id: 5,
@@ -50,6 +57,8 @@ const PopupWindow = () => {
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
       id: 6,
@@ -57,13 +66,22 @@ const PopupWindow = () => {
       price: 123,
       imageSource: require("../assets/voda.png"),
       number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
   ];
   const [data, setData] = useState(list);
-  const [sum, setSum] = useState(0);
+  const initialSum = data.reduce(
+    (acc, item) => acc + item.number * item.price,
+    0
+  );
+
+  const [sum, setSum] = useState(
+    data.reduce((acc, item) => acc + item.number * item.price, 0)
+  );
   const updateData = (id, number) => {
-    setData((prevData) => {
-      const updatedData = prevData.map((item) =>
+    setData((data) => {
+      const updatedData = data.map((item) =>
         item.id === id ? { ...item, number: number } : item
       );
       return updatedData;
@@ -76,11 +94,31 @@ const PopupWindow = () => {
       return total;
     });
   };
+
   const deleteElement = (id) => {
-    setData((prevData) => {
-      const updatedData = prevData.filter((item) => item.id !== id);
-      return updatedData;
-    });
+    Alert.alert("Видалення товару", "Ви впевнені, що хочете видалити товар?", [
+      {
+        text: "Ні",
+        onPress: () => console.log("Скасування видалення товару"),
+        style: "cancel",
+      },
+      {
+        text: "Так",
+        onPress: () => {
+          setData((prevData) => {
+            const updatedData = prevData.filter((item) => item.id !== id);
+            setSum((prevSum) => {
+              const total = data.reduce((acc, item) => {
+                return acc + item.number * item.price;
+              }, 0);
+
+              return total;
+            });
+            return updatedData;
+          });
+        },
+      },
+    ]);
   };
 
   return (
@@ -113,6 +151,7 @@ const PopupWindow = () => {
             onPress={() => {
               console.log("Переходимо до сплати");
               console.log(data);
+              setpaymentWindow(true);
             }}
             style={styles.paybuttoncontainer}
           >
