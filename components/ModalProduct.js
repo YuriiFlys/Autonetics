@@ -50,7 +50,7 @@ const ModalProduct = ({
       transparent={true}
       visible={isModalVisible}
       onRequestClose={() => {
-        toggleModal("");
+        toggleModal();
       }}
     >
       <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
