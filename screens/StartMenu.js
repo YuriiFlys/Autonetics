@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
-import { FontFamily, FontSize, Border, Color} from "../GlobalStyles";
+import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
 
 const screenWidth = Dimensions.get("window").width;
@@ -21,7 +21,11 @@ const StartMenu = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return <View><Text>Loading...</Text></View>; 
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -35,7 +39,7 @@ const StartMenu = () => {
       <Text style={styles.autonetics}>Autonetics!</Text>
       <Pressable
         style={styles.loginButton}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigate("SalesScreen")}
       >
         <View style={styles.loginButtonChild} />
         <Text style={styles.text}>Log in</Text>
@@ -50,7 +54,6 @@ const StartMenu = () => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   logoIcon: {
@@ -75,9 +78,9 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: screenHeight * 0.05,
-    alignSelf: 'center',
-    height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
-    width: screenWidth*0.5,
+    alignSelf: "center",
+    height: screenHeight < 600 ? screenHeight * 0.07 : screenHeight * 0.06,
+    width: screenWidth * 0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: "center",
@@ -91,8 +94,8 @@ const styles = StyleSheet.create({
   signupButton: {
     alignSelf: "center",
     marginTop: screenHeight * 0.02,
-    height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
-    width: screenWidth*0.5,
+    height: screenHeight < 600 ? screenHeight * 0.07 : screenHeight * 0.06,
+    width: screenWidth * 0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: "center",

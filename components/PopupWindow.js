@@ -11,74 +11,10 @@ import {
 import Element from "./Element";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import GrayLine from "./GrayLine";
+import { set } from "date-fns";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const PopupWindow = ({ setpaymentWindow }) => {
-  list = [
-    {
-      id: 1,
-      name: "Моршинська1",
-      price: 123,
-      imageSource: require("../assets/voda.png"),
-      number: 10,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 2,
-      name: "Моршинська2",
-      price: 123,
-      imageSource: require("../assets/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 3,
-      name: "Моршинська3",
-      price: 123,
-      imageSource: require("../assets/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 4,
-      name: "Моршинська4",
-      price: 123,
-      imageSource: require("../assets/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 5,
-      name: "Моршинська5",
-      price: 123,
-      imageSource: require("../assets/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 6,
-      name: "Моршинська6",
-      price: 123,
-      imageSource: require("../assets/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-  ];
-  const [data, setData] = useState(list);
-  const initialSum = data.reduce(
-    (acc, item) => acc + item.number * item.price,
-    0
-  );
-
-  const [sum, setSum] = useState(
-    data.reduce((acc, item) => acc + item.number * item.price, 0)
-  );
+const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
   const updateData = (id, number) => {
     setData((data) => {
       const updatedData = data.map((item) =>
@@ -151,7 +87,7 @@ const PopupWindow = ({ setpaymentWindow }) => {
             onPress={() => {
               console.log("Переходимо до сплати");
               console.log(data);
-              setpaymentWindow(true);
+              handleOpenPress();
             }}
             style={styles.paybuttoncontainer}
           >
