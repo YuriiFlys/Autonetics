@@ -111,7 +111,7 @@ const SalesScreen = () => {
         <BottomSheet
           ref={bottomSheetRef}
           index={0}
-          snapPoints={[screenHeight * 0.09, screenHeight * 0.9]}
+          snapPoints={[screenHeight * 0.09, screenHeight * 0.85]}
         >
           <PopupWindow
             handleOpenPress={handleOpenPress}
