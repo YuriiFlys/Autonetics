@@ -13,7 +13,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-
+import { SafeAreaView } from "react-native-safe-area-context";
 const Scanner = ({ style }) => {
   const navigator = useNavigation();
 
@@ -78,7 +78,7 @@ const Scanner = ({ style }) => {
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.scannerwindow}
         >
-          <View style={styles.buttonCameraContainer}>
+          <SafeAreaView style={styles.buttonCameraContainer}>
             <TouchableOpacity
               onPress={() => {
                 showAlert();
@@ -95,7 +95,7 @@ const Scanner = ({ style }) => {
                 style={styles.light}
               />
             </TouchableOpacity>
-          </View>
+          </SafeAreaView>
           <View style={styles.frame}>
             <View style={styles.topLeftCorner} />
             <View style={styles.topRightCorner} />
@@ -144,11 +144,9 @@ const styles = StyleSheet.create({
   scannerwindow: {
     flex: 1,
     position: "absolute",
-    width: screenWidth * 1.2,
+    width: screenWidth,
     height: screenHeight,
     backgroundColor: "transparent",
-    borderWidth: 5,
-    borderColor: "white",
     alignSelf: "center",
     alignItems: "center",
   },
@@ -159,7 +157,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: screenHeight * 0.35,
     height: screenHeight * 0.35,
-    marginTop: screenHeight * 0.2,
+    marginTop: screenHeight * 0.3,
   },
   topLeftCorner: {
     position: "absolute",
@@ -206,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   button: {
-    marginTop: screenHeight * 0.4,
+    marginTop: screenHeight * 0.5,
     alignItems: "center",
     justifyContent: "center",
     width: screenWidth * 0.17,

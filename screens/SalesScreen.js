@@ -9,6 +9,7 @@ import GrayLine from "../components/GrayLine";
 import PopupWindow from "../components/PopupWindow";
 import Scanner from "../components/ScannerCamera";
 import PayButton from "../components/PayButton";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -104,13 +105,13 @@ const SalesScreen = () => {
   const formattedDateTime = currentDateTime.toLocaleString();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
         <Scanner />
         <BottomSheet
           ref={bottomSheetRef}
           index={0}
-          snapPoints={[screenHeight * 0.15, screenHeight * 0.9]}
+          snapPoints={[screenHeight * 0.09, screenHeight * 0.9]}
         >
           <PopupWindow
             handleOpenPress={handleOpenPress}
@@ -187,7 +188,7 @@ const SalesScreen = () => {
           </BottomSheet>
         )}
       </GestureHandlerRootView>
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
