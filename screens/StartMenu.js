@@ -44,7 +44,7 @@ const StartMenu = () => {
       <Text style={styles.autonetics}>Autonetics!</Text>
       <Pressable
         style={styles.loginButton}
-        onPress={() => navigation.navigate("SalesScreen")}
+        onPress={() => navigation.navigate("Login")}
       >
         <View style={styles.loginButtonChild} />
         <Text style={styles.text}>Log in</Text>
