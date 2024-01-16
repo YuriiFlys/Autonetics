@@ -34,6 +34,7 @@ export const FontSize = {
   size_s: 15,
   size_m: 18,
   size_xl: 20,
+  size_2xl: 30,
   size_21xl: 40,
 };
 /* Colors */
@@ -50,6 +51,7 @@ export const Color = {
   colorDarkBlue: "#26364D",
   colorLightCyan: "#e0fafd",
   colorLightGray: "#B6B6B6",
+  colorSuperLightGray: "#F2F2F2",
 };
 /* border radiuses */
 export const Border = {

@@ -73,7 +73,7 @@ const SalesScreen = () => {
   const [data, setData] = useState(list);
   shop = {
     name: "Магазин АТБ",
-    address: "вул. Шевченка, 1",
+    address: "вул. Шевченка, 1, Львів, Львівська область, 79000",
     imageSource: require("../assets/atb500.png"),
   };
   const navigator = useNavigation();
@@ -126,11 +126,16 @@ const SalesScreen = () => {
             index={0}
             snapPoints={[screenHeight * 0.93]}
             enablePanDownToClose={true}
-            style={{ alignContent: "center" }}
+            style={{
+              alignContent: "center",
+              borderColor: Color.colorLightGray,
+              borderWidth: 1,
+              borderRadius: 16,
+            }}
           >
             <View
               style={{
-                backgroundColor: Color.colorLightLightGray,
+                backgroundColor: Color.colorWhite,
                 alignItems: "center",
               }}
             >
@@ -145,11 +150,12 @@ const SalesScreen = () => {
                 <Text style={[styles.addressText, { marginTop: 10 }]}>
                   {formattedDateTime}
                 </Text>
-                <Text style={styles.sumText}>До Сплати: {sum}$</Text>
+                <Text style={styles.sumText}>До cплати: {sum}$</Text>
               </View>
               <PayButton
                 payLogo={require("../assets/ApplePayLogo.svg")}
                 payName={"Apple Pay"}
+                arrow={require("../assets/Arrow.svg")}
                 styleButton={{
                   backgroundColor: Color.colorBlack,
                 }}
@@ -160,11 +166,22 @@ const SalesScreen = () => {
                 styleButton={{
                   backgroundColor: Color.colorWhite,
                   borderColor: Color.colorBlack,
-                  borderWidth: Border.br_1,
+                  borderWidth: 1,
                 }}
+                arrow={require("../assets/Arrow_black.svg")}
                 styleText={{
                   color: Color.colorBlack,
                 }}
+              />
+              <PayButton
+                payLogo={require("../assets/CashPayment.svg")}
+                payName={"Оплата на касі"}
+                styleButton={{
+                  backgroundColor: Color.colorDarkBlue,
+                  borderColor: Color.colorBlack,
+                  borderWidth: 1,
+                }}
+                arrow={require("../assets/Arrow.svg")}
               />
             </View>
           </BottomSheet>
@@ -188,7 +205,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height: screenHeight * 0.3,
     borderRadius: Border.br_20,
-    backgroundColor: Color.colorLightLightGray,
+    backgroundColor: Color.colorSuperLightGray,
     flexDirection: "column",
     padding: 20,
   },
@@ -220,7 +237,7 @@ const styles = StyleSheet.create({
   },
   sumText: {
     marginTop: 10,
-    fontSize: FontSize.size_21xl,
+    fontSize: FontSize.size_2xl,
     fontFamily: FontFamily.CommissioneBold,
     color: Color.colorDarkBlue,
     textAlignVertical: "center",
