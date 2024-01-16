@@ -140,6 +140,7 @@ const SalesScreen = () => {
                 alignItems: "center",
               }}
             >
+              <Text style={styles.payNameScreen}>Опалата</Text>
               <View style={styles.shopInfoContainer}>
                 <View style={styles.shopMainInfoContainer}>
                   <Image source={shop.imageSource} style={styles.shopImage} />
@@ -243,6 +244,11 @@ const styles = StyleSheet.create({
     color: Color.colorDarkBlue,
     textAlignVertical: "center",
     textAlign: "right",
+  },
+  payNameScreen: {
+    fontSize: FontSize.size_2xl,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
   },
 });
 export default SalesScreen;
