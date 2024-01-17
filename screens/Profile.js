@@ -8,10 +8,10 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Image } from "expo-image";
-import { Color, FontFamily, FontSize} from "../GlobalStyles";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { FIREBASE_AUTH, FIREBASE_DB} from "../FirebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -25,10 +25,6 @@ function getInitials(name) {
   const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
   return initials;
 }
-
-
-
-
 
 const Promotions = () => {
   const navigator = useNavigation();
@@ -58,23 +54,29 @@ const Promotions = () => {
   }
   React.useEffect(() => {
     const user = FIREBASE_AUTH.currentUser;
-    const userDoc = doc(FIREBASE_DB, 'users', user.email);
+    const userDoc = doc(FIREBASE_DB, "users", user.email);
     const unsubscribe = onSnapshot(userDoc, (doc) => {
       const data = doc.data();
       setUserName(data.fullname);
       setImage(data.profileImage);
     });
-      return unsubscribe;
+    return unsubscribe;
   }, []);
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
         <View style={styles.userData}>
           <View style={styles.userIcon}>
-            {profileImage ? ( <Image source={{ uri: profileImage }} style={styles.userIconImage} />) : 
-            <Text style={styles.userIconText}>{getInitials(userName)}</Text>}
+            {profileImage ? (
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.userIconImage}
+              />
+            ) : (
+              <Text style={styles.userIconText}>{getInitials(userName)}</Text>
+            )}
           </View>
           <Text style={styles.userName}>{userName}</Text>
         </View>
@@ -100,7 +102,7 @@ const Promotions = () => {
         <ButtonMenu
           image={require("../assets/Profile/Settings.svg")}
           name={"Налаштування"}
-          navig={() => console.log("Налаштування")}
+          navig={() => navigator.navigate("Settings")}
         />
         <GrayLine />
       </View>

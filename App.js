@@ -8,8 +8,8 @@ import MyTabs from "./screens/MyTabs";
 import BottomMenu from "./screens/BottomMenu";
 import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
-import UserProfile from "./screens/UserProfile";
 import SalesScreen from "./screens/SalesScreen";
+import Settings from "./screens/Settings";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
 
@@ -22,7 +22,11 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator
-            screenOptions={{ headerShown: false, gestureEnabled: false, animation: 'none' }}
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: false,
+              animation: "none",
+            }}
           >
             <Stack.Screen
               name="StartMenu"
@@ -60,13 +64,13 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="UserProfile"
-              component={UserProfile}
+              name="SalesScreen"
+              component={SalesScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="SalesScreen"
-              component={SalesScreen}
+              name="Settings"
+              component={Settings}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

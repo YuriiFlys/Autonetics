@@ -20,7 +20,7 @@ import { updateProfile, updateEmail } from "firebase/auth";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRef } from "react";
 import { format } from "date-fns";
@@ -88,7 +88,7 @@ const UserProfile = () => {
       setInitials(getInitials(fullnameRef.current));
     }
   }, [fullnameRef.current]);
-  
+
   const handleContactSave = useCallback(() => {
     const user = auth.currentUser;
     if (user) {
@@ -101,48 +101,50 @@ const UserProfile = () => {
         },
         { merge: true }
       )
-      .then(() => {
-        getUpdatedUserDataFromFirestore(userDoc);
-      })
-      .catch((error) => {
-        console.error("Error updating document: ", error);
-      });
+        .then(() => {
+          getUpdatedUserDataFromFirestore(userDoc);
+        })
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
     }
     setIsEditingContacts(false);
   }, [phoneRef]);
-  
+
   const handleMainSave = useCallback(() => {
     const user = auth.currentUser;
     const oldEmail = user.email;
     if (user) {
       if (oldEmail !== emailRef.current) {
-        updateEmail(user, emailRef.current).then(() => {
-          const newUserDoc = doc(firestore, "users", emailRef.current);
-          const birthdate = { day: day, month: month, year: year };
-  
-          setDoc(
-            newUserDoc,
-            {
-              email: emailRef.current,
-              fullname: fullnameRef.current,
-              phone: "+380" + phoneRef.current,
-              birthdate: birthdate,
-              gender: gender,
-            },
-            { merge: true }
-          )
+        updateEmail(user, emailRef.current)
           .then(() => {
-            getUpdatedUserDataFromFirestore(newUserDoc);
-  
-            const oldUserDoc = doc(firestore, "users", oldEmail);
-            deleteDoc(oldUserDoc);
+            const newUserDoc = doc(firestore, "users", emailRef.current);
+            const birthdate = { day: day, month: month, year: year };
+
+            setDoc(
+              newUserDoc,
+              {
+                email: emailRef.current,
+                fullname: fullnameRef.current,
+                phone: "+380" + phoneRef.current,
+                birthdate: birthdate,
+                gender: gender,
+              },
+              { merge: true }
+            )
+              .then(() => {
+                getUpdatedUserDataFromFirestore(newUserDoc);
+
+                const oldUserDoc = doc(firestore, "users", oldEmail);
+                deleteDoc(oldUserDoc);
+              })
+              .catch((error) => {
+                console.error("Error updating document: ", error);
+              });
           })
           .catch((error) => {
-            console.error("Error updating document: ", error);
+            console.log(error);
           });
-        }).catch((error) => {
-          console.log(error);
-        });
       } else {
         updateProfile(user, {
           displayName: fullnameRef.current,
@@ -160,23 +162,23 @@ const UserProfile = () => {
             },
             { merge: true }
           )
-          .then(() => {
-            getUpdatedUserDataFromFirestore(userDoc);
-          })
-          .catch((error) => {
-            console.error("Error updating document: ", error);
-          });
+            .then(() => {
+              getUpdatedUserDataFromFirestore(userDoc);
+            })
+            .catch((error) => {
+              console.error("Error updating document: ", error);
+            });
         });
       }
       if (image) {
         const storage = getStorage();
-        const storageRef = ref(storage, 'images/' + emailRef.current);
-  
+        const storageRef = ref(storage, "images/" + emailRef.current);
+
         fetch(image)
-          .then(res => res.blob())
-          .then(blob => {
-            uploadBytes(storageRef, blob).then(snapshot => {
-              getDownloadURL(snapshot.ref).then(url => {
+          .then((res) => res.blob())
+          .then((blob) => {
+            uploadBytes(storageRef, blob).then((snapshot) => {
+              getDownloadURL(snapshot.ref).then((url) => {
                 const userDoc = doc(firestore, "users", emailRef.current);
                 setDoc(
                   userDoc,
@@ -191,7 +193,7 @@ const UserProfile = () => {
       }
     }
     setIsEditing(false);
-  }, [emailRef,fullnameRef,phoneRef, day, month, gender, image]);
+  }, [emailRef, fullnameRef, phoneRef, day, month, gender, image]);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -204,19 +206,20 @@ const UserProfile = () => {
       const response = await fetch(result.assets[0].uri);
       const blob = await response.blob();
       const storage = getStorage();
-      const storageRef = ref(storage, 'images/' + emailRef.current + '/profile.jpg');
+      const storageRef = ref(
+        storage,
+        "images/" + emailRef.current + "/profile.jpg"
+      );
       const snapshot = await uploadBytes(storageRef, blob);
       const url = await getDownloadURL(snapshot.ref);
-    
+
       setImage(url);
-    
+
       const userDoc = doc(firestore, "users", emailRef.current);
-      setDoc(userDoc, { profileImage: url }, { merge: true })
+      setDoc(userDoc, { profileImage: url }, { merge: true });
     }
-    
   };
-  
-  
+
   const getUpdatedUserDataFromFirestore = (userDoc) => {
     getDoc(userDoc).then((docSnap) => {
       if (docSnap.exists()) {
@@ -240,17 +243,23 @@ const UserProfile = () => {
   };
   const handleContactEdit = () => {
     setIsEditingContacts(true);
-  }
+  };
 
-  const handleEveryImageChange = useCallback((image) => {
-    if (image) {
-      const storage = getStorage();
-      const storageRef = ref(storage, 'images/' + emailRef.current + '/profile.jpg');
-      getDownloadURL(storageRef).then(url => {
-        setImage(url);
-      });
-    }
-  }, [image]);
+  const handleEveryImageChange = useCallback(
+    (image) => {
+      if (image) {
+        const storage = getStorage();
+        const storageRef = ref(
+          storage,
+          "images/" + emailRef.current + "/profile.jpg"
+        );
+        getDownloadURL(storageRef).then((url) => {
+          setImage(url);
+        });
+      }
+    },
+    [image]
+  );
 
   const handleFullnameChange = useCallback((fullname) => {
     fullnameRef.current = fullname;
@@ -427,7 +436,10 @@ const UserProfile = () => {
             )}
             {isEditing && <View style={styles.sepLine}></View>}
             {isEditing && (
-              <TouchableOpacity styles={styles.saveIcon} onPress={handleMainSave}>
+              <TouchableOpacity
+                styles={styles.saveIcon}
+                onPress={handleMainSave}
+              >
                 <Image
                   style={styles.saveIcon}
                   contentFit="contain"
@@ -445,7 +457,7 @@ const UserProfile = () => {
       </TouchableWithoutFeedback>
     );
   };
-  const ContactsWidget = ({ widgetname}) => {
+  const ContactsWidget = ({ widgetname }) => {
     return (
       <View style={styles.ContactsWidgetView}>
         <View style={styles.widgetInfoRow}>
@@ -456,31 +468,32 @@ const UserProfile = () => {
               source={require("../assets/telephone.png")}
             />
             <Text style={styles.widgetProfileName}>{widgetname}</Text>
-            <TouchableOpacity style={styles.editIcon} onPress={handleContactEdit}>
-                <Image
-                  style={styles.editIcon}
-                  contentFit="contain"
-                  source={require("../assets/Profile/Settings.svg")}
-                />
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleContactEdit}
+            >
+              <Image
+                style={styles.editIcon}
+                contentFit="contain"
+                source={require("../assets/Profile/Settings.svg")}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Номер телефону"}</Text>
-          <View style = {styles.Phonenumber}>
-          <Text style={styles.EditedText}>{"+380"}</Text>
-          {isEditingContacts ? (
-            <TextInput
-              style={styles.EditedText}
-              defaultValue={phoneRef.current}
-              keyboardType="numeric"
-              onChangeText={handlePhoneChange}
-              maxLength={9}
-            />
-          ) : (
-            <Text style={styles.EditedText}>
-              {phoneRef.current}
-            </Text>
-          )}
+          <View style={styles.Phonenumber}>
+            <Text style={styles.EditedText}>{"+380"}</Text>
+            {isEditingContacts ? (
+              <TextInput
+                style={styles.EditedText}
+                defaultValue={phoneRef.current}
+                keyboardType="numeric"
+                onChangeText={handlePhoneChange}
+                maxLength={9}
+              />
+            ) : (
+              <Text style={styles.EditedText}>{phoneRef.current}</Text>
+            )}
           </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
@@ -495,15 +508,18 @@ const UserProfile = () => {
           )}
         </View>
         {isEditingContacts && <View style={styles.sepLine}></View>}
-            {isEditingContacts && (
-              <TouchableOpacity styles={styles.saveIcon} onPress={handleContactSave}>
-                <Image
-                  style={styles.saveIcon}
-                  contentFit="contain"
-                  source={require("../assets/tick.svg")}
-                />
-              </TouchableOpacity>
-            )}
+        {isEditingContacts && (
+          <TouchableOpacity
+            styles={styles.saveIcon}
+            onPress={handleContactSave}
+          >
+            <Image
+              style={styles.saveIcon}
+              contentFit="contain"
+              source={require("../assets/tick.svg")}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -539,25 +555,31 @@ const UserProfile = () => {
     }
   };
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
-    <SafeAreaView style={styles.container}>
-      <Logo name={"Профіль"} />
-      <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
-        <View style={styles.scrollView}>
-        <View style={styles.userIcon} onTouchEnd={pickImage}>
-          {image ? ( <Image source={{ uri: image }} style={styles.userIconImage} />) : 
-          <Text style={styles.userIconText}>{initials}</Text>}
-        </View>
-          <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
-          <ContactsWidget
-            widgetname={"Контакти"}
-            phone={"+380123456789"}
-            email={emailRef.current}
-          />
-          <SignOut />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <Logo name={"Профіль"} />
+        <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
+          <View style={styles.scrollView}>
+            <View style={styles.userIcon} onTouchEnd={pickImage}>
+              {image ? (
+                <Image source={{ uri: image }} style={styles.userIconImage} />
+              ) : (
+                <Text style={styles.userIconText}>{initials}</Text>
+              )}
+            </View>
+            <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
+            <ContactsWidget
+              widgetname={"Контакти"}
+              phone={"+380123456789"}
+              email={emailRef.current}
+            />
+            <SignOut />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
@@ -606,7 +628,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
   },
-  Phonenumber:{
+  Phonenumber: {
     flexDirection: "row",
   },
   SignOutView: {
@@ -680,7 +702,7 @@ const styles = StyleSheet.create({
   },
   mainWidgetLabel: {
     flexDirection: "row",
-    justifyContent:"space-between",
+    justifyContent: "space-between",
   },
   editIcon: {
     height: screenWidth * 0.09,
