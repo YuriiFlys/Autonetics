@@ -2,9 +2,14 @@ import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
-import { FontFamily, FontSize, Border, Color} from "../GlobalStyles";
+import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
-
+import {
+  SafeAreaView,
+  SafeAreaProvider,
+  SafeAreaInsetsContext,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -21,11 +26,15 @@ const StartMenu = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return <View><Text>Loading...</Text></View>; 
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
-    <View style={styles.startmenu}>
+    <SafeAreaProvider style={styles.startmenu}>
       <Text style={styles.welcomeTo}>{`Welcome to `}</Text>
       <Image
         style={styles.logoIcon}
@@ -47,10 +56,9 @@ const StartMenu = () => {
         <View style={styles.signupButtonChild} />
         <Text style={styles.signUp}>Sign Up</Text>
       </Pressable>
-    </View>
+    </SafeAreaProvider>
   );
 };
-
 
 const styles = StyleSheet.create({
   logoIcon: {
@@ -75,9 +83,9 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: screenHeight * 0.05,
-    alignSelf: 'center',
-    height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
-    width: screenWidth*0.5,
+    alignSelf: "center",
+    height: screenHeight < 600 ? screenHeight * 0.07 : screenHeight * 0.06,
+    width: screenWidth * 0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: "center",
@@ -91,8 +99,8 @@ const styles = StyleSheet.create({
   signupButton: {
     alignSelf: "center",
     marginTop: screenHeight * 0.02,
-    height: screenHeight < 600 ? screenHeight*0.07 : screenHeight*0.06,
-    width: screenWidth*0.5,
+    height: screenHeight < 600 ? screenHeight * 0.07 : screenHeight * 0.06,
+    width: screenWidth * 0.5,
     backgroundColor: "#354962",
     borderRadius: Border.br_3xs,
     justifyContent: "center",

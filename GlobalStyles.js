@@ -27,11 +27,14 @@ export const FontFamily = {
   CommissioneSemiBold: "CommissioneSemiBold",
   CommissioneThin: "CommissioneThin",
   CommissioneMedium: "CommissioneMedium",
-  palanquinDarkRegular: "PalanquinDark-Regular"
+  palanquinDarkRegular: "PalanquinDark-Regular",
 };
 /* font sizes */
 export const FontSize = {
+  size_s: 15,
+  size_m: 18,
   size_xl: 20,
+  size_2xl: 30,
   size_21xl: 40,
 };
 /* Colors */
@@ -40,6 +43,7 @@ export const Color = {
   colorDarkslategray_200: "#213045",
   colorGray: "rgba(255, 255, 255, 0)",
   colorWhite: "#fff",
+  colorBlack: "black",
   colorGainsboro: "#d9d9d9",
   colorSteelblue: "#2469a2",
 
@@ -47,9 +51,12 @@ export const Color = {
   colorDarkBlue: "#26364D",
   colorLightCyan: "#e0fafd",
   colorLightGray: "#B6B6B6",
+  colorSuperLightGray: "#F2F2F2",
 };
 /* border radiuses */
 export const Border = {
   br_4xs: 9,
   br_3xs: 10,
+  br_20: 20,
+  br_25: 25,
 };

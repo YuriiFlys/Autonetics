@@ -1,174 +1,254 @@
-import * as React from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-  Button,
-} from "react-native";
-import { Image } from "expo-image";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useNavigation } from "@react-navigation/native";
-import BottomSheet, { TouchableHighlight } from "@gorhom/bottom-sheet";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Dimensions, SafeAreaView, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import BottomSheet, { TouchableHighlight } from "@gorhom/bottom-sheet";
+import { Image } from "expo-image";
 import GrayLine from "../components/GrayLine";
+import PopupWindow from "../components/PopupWindow";
+import Scanner from "../components/ScannerCamera";
+import PayButton from "../components/PayButton";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const SalesScreen = () => {
-  const navigator = useNavigation();
-  const bottomSheetRef = React.useRef();
-  const keyExtractor = (item, index) => index.toString();
-  data = [
+  list = [
     {
-      name: "Моршинська",
+      id: 1,
+      name: "Моршинська1",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 10,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
-      name: "Моршинська",
+      id: 2,
+      name: "Моршинська2",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
-      name: "Моршинська",
+      id: 3,
+      name: "Моршинська3",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
-      name: "Моршинська",
+      id: 4,
+      name: "Моршинська4",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
-      name: "Моршинська",
+      id: 5,
+      name: "Моршинська5",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
     {
-      name: "Моршинська",
+      id: 6,
+      name: "Моршинська6",
       price: 123,
-      imageSource: require("../assets/Products/morshynska.png"),
+      imageSource: require("../assets/voda.png"),
+      number: 1,
+      description:
+        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
     },
   ];
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.shopelement}
-      onPress={() => {
-        console.log(item.name);
-        navigator.navigate("SalesScreen", { shopName: item.name });
-      }}
-    >
-      <Image source={item.imageSource} style={styles.imageSource} />
-      <Text style={styles.shopName}>{item.name}</Text>
-      <Text style={styles.street}>{item.price}</Text>
-    </TouchableOpacity>
-  );
-  const showAlert = () => {
-    Alert.alert("Вихід", "Чи справді ви хочете вийти?", [
-      {
-        text: "Ні",
-        onPress: () => console.log("Відміна"),
-        style: "cancel",
-      },
-      { text: "Так", onPress: () => navigator.goBack() },
-    ]);
+  const [data, setData] = useState(list);
+  shop = {
+    name: "Магазин АТБ",
+    address: "вул. Шевченка, 1, Львів, Львівська область, 79000",
+    imageSource: require("../assets/atb500.png"),
+  };
+  const navigator = useNavigation();
+  const bottomSheetRef = React.useRef();
+  const bottomSheetRef1 = React.useRef();
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false); // Додана змінна стану
+
+  const handleClosePress = () => {
+    if (bottomSheetRef1.current) {
+      bottomSheetRef1.current.close();
+    }
+    setIsBottomSheetOpen(false);
   };
 
+  const handleOpenPress = () => {
+    if (bottomSheetRef1.current) {
+      bottomSheetRef1.current.expand();
+      setIsBottomSheetOpen(true);
+    }
+    setIsBottomSheetOpen(true);
+  };
+
+  const [sum, setSum] = useState(
+    data.reduce((acc, item) => acc + item.number * item.price, 0)
+  );
+
+  const currentDateTime = new Date();
+  const formattedDateTime = currentDateTime.toLocaleString();
+
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <View style={styles.buttonCameraContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            showAlert();
-          }}
+    <SafeAreaProvider style={styles.container}>
+      <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
+        <Scanner />
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={[screenHeight * 0.09, screenHeight * 0.85]}
         >
-          <Image
-            source={require("../assets/Camera/cross.svg")}
-            style={styles.cross}
+          <PopupWindow
+            handleOpenPress={handleOpenPress}
+            sum={sum}
+            setSum={setSum}
+            data={data}
+            setData={setData}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log("Ліхатрик")}>
-          <Image
-            source={require("../assets/Camera/light.svg")}
-            style={styles.light}
-          />
-        </TouchableOpacity>
-      </View>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={[screenHeight * 0.09, screenHeight * 0.85]}
-      >
-        <View style={styles.bottomsheetcontainer}>
-          <View style={styles.sumContainer}>
-            <Text style={styles.sumtext}>Сума</Text>
-            <Text style={[styles.sumtext, { color: "red" }]}>99.99 ₴</Text>
-          </View>
-          <View style={styles.bottomsheet_main_container}>
-            <GrayLine />
-            <FlatList data={data} renderItem={renderItem} />
-          </View>
-        </View>
-      </BottomSheet>
-    </GestureHandlerRootView>
+        </BottomSheet>
+        {isBottomSheetOpen && (
+          <BottomSheet
+            ref={bottomSheetRef1}
+            index={0}
+            snapPoints={[screenHeight * 0.93]}
+            enablePanDownToClose={true}
+            style={{
+              alignContent: "center",
+              borderColor: Color.colorLightGray,
+              borderWidth: 1,
+              borderRadius: 16,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: Color.colorWhite,
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.payNameScreen}>Опалата</Text>
+              <View style={styles.shopInfoContainer}>
+                <View style={styles.shopMainInfoContainer}>
+                  <Image source={shop.imageSource} style={styles.shopImage} />
+                  <View style={styles.shopNameContainer}>
+                    <Text style={styles.shopName}>{shop.name}</Text>
+                  </View>
+                </View>
+                <Text style={styles.addressText}>{shop.address}</Text>
+                <Text style={[styles.addressText, { marginTop: 10 }]}>
+                  {formattedDateTime}
+                </Text>
+                <Text style={styles.sumText}>До cплати: {sum}$</Text>
+              </View>
+              <PayButton
+                payLogo={require("../assets/ApplePayLogo.svg")}
+                payName={"Apple Pay"}
+                arrow={require("../assets/Arrow.svg")}
+                styleButton={{
+                  backgroundColor: Color.colorBlack,
+                }}
+              />
+              <PayButton
+                payLogo={require("../assets/GooglePayLogo.svg")}
+                payName={"Google Pay"}
+                styleButton={{
+                  backgroundColor: Color.colorWhite,
+                  borderColor: Color.colorBlack,
+                  borderWidth: 1,
+                }}
+                arrow={require("../assets/Arrow_black.svg")}
+                styleText={{
+                  color: Color.colorBlack,
+                }}
+              />
+              <PayButton
+                payLogo={require("../assets/CashPayment.svg")}
+                payName={"Оплата на касі"}
+                styleButton={{
+                  backgroundColor: Color.colorDarkBlue,
+                  borderColor: Color.colorBlack,
+                  borderWidth: 1,
+                }}
+                arrow={require("../assets/Arrow.svg")}
+              />
+            </View>
+          </BottomSheet>
+        )}
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: Color.colorWhite,
+  },
+  GestureHandlerRootViewContainer: {
+    height: screenHeight,
+    width: screenWidth,
+    alignItems: "center",
+  },
+  shopInfoContainer: {
+    marginTop: 30,
+    width: "80%",
+    height: screenHeight * 0.3,
+    borderRadius: Border.br_20,
+    backgroundColor: Color.colorSuperLightGray,
     flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: "black",
+    padding: 20,
   },
-  buttonCameraContainer: {
-    marginTop: 100,
-    width: screenWidth * 0.8,
-    justifyContent: "space-between",
+  shopMainInfoContainer: {
     flexDirection: "row",
+    height: "50%",
   },
-  light: {
+  shopImage: {
+    width: "35%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  shopNameContainer: {
+    width: "65%",
     justifyContent: "center",
     alignItems: "center",
-    width: (screenHeight * 0.045 * 10) / 25,
-    height: screenHeight * 0.045,
   },
-  cross: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: screenHeight * 0.045,
-    width: screenHeight * 0.045,
-  },
-  bottomsheetcontainer: {
-    alignItems: "center",
-  },
-  sumContainer: {
-    width: screenWidth * 0.7,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  bottomsheet_main_container: {
-    marginTop: screenHeight * 0.045,
-  },
-  sumtext: {
-    fontSize: 23,
+  shopName: {
+    fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneBold,
     color: Color.colorDarkBlue,
+    textAlignVertical: "center",
+    textAlign: "center",
   },
-  shopelement: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: screenWidth * 0.9,
-    height: screenHeight * 0.09,
+  addressText: {
+    fontSize: FontSize.size_s,
+    fontFamily: FontFamily.CommissioneLight,
+    color: Color.colorLightGray,
   },
-  imageSource: {
-    width: screenWidth * 0.2,
-    height: screenWidth * 0.2,
+  sumText: {
+    marginTop: 10,
+    fontSize: FontSize.size_2xl,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
+    textAlignVertical: "center",
+    textAlign: "right",
+  },
+  payNameScreen: {
+    fontSize: FontSize.size_2xl,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
   },
 });
 export default SalesScreen;
