@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Image } from "expo-image";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Text,
   View,
@@ -9,47 +8,63 @@ import {
   Linking,
   Alert
 } from "react-native";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import {Image} from "expo-image";
+import { Camera } from "expo-camera";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(true);
+  const [scanned, setScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
   const navigator = useNavigation();
-
+  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+
+    const getCameraPermissions = async () => {
+      const { status } = await Camera.getCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
 
-    getBarCodeScannerPermissions();
-  }, []);
+    getCameraPermissions();
+    if (isFocused){
+      setFlashMode(Camera.Constants.FlashMode.off);
+    }
+    setScanned(false);
+    setTimeout(() => {
+      setScanned(true);
+    }, 1);
+  }, [isFocused]);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  useEffect(() => {
+    
+  }
+  ,[isFocused])
+  const handleBarCodeScanned = useCallback(({ type, data }) => {
     setScanned(true);
     setIsScanning(false);
     const isUrl = /^(http|https):\/\/[^ "]+$/.test(data);
-
-  if (isUrl && Linking.canOpenURL(data)) {
-    Linking.openURL(data).catch(err => console.error('Failed to open URL: ', err));
-  } else {
-    Alert.alert(data)
-  }
-  };
+  
+    if (isUrl && Linking.canOpenURL(data)) {
+      Linking.openURL(data).catch(err => console.error('Failed to open URL: ', err));
+    } else {
+      Alert.alert(data)
+    }
+  }, []);
+  
 
   const startScan = () => {
     setIsScanning(!isScanning);
-    if (isScanning) {
-      setScanned(true);
-    } else {
+    if (!isScanning) {
       setScanned(false);
     }
+    else {
+      setScanned(true);
+    }
   };
+  
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -58,12 +73,21 @@ export default function Scanner() {
     return <Text>No access to camera</Text>;
   }
 
+  const toggleFlashlight = () => {
+    if (flashMode === Camera.Constants.FlashMode.off) {
+      setFlashMode(Camera.Constants.FlashMode.torch);
+    } else {
+      setFlashMode(Camera.Constants.FlashMode.off);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {isFocused && (
-        <BarCodeScanner
+        <Camera
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.scannerwindow}
+          flashMode={flashMode}
         />
       )}
       <View style={styles.frame}>
@@ -71,6 +95,18 @@ export default function Scanner() {
         <View style={styles.topRightCorner} />
         <View style={styles.bottomLeftCorner} />
         <View style={styles.bottomRightCorner} />
+      </View>
+      <View style={styles.flash}>
+        <TouchableOpacity
+          onPress={() => {
+            toggleFlashlight();
+          }}
+        >
+          <Image
+            style={styles.icon}
+            source={require("../assets/Camera/light.svg")}
+          />
+        </TouchableOpacity>
       </View>
       <View>
         <TouchableOpacity
@@ -83,6 +119,7 @@ export default function Scanner() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -148,6 +185,11 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.1,
     aspectRatio: 1,
     contentFit: "contain",
+  },
+  flash: {
+    position: "absolute",
+    top: screenHeight * 0.05,
+    right: screenWidth * 0.05,
   },
   frame: {
     position: "absolute",
