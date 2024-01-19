@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable } from "react-native";
@@ -129,7 +128,6 @@ const LoginMenu = () => {
 const styles = StyleSheet.create({
   logIn: {
     marginTop: screenHeight * 0.1,
-    marginBottom: screenHeight * 0.05,
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
@@ -137,8 +135,9 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     alignSelf: "center",
-    height: screenHeight * 0.25,
-    width: screenWidth * 0.5,
+    marginTop: screenHeight * 0.02,
+    height: screenHeight * 0.3,
+    width: screenWidth * 0.6,
   },
   field: {
     marginTop: screenHeight * 0.01,
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.01,
   },
   errormessage: {
-    color: "red",
+    color: Color.colorErrorRed,
     fontFamily: FontFamily.CommissioneRegular,
     marginTop: screenHeight * 0.01,
     textAlign: "center",
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: screenHeight < 600 ? screenHeight * 0.06 : screenHeight * 0.05,
     width: screenWidth * 0.5,
-    backgroundColor: "#2469A2",
+    backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
     justifyContent: "center",
     alignItems: "center",
@@ -203,7 +202,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontFamily: FontFamily.CommissioneRegular,
     fontSize: 14,
-    color: "#25364c",
+    color: Color.colorDarkBlue,
   },
   vector: {
     marginTop: screenHeight * 0.01,
@@ -213,6 +212,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: screenHeight * 0.02,
     left: screenWidth * 0.02,
+    color: Color.colorDarkBlue,
   },
   loginmenu: {
     flex: 1,

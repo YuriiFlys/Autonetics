@@ -52,6 +52,7 @@ export const Color = {
   colorLightCyan: "#e0fafd",
   colorLightGray: "#B6B6B6",
   colorSuperLightGray: "#F2F2F2",
+  colorErrorRed: "#FF0000",
 };
 /* border radiuses */
 export const Border = {

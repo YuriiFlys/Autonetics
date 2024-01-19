@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View, Pressable, useEffect } from "react-native";
+import { StyleSheet, Text, View, Pressable} from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { TextInput, KeyboardAvoidingView, Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
@@ -27,18 +27,21 @@ const WelcomeScreen = () => {
         await updateProfile(user, { displayName: `${name} ${surname}` });
         navigator.navigate('BottomMenu', { screen: 'Home' });
         console.log('Ім\'я та прізвище оновлено');
-        const userDocRef = doc(firestore, 'users', user.email);
+        const userDocRef = doc(firestore, 'users', user.namesurname);
         const birthdate = {day: 1, month: 1, year: 1900};
         const gender = 'Не вказано';
-        await setDoc(userDocRef, { fullname: `${name} ${surname}`, email: user.email, birthdate: birthdate, gender: gender });
+        await setDoc(userDocRef, { fullname: `${name} ${surname}`, namesurname: user.namesurname, birthdate: birthdate, gender: gender });
       } catch (error) {
         console.error(error);
       }
     };
     
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
-      <Text style={styles.logIn}>Welcome!</Text>
+    <KeyboardAvoidingView behavior="position"
+    style={[{flex: 1, justifyContent: 'flex-start', backgroundColor: Color.colorLightCyan}]}
+    keyboardVerticalOffset={-screenHeight * 0.2}
+    enabled>
+      <Text style={styles.welcome}>Welcome!</Text>
       <Image
         style={styles.logoIcon}
         contentFit="contain"
@@ -46,8 +49,8 @@ const WelcomeScreen = () => {
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-      <View style={styles.email}>
-        <Text style={styles.emailtext}>Введіть ім'я</Text>
+      <View style={styles.namesurname}>
+        <Text style={styles.namesurnametext}>Введіть ім'я</Text>
         <TextInput 
           style={styles.field}
           placeholder="Ім'я"
@@ -55,8 +58,8 @@ const WelcomeScreen = () => {
           onChangeText={setName}
         />
       </View>
-      <View style={styles.email}>
-        <Text style={styles.emailtext}>Введіть прізвище</Text>
+      <View style={styles.namesurname}>
+        <Text style={styles.namesurnametext}>Введіть прізвище</Text>
         <TextInput
             style={styles.field}
             placeholder="Прізвище"
@@ -72,7 +75,6 @@ const WelcomeScreen = () => {
       >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
-      
     </KeyboardAvoidingView>
   );
 };
@@ -80,18 +82,18 @@ const WelcomeScreen = () => {
 
 
 const styles = StyleSheet.create({
-  logIn: {
+  welcome: {
     marginTop: screenHeight*0.1,
-    marginBottom: screenHeight*0.05,
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
-    color: "#23334A",
+    color: Color.colorDarkBlue,
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenHeight*0.25,
-    width: screenWidth*0.5,
+    marginTop: screenHeight*0.02,
+    height: screenHeight*0.3,
+    width: screenWidth*0.6,
   },
   field: {
     marginTop: screenHeight*0.01,
@@ -101,33 +103,28 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
-    backgroundColor: Color.colorLightcyan,
+    backgroundColor: Color.colorLightCyan,
     fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth*0.02,
     paddingRight: screenWidth*0.02,
   },
-  emailtext: {
+  namesurnametext: {
     marginLeft: screenWidth*0.1,
     color: Color.colorDarkslategray_200,
     fontSize: 16,
     fontFamily: FontFamily.CommissioneBold,
   },
   
-  email: {
+  namesurname: {
     marginTop: screenHeight*0.01,
   },
-  errormessage:{
-    color: 'red',
-    fontFamily: FontFamily.CommissioneRegular,
-    marginTop: screenHeight*0.01,
-    textAlign: 'center',
-  },
+  
   submit: {
     marginTop: screenHeight*0.02,
     alignSelf: 'center',
     height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
     width: screenWidth*0.5,
-    backgroundColor: "#2469A2",
+    backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
     alignItems: 'center',
@@ -137,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    color: "#fff",
+    color: Color.colorWhite,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneRegular,
   },
@@ -149,11 +146,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: screenHeight*0.02,
     left: screenWidth*0.02,
-  },
-  forgotPass: {
-    flex: 1,
-    backgroundColor: Color.colorLightcyan,
-    justifyContent: 'flex-start',
   },
 });
 

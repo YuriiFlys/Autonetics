@@ -5,10 +5,7 @@ import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
 import {
-  SafeAreaView,
   SafeAreaProvider,
-  SafeAreaInsetsContext,
-  useSafeAreaInsets,
 } from "react-native-safe-area-context";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -72,21 +69,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
-    color: "#354962",
+    color: Color.colorDarkBlue,
   },
   autonetics: {
     marginTop: screenHeight * 0.01,
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
-    color: "#354962",
+    color: Color.colorDarkBlue,
   },
   loginButton: {
     marginTop: screenHeight * 0.05,
     alignSelf: "center",
     height: screenHeight < 600 ? screenHeight * 0.07 : screenHeight * 0.06,
     width: screenWidth * 0.5,
-    backgroundColor: "#354962",
+    backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
     justifyContent: "center",
   },
@@ -101,7 +98,7 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.02,
     height: screenHeight < 600 ? screenHeight * 0.07 : screenHeight * 0.06,
     width: screenWidth * 0.5,
-    backgroundColor: "#354962",
+    backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
     justifyContent: "center",
   },

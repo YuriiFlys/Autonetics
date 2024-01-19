@@ -61,8 +61,8 @@ const SignUpMenu = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
     <View>
-      <View style={styles.phoneNumber}>
-        <Text style={styles.phoneNumbertext}>Email</Text>
+      <View style={styles.email}>
+        <Text style={styles.emailtext}>Email</Text>
         <TextInput 
           style={styles.field}
           onChangeText={setEmail}
@@ -117,16 +117,16 @@ const SignUpMenu = () => {
 const styles = StyleSheet.create({
   signUp: {
     marginTop: screenHeight * 0.1,
-    marginBottom: screenHeight * 0.05,
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
-    color: "#23334A",
+    color: Color.colorDarkBlue,
   },
   logoIcon: {
     alignSelf: 'center',
-    height: screenHeight * 0.25,
-    width: screenWidth * 0.5,
+    marginTop: screenHeight * 0.02,
+    height: screenHeight * 0.3,
+    width: screenWidth * 0.6,
   },
   field: {
     marginTop: screenHeight * 0.01,
@@ -136,12 +136,12 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
-    backgroundColor: Color.colorLightcyan,
+    backgroundColor: Color.colorLightCyan,
     fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth*0.02,
     paddingRight: screenWidth*0.02,
   },
-  phoneNumbertext: {
+  emailtext: {
     marginLeft: screenWidth * 0.1,
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
@@ -160,11 +160,11 @@ const styles = StyleSheet.create({
   repeatPass: {
     marginTop: screenHeight * 0.01,
   },
-  phoneNumber: {
+  email: {
     marginTop: screenHeight * 0.01,
   },
   errormessage:{
-    color: 'red',
+    color: Color.colorErrorRed,
     fontFamily: FontFamily.CommissioneRegular,
     marginTop: screenHeight*0.01,
     textAlign: 'center',
@@ -174,13 +174,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
     width: screenWidth*0.5,
-    backgroundColor: "#2469A2",
+    backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
   },
   registerText: {
     textAlign: 'center',
-    color: 'white',
+    color: Color.colorWhite,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneRegular,
   },
@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: screenHeight*0.02,
     left: screenWidth*0.02,
+    color: Color.colorDarkBlue,
   },
   signupmenu: {
     flex: 1,

@@ -7,7 +7,6 @@ import {
   Dimensions,
   TextInput,
   Modal,
-  Button,
   SafeAreaView,
   ScrollView,
   Alert,

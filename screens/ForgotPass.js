@@ -30,7 +30,7 @@ const ForgotPass = () => {
     <KeyboardAvoidingView style={styles.forgotPass} behavior="position"
     keyboardVerticalOffset={-screenHeight*0.2}
      enabled>
-      <Text style={styles.logIn}>Recover password</Text>
+      <Text style={styles.recover}>Recover password</Text>
       <Image
         style={styles.logoIcon}
         contentFit="contain"
@@ -66,16 +66,16 @@ const ForgotPass = () => {
 
 
 const styles = StyleSheet.create({
-  logIn: {
+  recover: {
     marginTop: screenHeight*0.1,
-    marginBottom: screenHeight*0.05,
     textAlign: "center",
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_21xl,
-    color: "#23334A",
+    color: Color.colorDarkBlue,
   },
   logoIcon: {
     alignSelf: 'center',
+    marginTop: screenHeight*0.02,
     height: screenHeight*0.3,
     width: screenWidth*0.6,
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
     width: screenWidth*0.8,
-    backgroundColor: Color.colorLightcyan,
+    backgroundColor: Color.colorLightCyan,
     fontFamily: FontFamily.CommissioneBold,
     paddingLeft: screenWidth*0.02,
     paddingRight: screenWidth*0.02,
@@ -102,18 +102,12 @@ const styles = StyleSheet.create({
   email: {
     marginTop: screenHeight*0.01,
   },
-  errormessage:{
-    color: 'red',
-    fontFamily: FontFamily.CommissioneRegular,
-    marginTop: screenHeight*0.01,
-    textAlign: 'center',
-  },
   submit: {
     marginTop: screenHeight*0.02,
     alignSelf: 'center',
     height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
     width: screenWidth*0.5,
-    backgroundColor: "#2469A2",
+    backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
     justifyContent: 'center',
     alignItems: 'center',
@@ -135,10 +129,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: screenHeight*0.02,
     left: screenWidth*0.02,
+    color: Color.colorDarkBlue,
   },
   forgotPass: {
     flex: 1,
-    backgroundColor: Color.colorLightcyan,
+    backgroundColor: Color.colorLightCyan,
     justifyContent: 'flex-start',
   },
 });
