@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  ScrollView,
+  FlatList,
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
@@ -39,17 +41,68 @@ const Promotions = () => {
       </View>
     );
   };
+  const SmallWidget = ({ name, price, image, brand }) => {
+    return (
+      <View style={styles.smallWidgetView}>
+        <View style={styles.smallWidgetInfoRow}>
+          <Text style={[styles.widgetProductMainInfo]}>{name}</Text>
+          <Text style={styles.widgetProductMainInfo}>{price}</Text>
+        </View>
+        <View style={styles.widgetImageRow}>
+          <View style={styles.widgetImageBox}>
+            <Image source={image} style={styles.widgetProductImage} />
+          </View>
+          <View style={[styles.widgetImageBox]}>
+            <Image source={brand} style={styles.widgetProductBrandLogo} />
+          </View>
+        </View>
+      </View>
+    );
+  };
+  const scrollViewRef = useRef();
   return (
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Акції"} />
-      <MainWidget
-        name={"Банани "}
-        price={"47.59₴"}
-        image={require("../assets/bananas.jpeg")}
-        brand={require("../assets/atb500.png")}
-        description={"Банани Іспанія"}
-      />
+      <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
+        <MainWidget
+          name={"Банани"}
+          price={"47.59₴"}
+          image={require("../assets/bananas.jpeg")}
+          brand={require("../assets/atb500.png")}
+          description={"Банани - смачний та корисний фрукт, багатий на калій та вітаміни. Їх аромат та смак завжди радують. Ідеальний перекус для енергії!"}
+        />
+        <View style={styles.smallWidgets}>
+          <SmallWidget
+            name={"Пиво"}
+            price={"34.95₴"}
+            image={require("../assets/beer.png")}
+            brand={require("../assets/blizenko.png")}
+          />
+          <SmallWidget
+            name={"Пиво"}
+            price={"34.95₴"}
+            image={require("../assets/beer.png")}
+            brand={require("../assets/blizenko.png")}
+          />
+        </View>
+        <View style={styles.smallWidgets}>
+          <SmallWidget
+            name={"Пиво"}
+            price={"34.95₴"}
+            image={require("../assets/beer.png")}
+            brand={require("../assets/blizenko.png")}
+          />
+          <SmallWidget
+            name={"Пиво"}
+            price={"34.95₴"}
+            image={require("../assets/beer.png")}
+            brand={require("../assets/blizenko.png")}
+          />
+        </View>
+
+      </ScrollView>
     </SafeAreaView>
+
   );
 };
 
@@ -68,6 +121,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     padding: 20,
     alignItems: "center",
+    marginBottom: 10,
   },
   widgetInfoRow: {
     flexDirection: "row",
@@ -92,7 +146,7 @@ const styles = StyleSheet.create({
   widgetProductImage: {
     flex: 1,
     width: "150%",
-    resizeMode: "contain",
+    contentFit: "contain",
   },
   widgetProductBrandLogo: {
     width: "30%",
@@ -105,6 +159,26 @@ const styles = StyleSheet.create({
   },
   widgetProductDescriptionContainer: {
     width: "90%",
+  },
+  smallWidgets: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  smallWidgetView: {
+    flexDirection: "column",
+    width: screenWidth * 0.43,
+    backgroundColor: "lightgrey",
+    borderRadius: 20,
+    overflow: "hidden",
+    padding: 20,
+    alignItems: "center",
+    margin: screenWidth * 0.01,
+  },
+  smallWidgetInfoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 10,
   },
 });
 export default Promotions;
