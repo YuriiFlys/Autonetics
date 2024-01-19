@@ -1,11 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useNavigation } from "@react-navigation/native";
+import { Color } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 
 const GrayLine = ({ style }) => {
-  const navigator = useNavigation();
   return <View style={[styles.grayLine, style]} />;
 };
 

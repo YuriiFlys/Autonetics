@@ -1,4 +1,3 @@
-const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import StartMenu from "./screens/StartMenu";
@@ -13,9 +12,10 @@ import Settings from "./screens/Settings";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
 
+const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
-  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+  const [hideSplashScreen] = React.useState(true);
 
   return (
     <>

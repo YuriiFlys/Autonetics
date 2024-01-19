@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import {
   Text,
   View,
@@ -19,7 +19,6 @@ export default function Scanner() {
   const [scanned, setScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
-  const navigator = useNavigation();
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   useEffect(() => {
 

@@ -21,18 +21,16 @@ export async function getUserName() {
   const user = FIREBASE_AUTH.currentUser;
   const userDoc = doc(FIREBASE_DB, "users", user.email);
 
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onSnapshot(userDoc, (doc) => {
-      const data = doc.data();
-      resolve(data.fullname);
-    });
+  onSnapshot(userDoc, (doc) => {
+    const data = doc.data();
+    return data.fullname;
   });
 }
 
 const LoginMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
-  const [userName, setUserName] = React.useState("");
+  const [,setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");

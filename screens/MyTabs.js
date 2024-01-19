@@ -1,6 +1,6 @@
 // MyTabs.js
 import * as React from "react";
-import { View, StyleSheet, Dimensions, Text, SafeAreaView } from "react-native";
+import {StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import MainMenu from "./MainMenu";
 import Scanner from "./Scanner";
