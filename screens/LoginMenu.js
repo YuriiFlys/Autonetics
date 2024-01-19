@@ -1,15 +1,8 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView, Dimensions, TouchableWithoutFeedback, Keyboard} from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import {
-  TextInput,
-  KeyboardAvoidingView,
-  Dimensions,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
 import { doc, onSnapshot } from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";

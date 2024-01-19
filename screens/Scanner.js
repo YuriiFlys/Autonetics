@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import {Image} from "expo-image";
 import { Camera } from "expo-camera";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {useIsFocused } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
