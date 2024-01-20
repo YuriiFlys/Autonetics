@@ -34,7 +34,7 @@ export default function Scanner() {
     setScanned(false);
     setTimeout(() => {
       setScanned(true);
-    }, 1);
+    }, 100);
   }, [isFocused]);
 
   useEffect(() => {
