@@ -23,10 +23,10 @@ const WelcomeScreen = () => {
         await updateProfile(user, { displayName: `${name} ${surname}` });
         navigator.navigate('BottomMenu', { screen: 'Home' });
         console.log('Ім\'я та прізвище оновлено');
-        const userDocRef = doc(firestore, 'users', user.namesurname);
+        const userDocRef = doc(firestore, 'users', user.email);
         const birthdate = {day: 1, month: 1, year: 1900};
         const gender = 'Не вказано';
-        await setDoc(userDocRef, { fullname: `${name} ${surname}`, namesurname: user.namesurname, birthdate: birthdate, gender: gender });
+        await setDoc(userDocRef, { fullname: `${name} ${surname}`, email: user.email, birthdate: birthdate, gender: gender });
       } catch (error) {
         console.error(error);
       }

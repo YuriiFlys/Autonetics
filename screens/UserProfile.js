@@ -68,7 +68,9 @@ const UserProfile = () => {
           const userData = docSnap.data();
           fullnameRef.current = userData.fullname;
           emailRef.current = userData.email;
-          phoneRef.current = userData.phone.substring(4);
+          if (userData.phone) {
+            phoneRef.current = userData.phone.substring(4);
+          }
           const birthdate = userData.birthdate;
           setDay(birthdate.day);
           setMonth(birthdate.month);
