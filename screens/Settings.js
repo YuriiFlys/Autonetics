@@ -6,6 +6,8 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../components/Logo";
+import { Switch } from "react-native-gesture-handler";
+import { set } from "date-fns";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -17,6 +19,12 @@ const Settings = () => {
   ];
   const navigator = useNavigation();
   const [value, setValue] = React.useState(0);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () =>
+    setIsEnabled((previousState) => {
+      console.log(" міняємо тему: ", previousState ? "світлу" : "темну");
+      return !previousState;
+    });
   return (
     <SafeAreaView style={styles.container}>
       <Logo name={"Налаштування"} />
@@ -51,7 +59,10 @@ const Settings = () => {
           <Text style={styles.settingText}>Змінити розмір шрифту</Text>
           <Slider
             value={value}
-            onValueChange={setValue}
+            onValueChange={(value) => {
+              setValue(value);
+              console.log("Міняємо шрифт" + value);
+            }}
             minimumValue={0}
             maximumValue={5}
             step={0.25}
@@ -59,8 +70,20 @@ const Settings = () => {
           />
           <Text>{value}</Text>
         </View>
-        <View style={styles.settingItem}>
+        <View
+          style={[
+            styles.settingItem,
+            { flexDirection: "row", justifyContent: "space-around" },
+          ]}
+        >
           <Text style={styles.settingText}>Темний режим</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: Color.colorDarkBlue }}
+            thumbColor={isEnabled ? Color.colorWhite : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
         </View>
       </View>
     </SafeAreaView>
