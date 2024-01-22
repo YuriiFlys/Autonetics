@@ -31,10 +31,6 @@ const App = () => {
             }}
           >
             <Stack.Screen
-              name="Basket"
-              component={Basket}
-              options={{ headerShown: false }} />
-            <Stack.Screen
               name="StartMenu"
               component={StartMenu}
               options={{ headerShown: false }}
