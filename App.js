@@ -12,6 +12,8 @@ import Settings from "./screens/Settings";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
 
+import Basket from "./screens/Basket";
+
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
@@ -28,6 +30,10 @@ const App = () => {
               animation: "none",
             }}
           >
+            <Stack.Screen
+              name="Basket"
+              component={Basket}
+              options={{ headerShown: false }} />
             <Stack.Screen
               name="StartMenu"
               component={StartMenu}

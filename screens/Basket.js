@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  FlatList
 } from "react-native";
+import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import Logo from '../components/Logo';
 const screenWidth = Dimensions.get("window").width;
@@ -20,30 +22,63 @@ const Basket = () => {
   const toggleHystory = () => {
     setHystoryVisible(!hystoryVisible);
   };
+  const data = [
+    {
+      shopLogo: require("../assets/atb500.png"),
+      nameCart: "Святковий кошик",
+      shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
+      price: "99.99"
+    },
+    {
+      shopLogo: require("../assets/atb500.png"),
+      nameCart: "Святковий кошик",
+      shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
+      price: "99.99"
+    },
+    {
+      shopLogo: require("../assets/atb500.png"),
+      nameCart: "Святковий кошик",
+      shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
+      price: "99.99"
+    },
+    {
+      shopLogo: require("../assets/atb500.png"),
+      nameCart: "Святковий кошик",
+      shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
+      price: "99.99"
+    }
+  ]
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.itemBasket}>
+        <View style={[styles.itemContentContainer, styles.startContainer]}>
+          <Image source={require("../assets/Star.svg")} style={styles.starImage} />
+        </View>
+        <View style={[styles.itemContentContainer, styles.shopLogoContainer]}>
+          <Image source={item.shopLogo} style={styles.shopLogo} />
+        </View>
+        <View style={[styles.itemContentContainer, styles.mainInfoContainer]}>
+          <Text>{item.nameCart}</Text>
+          <Text>{item.shopAddress}</Text>
+        </View>
+        <View style={[styles.itemContentContainer, styles.priceContainer]}>
+          <Text>{item.price}</Text>
+        </View>
+        <View style={[styles.itemContentContainer, styles.arrowContainer]}>
+          <Image source={require("../assets/Star.svg")} style={styles.arrowImage} />
+        </View>
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Історія та улюблені"} />
-      <TouchableOpacity
-        style={styles.favoritesButton}
-        onPress={toggleFavorites}
-      >
-        <View style={styles.favoritesButton}>
-          <Text style={styles.favoritesButtonText}>Улюблені </Text>
-          <Text style={styles.favoritesButtonArrow}>&gt;</Text>
-        </View>
-        <View style={styles.horizontalLineFavorites}></View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.historyButton}
-        onPress={() => toggleHystory}
-      >
-        <View style={styles.historyButton}>
-          <Text style={styles.historyButtonText}>Історія </Text>
-          <Text style={styles.historyButtonArrow}>&gt;</Text>
-        </View>
-        <View style={styles.horizontalLineHistory}></View>
-      </TouchableOpacity>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+      />
     </SafeAreaView>
   );
 };
@@ -56,140 +91,49 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     position: "relative",
   },
-  mainText: {
-    position: "absolute",
-    top: screenHeight * 0.102,
-    left: screenWidth * 0.337,
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#404040",
-  },
-  favoritesButton: {
-    position: "absolute",
-    top: screenHeight * 0.09,
-    left: 0,
-    right: 0,
-    height: 50,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "baseline",
-  },
-  favoritesButtonText: {
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#B6B6B6",
-    marginRight: 272,
-    marginBottom: 20,
-  },
-  favoritesButtonArrow: {
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 30,
-    color: "#B6B6B6",
-  },
-  horizontalLineFavorites: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: screenHeight * 0.15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#B6B6B6",
-  },
-  historyButton: {
-    position: "absolute",
-    top: screenHeight * 0.118,
-    left: 0,
-    right: 0,
-    height: 50,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "baseline",
-  },
-  historyButtonText: {
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#B6B6B6",
-    marginRight: 295,
-    marginBottom: 20,
-  },
-  historyButtonArrow: {
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 30,
-    color: "#B6B6B6",
-  },
-  horizontalLineHistory: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: screenHeight * 0.18,
-    borderBottomWidth: 1,
-    borderBottomColor: "#B6B6B6",
-  },
-
-  logoIcon: {
-    alignSelf: "center",
-    height: screenWidth * 0.1299,
-    width: screenWidth * 0.1299,
-    position: "absolute",
-    top: screenHeight * 0.0446,
-    left: screenWidth * 0.04,
-  },
-  topRectangle: {
-    position: "absolute",
-    height: screenHeight * 0.15,
+  itemBasket: {
+    height: screenHeight * 0.1,
     width: screenWidth,
-    top: 0,
-    backgroundColor: "#fff",
+    flexDirection: "row",
+  },
+  itemContentContainer: {
     alignItems: "center",
+    justifyContent: "center",
   },
-  mainWidgetView: {
-    height: screenWidth * 0.4,
-    width: screenWidth * 0.9,
-    position: "absolute",
-    top: screenHeight * 0.2,
-    left: screenWidth * 0.05,
-    backgroundColor: "lightgrey",
-    borderRadius: 20,
-    overflow: "hidden",
+  startContainer: {
+    width: screenHeight * 0.05,
+    height: "100%",
   },
-  widgetInfoRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    position: "absolute",
-    top: "5%",
-    left: 0,
-    right: 0,
+  shopLogoContainer: {
+    width: screenHeight * 0.05,
+    height:"100%",
   },
-  widgetProductMainInfo: {
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 24,
-    color: "#404040",
+  mainInfoContainer: {
+    width: screenHeight * 0.25,
+    height:"100%",
   },
-  widgetImageRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    top: "15%",
-    left: 0,
-    right: 0,
-    height: screenHeight * 0.25,
-    width: screenWidth * 0.75,
+  priceContainer: {
+    width: screenHeight * 0.05,
+    height: "100%",
   },
-  widgetProductImage: {
-    width: "70%",
-    height: "50%",
-    objectFit: "contain",
+  arrowContainer: {
+    width: screenHeight * 0.05,
+    height: "100%",
   },
-
-  widgetProductBrandLogo: {
-    width: "30%",
+  starImage: {
+    height: "40%",
+    width: "40%",
+    contentFit: "contain",
+  },
+  shopLogo: {
+    height: "100%",
+    width: "100%",
+    contentFit: "contain",
+  },
+  arrowImage: {
     height: "30%",
-    objectFit: "contain",
-  },
-  widgetProductDescription: {
-    position: "absolute",
-    top: "0%",
-    fontFamily: "PalanquinDark-Regular",
-    fontSize: 18,
-    color: "#404040",
-  },
+    width: "30%",
+    contentFit: "contain",
+  }
 });
 export default Basket;
