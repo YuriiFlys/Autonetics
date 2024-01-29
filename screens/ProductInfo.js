@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
+import SmallWidget from "../components/SmallWidget";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -38,6 +39,15 @@ const ProductInfo = () => {
       "Калій (K)": "15-45 мг/дм.куб.",
       "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
     },
+  };
+
+  const item = {
+    name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+    price: 67.99,
+    discount: 20,
+    imageSource: require("../assets/voda.png"),
+    shopLogo: require("../assets/atb500.png"),
+    isAvailable: true,
   };
   const scrollViewRef = useRef();
   if (product.discount === 0) {
@@ -143,6 +153,7 @@ const ProductInfo = () => {
         </View>
         <View style={styles.productOffersContainer}>
           <Text style={styles.title}>Ваші пропозиції</Text>
+          <SmallWidget item={item} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -217,6 +228,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_xl,
     color: Color.colorDarkBlue,
+    marginBottom: 10,
   },
   descriptionText: {
     margin: 10,
@@ -245,7 +257,6 @@ const styles = StyleSheet.create({
     color: Color.colorDarkBlue,
   },
   productOffersContainer: {
-    backgroundColor: Color.colorWhite,
     marginTop: screenHeight * 0.02,
     width: screenWidth,
     padding: 10,
