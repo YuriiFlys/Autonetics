@@ -13,7 +13,6 @@ import Animated, {
   useSharedValue,
   withSpring,
   useAnimatedStyle,
-  useDerivedValue,
   runOnJS,
 } from "react-native-reanimated";
 import * as Location from "expo-location";

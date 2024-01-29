@@ -9,9 +9,9 @@ import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import SalesScreen from "./screens/SalesScreen";
 import Settings from "./screens/Settings";
+import ProductInfo from "./screens/ProductInfo";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
-
 import Basket from "./screens/Basket";
 
 const Stack = createNativeStackNavigator();
@@ -68,6 +68,11 @@ const App = () => {
             <Stack.Screen
               name="SalesScreen"
               component={SalesScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProductInfo"
+              component={ProductInfo}
               options={{ headerShown: false }}
             />
             <Stack.Screen

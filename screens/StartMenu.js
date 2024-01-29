@@ -4,9 +4,7 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
-import {
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -41,7 +39,7 @@ const StartMenu = () => {
       <Text style={styles.autonetics}>Autonetics!</Text>
       <Pressable
         style={styles.loginButton}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigate("ProductInfo")}
       >
         <View style={styles.loginButtonChild} />
         <Text style={styles.text}>Log in</Text>
