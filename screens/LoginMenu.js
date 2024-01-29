@@ -1,7 +1,17 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView, Dimensions, TouchableWithoutFeedback, Keyboard} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  KeyboardAvoidingView,
+  Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -23,7 +33,7 @@ export async function getUserName() {
 const LoginMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
-  const [,setUserName] = React.useState("");
+  const [, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -65,7 +75,7 @@ const LoginMenu = () => {
       <Image
         style={styles.logoIcon}
         contentFit="contain"
-        source={require("../assets/logo1.png")}
+        source={require("../assets/logoAutonetics.png")}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
@@ -109,7 +119,7 @@ const LoginMenu = () => {
         <Image
           style={styles.vector}
           contentFit="contain"
-          source={require("../assets/vector.png")}
+          source={require("../assets/Vector.svg")}
         />
       </Pressable>
     </KeyboardAvoidingView>
@@ -146,7 +156,7 @@ const styles = StyleSheet.create({
   },
   emailtext: {
     marginLeft: screenWidth * 0.1,
-    color: Color.colorDarkslategray_200,
+    color: Color.colorDarkBlue,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneBold,
   },

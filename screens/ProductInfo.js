@@ -84,8 +84,8 @@ const ProductInfo = () => {
                 style={styles.isAvailableImage}
                 source={
                   product.isAvailable
-                    ? require("../assets/Yes.svg")
-                    : require("../assets/No.svg")
+                    ? require("../assets/confirmation.svg")
+                    : require("../assets/denial.svg")
                 }
               />
               <Text>{product.isAvailable ? "В наявності" : "Немає"}</Text>

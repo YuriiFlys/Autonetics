@@ -34,7 +34,7 @@ const StartMenu = () => {
       <Image
         style={styles.logoIcon}
         contentFit="contain"
-        source={require("../assets/logo1.png")}
+        source={require("../assets/logoAutonetics.png")}
       />
       <Text style={styles.autonetics}>Autonetics!</Text>
       <Pressable

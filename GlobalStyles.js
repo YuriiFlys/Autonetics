@@ -39,9 +39,6 @@ export const FontSize = {
 };
 /* Colors */
 export const Color = {
-  colorDarkslategray_100: "#23334a",
-  colorDarkslategray_200: "#213045",
-  colorGray: "rgba(255, 255, 255, 0)",
   colorWhite: "#fff",
   colorBlack: "black",
   colorGainsboro: "#d9d9d9",

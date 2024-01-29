@@ -144,7 +144,7 @@ const Map = () => {
           </View>
           <View>
             <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
-              <Image source={require("../assets/cross.png")} />
+              <Image source={require("../assets/cross_Blue.svg")} />
             </TouchableOpacity>
           </View>
         </Animated.View>
