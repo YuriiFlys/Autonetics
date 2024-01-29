@@ -18,8 +18,8 @@ const ProductInfo = () => {
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
     discount: 20,
-    imageSource: require("../assets/voda.png"),
-    shopLogo: require("../assets/atb500.png"),
+    imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+    shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
     isAvailable: true,
     description:
       "Вода Боржомі - природна мінеральна вода, батьківщиною добування якої є Грузія. Історія води налічує понад тисячу років. Вона має чудовий смак і відмінний гідрокарбонатно-натрієвий склад. Містить багато мінералів і мікроелементів: натрій, кальцій, хлор, сірка, кремній, фтор і магній. Дуже добре підходить для попередження і лікування в якості додаткової терапії гастритів, виразки дванадцятипалої кишки та інших захворювань шлунково-кишкового тракту. Але не підходить в періоди загострення виразки.",
@@ -45,8 +45,8 @@ const ProductInfo = () => {
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
     discount: 20,
-    imageSource: require("../assets/voda.png"),
-    shopLogo: require("../assets/atb500.png"),
+    imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+    shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
     isAvailable: true,
   };
   const scrollViewRef = useRef();

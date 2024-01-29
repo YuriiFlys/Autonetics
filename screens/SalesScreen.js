@@ -20,7 +20,7 @@ const SalesScreen = () => {
       id: 1,
       name: "Моршинська1",
       price: 123,
-      imageSource: require("../assets/voda.png"),
+      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 10,
       description:
         "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
@@ -29,7 +29,7 @@ const SalesScreen = () => {
       id: 2,
       name: "Моршинська2",
       price: 123,
-      imageSource: require("../assets/voda.png"),
+      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
         "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
@@ -38,7 +38,7 @@ const SalesScreen = () => {
       id: 3,
       name: "Моршинська3",
       price: 123,
-      imageSource: require("../assets/voda.png"),
+      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
         "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
@@ -47,7 +47,7 @@ const SalesScreen = () => {
       id: 4,
       name: "Моршинська4",
       price: 123,
-      imageSource: require("../assets/voda.png"),
+      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
         "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
@@ -56,7 +56,7 @@ const SalesScreen = () => {
       id: 5,
       name: "Моршинська5",
       price: 123,
-      imageSource: require("../assets/voda.png"),
+      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
         "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
@@ -65,7 +65,7 @@ const SalesScreen = () => {
       id: 6,
       name: "Моршинська6",
       price: 123,
-      imageSource: require("../assets/voda.png"),
+      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
         "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
@@ -75,7 +75,7 @@ const SalesScreen = () => {
   shop = {
     name: "Магазин АТБ",
     address: "вул. Шевченка, 1, Львів, Львівська область, 79000",
-    imageSource: require("../assets/atb500.png"),
+    imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
   };
   const navigator = useNavigation();
   const bottomSheetRef = React.useRef();

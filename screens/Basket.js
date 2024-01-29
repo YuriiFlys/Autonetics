@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  FlatList
+  FlatList,
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-import Logo from '../components/Logo';
+import Logo from "../components/Logo";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -24,36 +24,39 @@ const Basket = () => {
   };
   const data = [
     {
-      shopLogo: require("../assets/atb500.png"),
+      shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
       nameCart: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99"
+      price: "99.99",
     },
     {
-      shopLogo: require("../assets/atb500.png"),
+      shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
       nameCart: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99"
+      price: "99.99",
     },
     {
-      shopLogo: require("../assets/atb500.png"),
+      shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
       nameCart: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99"
+      price: "99.99",
     },
     {
-      shopLogo: require("../assets/atb500.png"),
+      shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
       nameCart: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99"
-    }
-  ]
+      price: "99.99",
+    },
+  ];
 
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemBasket}>
         <View style={[styles.itemContentContainer, styles.startContainer]}>
-          <Image source={require("../assets/Star.svg")} style={styles.starImage} />
+          <Image
+            source={require("../assets/Star.svg")}
+            style={styles.starImage}
+          />
         </View>
         <View style={[styles.itemContentContainer, styles.shopLogoContainer]}>
           <Image source={item.shopLogo} style={styles.shopLogo} />
@@ -66,19 +69,19 @@ const Basket = () => {
           <Text>{item.price}</Text>
         </View>
         <View style={[styles.itemContentContainer, styles.arrowContainer]}>
-          <Image source={require("../assets/Star.svg")} style={styles.arrowImage} />
+          <Image
+            source={require("../assets/Star.svg")}
+            style={styles.arrowImage}
+          />
         </View>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Історія та улюблені"} />
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-      />
+      <FlatList data={data} renderItem={renderItem} />
     </SafeAreaView>
   );
 };
@@ -106,11 +109,11 @@ const styles = StyleSheet.create({
   },
   shopLogoContainer: {
     width: screenHeight * 0.05,
-    height:"100%",
+    height: "100%",
   },
   mainInfoContainer: {
     width: screenHeight * 0.25,
-    height:"100%",
+    height: "100%",
   },
   priceContainer: {
     width: screenHeight * 0.05,
@@ -134,6 +137,6 @@ const styles = StyleSheet.create({
     height: "30%",
     width: "30%",
     contentFit: "contain",
-  }
+  },
 });
 export default Basket;
