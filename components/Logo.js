@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-import { Color, FontFamily, FontSize} from "../GlobalStyles";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -24,7 +24,7 @@ const Logo = ({ name, style }) => {
           <Image
             style={styles.logoIcon}
             contentFit="contain"
-            source={require("../assets/logo1.png")}
+            source={require("../assets/logoAutonetics.png")}
           />
         </View>
       </TouchableOpacity>

@@ -4,9 +4,7 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
-import {
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -36,7 +34,7 @@ const StartMenu = () => {
       <Image
         style={styles.logoIcon}
         contentFit="contain"
-        source={require("../assets/logo1.png")}
+        source={require("../assets/logoAutonetics.png")}
       />
       <Text style={styles.autonetics}>Autonetics!</Text>
       <Pressable

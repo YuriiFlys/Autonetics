@@ -13,7 +13,6 @@ import Animated, {
   useSharedValue,
   withSpring,
   useAnimatedStyle,
-  useDerivedValue,
   runOnJS,
 } from "react-native-reanimated";
 import * as Location from "expo-location";
@@ -27,7 +26,7 @@ const data = [
     name: "АШАН",
     street: "Вул Університетська, 1",
     distance: "200м",
-    imageSource: require("../assets/atb500.png"),
+    imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
     coordinate: {
       latitude: 49.842606,
       longitude: 24.025363,
@@ -38,7 +37,7 @@ const data = [
     name: "Магазин Атб",
     street: "Вулиця Шевченка, 2а",
     distance: "500м",
-    imageSource: require("../assets/atb500.png"),
+    imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
     coordinate: {
       latitude: 49.839426,
       longitude: 24.022695,
@@ -145,7 +144,7 @@ const Map = () => {
           </View>
           <View>
             <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
-              <Image source={require("../assets/cross.png")} />
+              <Image source={require("../assets/cross_Blue.svg")} />
             </TouchableOpacity>
           </View>
         </Animated.View>

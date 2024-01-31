@@ -1,27 +1,35 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Image } from 'expo-image';
-import { StyleSheet, Text, View, Pressable, TextInput, KeyboardAvoidingView,TouchableWithoutFeedback, Keyboard, Dimensions } from "react-native";
+import { Image } from "expo-image";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Dimensions,
+} from "react-native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-
-
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 const SignUpMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
-  const repeatpasswordRef= React.useRef();
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [repeatPassword, setRepeatPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const repeatpasswordRef = React.useRef();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [repeatPassword, setRepeatPassword] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
   const auth = FIREBASE_AUTH;
   const handleRegister = async () => {
     if (password !== repeatPassword) {
-      setErrorMessage('Паролі не співпадають');
+      setErrorMessage("Паролі не співпадають");
       return;
     }
     try {
@@ -29,85 +37,89 @@ const SignUpMenu = () => {
       navigator.navigate("Welcome");
     } catch (error) {
       console.error(error);
-      let errorMessage = '';
+      let errorMessage = "";
       switch (error.code) {
-        case 'auth/invalid-email':
-          errorMessage = 'Неправильний формат електронної пошти';
+        case "auth/invalid-email":
+          errorMessage = "Неправильний формат електронної пошти";
           break;
-        case 'auth/weak-password':
-          errorMessage = 'Пароль повинен містити принаймні 6 символів';
+        case "auth/weak-password":
+          errorMessage = "Пароль повинен містити принаймні 6 символів";
           break;
-        case 'auth/email-already-in-use':
-          errorMessage = 'Електронна пошта вже використовується';
+        case "auth/email-already-in-use":
+          errorMessage = "Електронна пошта вже використовується";
           break;
         default:
-          errorMessage = 'Сталася помилка під час реєстрації';
+          errorMessage = "Сталася помилка під час реєстрації";
       }
       setErrorMessage(errorMessage);
     }
   };
-  
 
   return (
-    <KeyboardAvoidingView style={styles.signupmenu} behavior="position" 
-      keyboardVerticalOffset={-screenHeight*0.15}
-      enabled>
+    <KeyboardAvoidingView
+      style={styles.signupmenu}
+      behavior="position"
+      keyboardVerticalOffset={-screenHeight * 0.15}
+      enabled
+    >
       <Text style={styles.signUp}>Sign Up</Text>
       <Image
         style={styles.logoIcon}
         contentFit="contain"
-        source={require("../assets/logo1.png")}
+        source={require("../assets/logoAutonetics.png")}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View>
-    <View>
-      <View style={styles.email}>
-        <Text style={styles.emailtext}>Email</Text>
-        <TextInput 
-          style={styles.field}
-          onChangeText={setEmail}
-          onSubmitEditing={() => passwordRef.current.focus()}
-          blurOnSubmit={false}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        <View>
+          <View>
+            <View style={styles.email}>
+              <Text style={styles.emailtext}>Email</Text>
+              <TextInput
+                style={styles.field}
+                onChangeText={setEmail}
+                onSubmitEditing={() => passwordRef.current.focus()}
+                blurOnSubmit={false}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={styles.enterPass}>
+              <Text style={styles.enterPasstext}>Пароль</Text>
+              <TextInput
+                style={styles.field}
+                secureTextEntry
+                ref={passwordRef}
+                onChangeText={setPassword}
+                textContentType="oneTimeCode"
+                onSubmitEditing={() => repeatpasswordRef.current.focus()}
+              />
+            </View>
+            <View style={styles.repeatPass}>
+              <Text style={styles.repeatPasstext}>Підтвердіть пароль</Text>
+              <TextInput
+                style={styles.field}
+                secureTextEntry
+                ref={repeatpasswordRef}
+                onChangeText={setRepeatPassword}
+                textContentType="oneTimeCode"
+              />
+              {errorMessage ? (
+                <Text style={styles.errormessage}>{errorMessage}</Text>
+              ) : null}
+            </View>
+          </View>
         </View>
-        <View style={styles.enterPass}>
-        <Text style={styles.enterPasstext}>Пароль</Text>
-        <TextInput 
-          style={styles.field} 
-          secureTextEntry 
-          ref={passwordRef}
-          onChangeText={setPassword}
-          textContentType='oneTimeCode'
-          onSubmitEditing={() => repeatpasswordRef.current.focus()}
-        />
-        </View>
-        <View style={styles.repeatPass}>
-        <Text style={styles.repeatPasstext}>Підтвердіть пароль</Text>
-        <TextInput 
-          style={styles.field} 
-          secureTextEntry 
-          ref={repeatpasswordRef}
-          onChangeText={setRepeatPassword}
-          textContentType='oneTimeCode'
-        />
-        {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
-        </View>
-      </View>
-      </View>
       </TouchableWithoutFeedback>
-      <Pressable
-        style={styles.register}
-        onPress={handleRegister}
-      >
+      <Pressable style={styles.register} onPress={handleRegister}>
         <Text style={styles.registerText}>Register</Text>
       </Pressable>
-      <Pressable style={styles.vector} onPress={() => navigator.navigate("StartMenu")}>
+      <Pressable
+        style={styles.vector}
+        onPress={() => navigator.navigate("StartMenu")}
+      >
         <Image
           style={styles.vector}
           contentFit="contain"
-          source={require("../assets/vector.png")}
+          source={require("../assets/Vector.svg")}
         />
       </Pressable>
     </KeyboardAvoidingView>
@@ -123,23 +135,23 @@ const styles = StyleSheet.create({
     color: Color.colorDarkBlue,
   },
   logoIcon: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: screenHeight * 0.02,
     height: screenHeight * 0.3,
     width: screenWidth * 0.6,
   },
   field: {
     marginTop: screenHeight * 0.01,
-    alignSelf: 'center',
+    alignSelf: "center",
     borderColor: Color.colorDarkslategray_100,
     borderWidth: 1,
     borderRadius: Border.br_3xs,
-    height: screenHeight < 600 ? screenHeight*0.04 : screenHeight*0.03,
-    width: screenWidth*0.8,
+    height: screenHeight < 600 ? screenHeight * 0.04 : screenHeight * 0.03,
+    width: screenWidth * 0.8,
     backgroundColor: Color.colorLightCyan,
     fontFamily: FontFamily.CommissioneBold,
-    paddingLeft: screenWidth*0.02,
-    paddingRight: screenWidth*0.02,
+    paddingLeft: screenWidth * 0.02,
+    paddingRight: screenWidth * 0.02,
   },
   emailtext: {
     marginLeft: screenWidth * 0.1,
@@ -149,7 +161,7 @@ const styles = StyleSheet.create({
   },
   enterPasstext: {
     marginLeft: screenWidth * 0.1,
-    textAlign: 'left',
+    textAlign: "left",
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneBold,
@@ -163,48 +175,48 @@ const styles = StyleSheet.create({
   email: {
     marginTop: screenHeight * 0.01,
   },
-  errormessage:{
+  errormessage: {
     color: Color.colorErrorRed,
     fontFamily: FontFamily.CommissioneRegular,
-    marginTop: screenHeight*0.01,
-    textAlign: 'center',
+    marginTop: screenHeight * 0.01,
+    textAlign: "center",
   },
   register: {
     marginTop: screenHeight * 0.03,
-    alignSelf: 'center',
-    height: screenHeight < 600 ? screenHeight*0.06 : screenHeight*0.05,
-    width: screenWidth*0.5,
+    alignSelf: "center",
+    height: screenHeight < 600 ? screenHeight * 0.06 : screenHeight * 0.05,
+    width: screenWidth * 0.5,
     backgroundColor: Color.colorDarkBlue,
     borderRadius: Border.br_3xs,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   registerText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.colorWhite,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneRegular,
   },
   repeatPasstext: {
     marginLeft: screenWidth * 0.1,
-    textAlign: 'left',
-    color: Color.colorDarkslategray_200,
+    textAlign: "left",
+    color: Color.colorDarkBlue,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneBold,
   },
   vector: {
     marginTop: screenHeight * 0.01,
-    alignSelf: 'center',
-    height: screenHeight*0.05,
-    width: screenHeight*0.05,
-    position: 'absolute',
-    top: screenHeight*0.02,
-    left: screenWidth*0.02,
+    alignSelf: "center",
+    height: screenHeight * 0.05,
+    width: screenHeight * 0.05,
+    position: "absolute",
+    top: screenHeight * 0.02,
+    left: screenWidth * 0.02,
     color: Color.colorDarkBlue,
   },
   signupmenu: {
     flex: 1,
     backgroundColor: Color.colorLightCyan,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
 });
 

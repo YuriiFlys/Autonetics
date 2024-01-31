@@ -67,42 +67,42 @@ const Promotions = () => {
         <MainWidget
           name={"Банани"}
           price={"47.59₴"}
-          image={require("../assets/bananas.jpeg")}
-          brand={require("../assets/atb500.png")}
-          description={"Банани - смачний та корисний фрукт, багатий на калій та вітаміни. Їх аромат та смак завжди радують. Ідеальний перекус для енергії!"}
+          image={require("../assets/Image_Product_or_Shop/bananas.jpeg")}
+          brand={require("../assets/Image_Product_or_Shop/atbLogo.png")}
+          description={
+            "Банани - смачний та корисний фрукт, багатий на калій та вітаміни. Їх аромат та смак завжди радують. Ідеальний перекус для енергії!"
+          }
         />
         <View style={styles.smallWidgets}>
           <SmallWidget
             name={"Пиво"}
             price={"34.95₴"}
-            image={require("../assets/beer.png")}
-            brand={require("../assets/blizenko.png")}
+            image={require("../assets/Image_Product_or_Shop/beer.png")}
+            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
           />
           <SmallWidget
             name={"Пиво"}
             price={"34.95₴"}
-            image={require("../assets/beer.png")}
-            brand={require("../assets/blizenko.png")}
+            image={require("../assets/Image_Product_or_Shop/beer.png")}
+            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
           />
         </View>
         <View style={styles.smallWidgets}>
           <SmallWidget
             name={"Пиво"}
             price={"34.95₴"}
-            image={require("../assets/beer.png")}
-            brand={require("../assets/blizenko.png")}
+            image={require("../assets/Image_Product_or_Shop/beer.png")}
+            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
           />
           <SmallWidget
             name={"Пиво"}
             price={"34.95₴"}
-            image={require("../assets/beer.png")}
-            brand={require("../assets/blizenko.png")}
+            image={require("../assets/Image_Product_or_Shop/beer.png")}
+            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
           />
         </View>
-
       </ScrollView>
     </SafeAreaView>
-
   );
 };
 

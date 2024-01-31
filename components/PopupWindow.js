@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from "react-native";
 import Element from "./Element";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -56,14 +57,25 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
       },
     ]);
   };
-
+  const scrollViewRef = useRef();
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.offerContainer}>
+        <Text>{item.name}</Text>
+        <Text>{item.price}</Text>
+      </View>
+    );
+  };
   return (
     <View style={styles.bottomsheetcontainer}>
       <View style={styles.bottomsheet_header_container}>
         <Text style={styles.textCartContainer}>Ваша Козина</Text>
       </View>
-      <View style={styles.bottomsheet_main_container}>
-        <GrayLine />
+      <ScrollView
+        ref={scrollViewRef}
+        automaticallyAdjustContentInsets={true}
+        contentContainerStyle={styles.bottomsheet_main_container}
+      >
         <View style={{ height: screenHeight * 0.5 }}>
           <FlatList
             data={data}
@@ -94,7 +106,22 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
             <Text style={styles.paybuttonText}>Перейти до сплати</Text>
           </TouchableOpacity>
         </View>
-      </View>
+        <View style={styles.offersContainer}>
+          <Text>Ваші пропозиції</Text>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal={true}
+          />
+        </View>
+        <View
+          style={{
+            width: screenWidth,
+            height: screenHeight * 0.2,
+          }}
+        ></View>
+      </ScrollView>
     </View>
   );
 };
@@ -103,8 +130,14 @@ const styles = StyleSheet.create({
   bottomsheetcontainer: {
     alignItems: "center",
   },
+  bottomsheet_header_container: {
+    alignItems: "center",
+    width: "100%",
+    height: screenHeight * 0.07,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.colorLightGray,
+  },
   bottomsheet_main_container: {
-    marginTop: screenHeight * 0.045,
     alignItems: "center",
   },
   textCartContainer: {
@@ -151,7 +184,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.5)", // 50% прозорий
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   modalcontainer: {
     height: screenHeight * 0.8,
@@ -195,6 +228,20 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_xl,
     marginLeft: 10,
     marginRight: 10,
+  },
+  offersContainer: {
+    marginTop: screenHeight * 0.05,
+    width: screenWidth,
+    marginBottom: screenHeight * 0.05,
+  },
+  offerContainer: {
+    width: screenWidth * 0.3,
+    height: screenHeight * 0.2,
+    backgroundColor: Color.colorSuperLightGray,
+    borderRadius: Border.br_20,
+    margin: screenWidth * 0.02,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
