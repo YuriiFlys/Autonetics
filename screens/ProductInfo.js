@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -10,6 +10,7 @@ import {
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
 import SmallWidget from "../components/SmallWidget";
+import { FlatList } from "react-native-gesture-handler";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -42,6 +43,7 @@ const ProductInfo = () => {
   };
 
   const item = {
+    id: 1,
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
     discount: 20,
@@ -117,17 +119,6 @@ const ProductInfo = () => {
                 >
                   19
                 </Text>
-                {/* <View
-                  style={{
-                    position: "absolute",
-                    top: "25%",
-                    width: "60%",
-                    height: "60%",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "red",
-                    transform: [{ rotate: "150deg" }],
-                  }}
-                /> */}
               </View>
               {/* нова ціна */}
               <View style={styles.priceContainer}>

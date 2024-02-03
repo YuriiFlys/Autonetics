@@ -13,9 +13,12 @@ import Element from "./Element";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import GrayLine from "./GrayLine";
 import { set } from "date-fns";
+import SmallWidget from "./SmallWidget";
+import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
+  const navigation = useNavigation();
   const updateData = (id, number) => {
     setData((data) => {
       const updatedData = data.map((item) =>
@@ -58,14 +61,6 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
     ]);
   };
   const scrollViewRef = useRef();
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.offerContainer}>
-        <Text>{item.name}</Text>
-        <Text>{item.price}</Text>
-      </View>
-    );
-  };
   return (
     <View style={styles.bottomsheetcontainer}>
       <View style={styles.bottomsheet_header_container}>
@@ -107,20 +102,14 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.offersContainer}>
-          <Text>Ваші пропозиції</Text>
+          <Text style={styles.personalSuggestions}>Ваші пропозиції</Text>
           <FlatList
             data={data}
-            renderItem={renderItem}
+            renderItem={({ item }) => <SmallWidget item={item} />}
             keyExtractor={(item) => item.id.toString()}
             horizontal={true}
           />
         </View>
-        <View
-          style={{
-            width: screenWidth,
-            height: screenHeight * 0.2,
-          }}
-        ></View>
       </ScrollView>
     </View>
   );
@@ -232,16 +221,14 @@ const styles = StyleSheet.create({
   offersContainer: {
     marginTop: screenHeight * 0.05,
     width: screenWidth,
-    marginBottom: screenHeight * 0.05,
+    marginBottom: screenHeight * 0.1,
   },
-  offerContainer: {
-    width: screenWidth * 0.3,
-    height: screenHeight * 0.2,
-    backgroundColor: Color.colorSuperLightGray,
-    borderRadius: Border.br_20,
-    margin: screenWidth * 0.02,
-    alignItems: "center",
-    justifyContent: "center",
+  personalSuggestions: {
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
+    marginBottom: screenHeight * 0.02,
+    marginLeft: screenWidth * 0.05,
   },
 });
 

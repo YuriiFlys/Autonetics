@@ -12,7 +12,6 @@ import Settings from "./screens/Settings";
 import ProductInfo from "./screens/ProductInfo";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
-import Basket from "./screens/Basket";
 
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();

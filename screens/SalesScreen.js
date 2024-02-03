@@ -19,7 +19,7 @@ const SalesScreen = () => {
     {
       id: 1,
       name: "Моршинська1",
-      price: 123,
+      price: 123.28,
       imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 10,
       description:
@@ -28,7 +28,7 @@ const SalesScreen = () => {
     {
       id: 2,
       name: "Моршинська2",
-      price: 123,
+      price: 123.28,
       imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
@@ -37,7 +37,7 @@ const SalesScreen = () => {
     {
       id: 3,
       name: "Моршинська3",
-      price: 123,
+      price: 123.28,
       imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
@@ -46,7 +46,7 @@ const SalesScreen = () => {
     {
       id: 4,
       name: "Моршинська4",
-      price: 123,
+      price: 123.28,
       imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
@@ -55,7 +55,7 @@ const SalesScreen = () => {
     {
       id: 5,
       name: "Моршинська5",
-      price: 123,
+      price: 123.28,
       imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
@@ -64,7 +64,7 @@ const SalesScreen = () => {
     {
       id: 6,
       name: "Моршинська6",
-      price: 123,
+      price: 123.28,
       imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
       number: 1,
       description:
