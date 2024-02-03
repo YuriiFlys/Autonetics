@@ -87,7 +87,9 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
         <GrayLine />
         <View style={styles.sumContainer}>
           <Text style={styles.sumtext}>Сума</Text>
-          <Text style={[styles.sumtext, { color: "red" }]}>{sum} ₴</Text>
+          <Text style={[styles.sumtext, { color: "red" }]}>
+            {sum.toFixed(2)} ₴
+          </Text>
         </View>
         <View>
           <TouchableOpacity
