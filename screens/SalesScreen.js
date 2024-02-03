@@ -5,7 +5,6 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import BottomSheet, { TouchableHighlight } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import GrayLine from "../components/GrayLine";
 import PopupWindow from "../components/PopupWindow";
 import Scanner from "../components/ScannerCamera";
 import PayButton from "../components/PayButton";

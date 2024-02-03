@@ -67,6 +67,7 @@ const ProductInfo = () => {
       <Logo
         name="Інформація про товар"
         logoSource={require("../assets/Arrow_blue.svg")}
+        isGoBack={true}
       />
       <ScrollView
         ref={scrollViewRef}
