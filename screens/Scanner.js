@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
   View,
@@ -6,119 +6,27 @@ import {
   TouchableOpacity,
   Dimensions,
   Linking,
-  Alert
+  Alert,
 } from "react-native";
-import {Image} from "expo-image";
-import { Camera } from "expo-camera";
-import {useIsFocused } from "@react-navigation/native";
+import { Image } from "expo-image";
+
+import { useIsFocused } from "@react-navigation/native";
+import ScannerCamera from "../components/ScannerCamera";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Scanner() {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
-  const isFocused = useIsFocused();
-  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
-  useEffect(() => {
-
-    const getCameraPermissions = async () => {
-      const { status } = await Camera.getCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
-
-    getCameraPermissions();
-    if (isFocused){
-      setFlashMode(Camera.Constants.FlashMode.off);
-    }
-    setScanned(false);
-    setTimeout(() => {
-      setScanned(true);
-    }, 1);
-  }, [isFocused]);
-
-  useEffect(() => {
-    
-  }
-  ,[isFocused])
-  const handleBarCodeScanned = useCallback(({ type, data }) => {
-    setScanned(true);
-    setIsScanning(false);
-    const isUrl = /^(http|https):\/\/[^ "]+$/.test(data);
-  
-    if (isUrl && Linking.canOpenURL(data)) {
-      Linking.openURL(data).catch(err => console.error('Failed to open URL: ', err));
-    } else {
-      Alert.alert(data)
-    }
-  }, []);
-  
-
-  const startScan = () => {
-    setIsScanning(!isScanning);
-    if (!isScanning) {
-      setScanned(false);
-    }
-    else {
-      setScanned(true);
-    }
-  };
-  
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-
-  const toggleFlashlight = () => {
-    if (flashMode === Camera.Constants.FlashMode.off) {
-      setFlashMode(Camera.Constants.FlashMode.torch);
-    } else {
-      setFlashMode(Camera.Constants.FlashMode.off);
-    }
-  };
-
   return (
     <View style={styles.container}>
-      {isFocused && (
-        <Camera
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={styles.scannerwindow}
-          flashMode={flashMode}
-        />
-      )}
-      <View style={styles.frame}>
-        <View style={styles.topLeftCorner} />
-        <View style={styles.topRightCorner} />
-        <View style={styles.bottomLeftCorner} />
-        <View style={styles.bottomRightCorner} />
-      </View>
-      <View style={styles.flash}>
-        <TouchableOpacity
-          onPress={() => {
-            toggleFlashlight();
-          }}
-        >
-          <Image
-            style={styles.icon}
-            source={require("../assets/Camera/light.svg")}
-          />
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TouchableOpacity
-          style={[styles.button, isScanning ? styles.scanningButton : null]}
-          onPress={startScan}
-        >
-          <View style={styles.innerCircle} />
-        </TouchableOpacity>
-      </View>
+      <ScannerCamera
+        styleflashlight={{}}
+        styleFrame={{ marginTop: 0 }}
+        styleButtonScanner={{ marginTop: screenHeight * 0.05 }}
+        isCross={false}
+      />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

@@ -14,7 +14,12 @@ import { Camera } from "expo-camera";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import { SafeAreaView } from "react-native-safe-area-context";
-const Scanner = ({ style }) => {
+const Scanner = ({
+  styleflashlight,
+  styleFrame,
+  styleButtonScanner,
+  isCross,
+}) => {
   const navigator = useNavigation();
 
   // Вихід
@@ -96,16 +101,18 @@ const Scanner = ({ style }) => {
           style={styles.scannerwindow}
           flashMode={flashMode}
         >
-          <SafeAreaView style={styles.buttonCameraContainer}>
+          <SafeAreaView style={[styles.buttonCameraContainer, styleflashlight]}>
             <TouchableOpacity
               onPress={() => {
                 showAlert();
               }}
             >
-              <Image
-                source={require("../assets/Camera/cross.svg")}
-                style={styles.cross}
-              />
+              {isCross && (
+                <Image
+                  source={require("../assets/Camera/cross.svg")}
+                  style={styles.cross}
+                />
+              )}
             </TouchableOpacity>
             <TouchableOpacity onPress={() => toggleFlashlight()}>
               <Image
@@ -114,7 +121,7 @@ const Scanner = ({ style }) => {
               />
             </TouchableOpacity>
           </SafeAreaView>
-          <View style={styles.frame}>
+          <View style={[styles.frame, styleFrame]}>
             <View style={styles.topLeftCorner} />
             <View style={styles.topRightCorner} />
             <View style={styles.bottomLeftCorner} />
@@ -122,7 +129,11 @@ const Scanner = ({ style }) => {
           </View>
           <View>
             <TouchableOpacity
-              style={[styles.button, isScanning ? styles.scanningButton : null]}
+              style={[
+                styles.button,
+                isScanning ? styles.scanningButton : null,
+                styleButtonScanner,
+              ]}
               onPress={startScan}
             >
               <View style={styles.innerCircle} />
@@ -157,7 +168,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "green",
+    backgroundColor: "black",
     width: "100%",
     height: "100%",
   },
