@@ -106,7 +106,7 @@ const SalesScreen = () => {
   return (
     <SafeAreaProvider style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
-        <Scanner />
+        <Scanner isCross={true} />
         <BottomSheet
           ref={bottomSheetRef}
           index={0}
