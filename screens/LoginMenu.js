@@ -13,22 +13,11 @@ import {
   Keyboard,
 } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
-import { doc, onSnapshot } from "firebase/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-export async function getUserName() {
-  const user = FIREBASE_AUTH.currentUser;
-  const userDoc = doc(FIREBASE_DB, "users", user.email);
-
-  onSnapshot(userDoc, (doc) => {
-    const data = doc.data();
-    return data.fullname;
-  });
-}
 
 const LoginMenu = () => {
   const navigator = useNavigation();
@@ -37,13 +26,19 @@ const LoginMenu = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  const auth = FIREBASE_AUTH;
+  
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      getUserName().then((name) => setUserName(name));
-      navigator.navigate("BottomMenu", { screen: "Home" });
+      const response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
+      const data = await response.json();
+  
+      if (data.password === password) {
+        console.log(data);
+        navigator.navigate("BottomMenu", { screen: "Home" });
+      } else {
+        setErrorMessage("Неправильний email або пароль");
+      }
     } catch (error) {
       console.error(error);
       let errorMessage = "";
@@ -63,6 +58,7 @@ const LoginMenu = () => {
       setErrorMessage(errorMessage);
     }
   };
+  
 
   return (
     <KeyboardAvoidingView

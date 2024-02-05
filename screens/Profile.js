@@ -32,8 +32,8 @@ const Promotions = () => {
   const emailRef = React.useRef("");
   const [profileImage, setImage] = React.useState(null);
   const auth = FIREBASE_AUTH;
-  const user = auth.currentUser;
-  emailRef.current = user.email;
+  //const user = auth.currentUser;
+  //emailRef.current = user.email;
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
@@ -46,22 +46,8 @@ const Promotions = () => {
       </TouchableOpacity>
     );
   };
-  async function getImageFromStorage() {
-    const storage = getStorage();
-    const storageRef = ref(storage, `images/${emailRef.current}/profile.jpg`);
-    const url = await getDownloadURL(storageRef);
-    return url;
-  }
-  React.useEffect(() => {
-    const user = FIREBASE_AUTH.currentUser;
-    const userDoc = doc(FIREBASE_DB, "users", user.email);
-    const unsubscribe = onSnapshot(userDoc, (doc) => {
-      const data = doc.data();
-      setUserName(data.fullname);
-      setImage(data.profileImage);
-    });
-    return unsubscribe;
-  }, []);
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,10 +61,10 @@ const Promotions = () => {
                 style={styles.userIconImage}
               />
             ) : (
-              <Text style={styles.userIconText}>{getInitials(userName)}</Text>
+              <Text style={styles.userIconText}>{getInitials("NoName NoName")}</Text>
             )}
           </View>
-          <Text style={styles.userName}>{userName}</Text>
+          <Text style={styles.userName}>{"NoName NoName"}</Text>
         </View>
         <GrayLine />
         <ButtonMenu

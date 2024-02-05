@@ -4,9 +4,9 @@ import {
   View,
   Text,
   Dimensions,
-  Image,
   TouchableOpacity,
 } from "react-native";
+import { Image } from "expo-image";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
@@ -42,6 +42,17 @@ const data = [
       latitude: 49.839426,
       longitude: 24.022695,
     },
+  },
+  {
+    id:3,
+    name: "Хата Тімліда",
+    street: "Вулиця Варшавська,201А",
+    distance: "100м",
+    imageSource: require("../assets/logoAutonetics.png"),
+    coordinate: {
+    latitude: 49.869481,
+    longitude: 24.015616,
+  },
   },
 ];
 
@@ -203,7 +214,7 @@ const styles = StyleSheet.create({
   image: {
     width: screenWidth * 0.18,
     height: screenWidth * 0.18,
-    borderRadius: 50,
+    contentFit: "contain",
   },
   textContainer: {
     flex: 1,
