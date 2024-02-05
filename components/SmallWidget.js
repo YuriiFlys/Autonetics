@@ -1,13 +1,24 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { Color, FontFamily } from "../GlobalStyles";
 import { Image } from "expo-image";
+import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const SmallWidget = ({ item }) => {
+  const navigator = useNavigation();
   const price = item.price.toString().split(".");
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigator.navigate("ProductInfo")}
+    >
       <View style={styles.productImageContainer}>
         <Image source={item.imageSource} style={styles.productImage} />
       </View>
@@ -29,9 +40,17 @@ const SmallWidget = ({ item }) => {
             {price[1]}
           </Text>
         </View>
-        <View style={styles.addBasketButton}></View>
+        <TouchableOpacity
+          style={styles.addCartButton}
+          onPress={() => console.log("Добавляємо елмент в кошик")}
+        >
+          <Image
+            source={require("../assets/cart.svg")}
+            style={styles.addCartImage}
+          />
+        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -41,7 +60,9 @@ const styles = StyleSheet.create({
     height: 0.7 * screenWidth,
     backgroundColor: Color.colorWhite,
     borderRadius: 10,
-    marginBottom: 0.05 * screenWidth,
+    borderColor: Color.colorSuperLightGray,
+    borderWidth: 1,
+    margin: 0.02 * screenWidth,
     padding: 0.02 * screenWidth,
   },
   productImageContainer: {
@@ -67,11 +88,18 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: FontFamily.CommissioneBold,
   },
-  addBasketButton: {
+  addCartButton: {
     width: 0.12 * screenWidth,
     height: 0.12 * screenWidth,
-    backgroundColor: Color.colorLightGray,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#6ABF40",
     borderRadius: 1000,
+  },
+  addCartImage: {
+    width: "70%",
+    height: "70%",
+    contentFit: "contain",
   },
 });
 

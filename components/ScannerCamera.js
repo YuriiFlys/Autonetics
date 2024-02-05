@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,16 @@ import {
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { Camera } from "expo-camera";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import { SafeAreaView } from "react-native-safe-area-context";
-const Scanner = ({ style }) => {
+const Scanner = ({
+  styleflashlight,
+  styleFrame,
+  styleButtonScanner,
+  isCross,
+}) => {
   const navigator = useNavigation();
 
   // Вихід
@@ -30,19 +35,28 @@ const Scanner = ({ style }) => {
   };
 
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(true);
+  const [scanned, setScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
+  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+    const getCameraPermissions = async () => {
+      const { status } = await Camera.getCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
 
-    getBarCodeScannerPermissions();
-  }, []);
+    getCameraPermissions();
+    if (isFocused) {
+      setFlashMode(Camera.Constants.FlashMode.off);
+    }
+    setScanned(false);
+    setTimeout(() => {
+      setScanned(true);
+    }, 1);
+  }, [isFocused]);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  useEffect(() => {}, [isFocused]);
+  const handleBarCodeScanned = useCallback(({ type, data }) => {
     setScanned(true);
     setIsScanning(false);
     const isUrl = /^(http|https):\/\/[^ "]+$/.test(data);
@@ -54,14 +68,14 @@ const Scanner = ({ style }) => {
     } else {
       Alert.alert(data);
     }
-  };
+  }, []);
 
   const startScan = () => {
     setIsScanning(!isScanning);
-    if (isScanning) {
-      setScanned(true);
-    } else {
+    if (!isScanning) {
       setScanned(false);
+    } else {
+      setScanned(true);
     }
   };
 
@@ -71,44 +85,61 @@ const Scanner = ({ style }) => {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+
+  const toggleFlashlight = () => {
+    if (flashMode === Camera.Constants.FlashMode.off) {
+      setFlashMode(Camera.Constants.FlashMode.torch);
+    } else {
+      setFlashMode(Camera.Constants.FlashMode.off);
+    }
+  };
   return (
     <View style={styles.container_c}>
       {isFocused && (
-        <BarCodeScanner
+        <Camera
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.scannerwindow}
+          flashMode={flashMode}
         >
-          <SafeAreaView style={styles.buttonCameraContainer}>
+          <SafeAreaView style={[styles.buttonCameraContainer, styleflashlight]}>
             <TouchableOpacity
               onPress={() => {
                 showAlert();
               }}
             >
-              <Image
-                source={require("../assets/Camera/cross.svg")}
-                style={styles.cross}
-              />
+              {isCross && (
+                <Image
+                  source={require("../assets/Camera/cross.svg")}
+                  style={styles.cross}
+                />
+              )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log("Ліхатрик")}>
+            <TouchableOpacity onPress={() => toggleFlashlight()}>
               <Image
                 source={require("../assets/Camera/light.svg")}
                 style={styles.light}
               />
             </TouchableOpacity>
           </SafeAreaView>
-          <View style={styles.frame}>
+          <View style={[styles.frame, styleFrame]}>
             <View style={styles.topLeftCorner} />
             <View style={styles.topRightCorner} />
             <View style={styles.bottomLeftCorner} />
             <View style={styles.bottomRightCorner} />
           </View>
-          <TouchableOpacity
-            style={[styles.button, isScanning ? styles.scanningButton : null]}
-            onPress={startScan}
-          >
-            <View style={styles.innerCircle} />
-          </TouchableOpacity>
-        </BarCodeScanner>
+          <View>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                isScanning ? styles.scanningButton : null,
+                styleButtonScanner,
+              ]}
+              onPress={startScan}
+            >
+              <View style={styles.innerCircle} />
+            </TouchableOpacity>
+          </View>
+        </Camera>
       )}
     </View>
   );
@@ -137,27 +168,25 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "green",
-    width: screenWidth,
+    backgroundColor: "black",
+    width: "100%",
     height: "100%",
   },
   scannerwindow: {
     flex: 1,
-    position: "absolute",
-    width: screenWidth,
-    height: screenHeight,
+    width: "100%",
+    height: "100%",
     backgroundColor: "transparent",
-    alignSelf: "center",
     alignItems: "center",
   },
   scanningButton: {
     backgroundColor: "red",
   },
   frame: {
-    position: "absolute",
     width: screenHeight * 0.35,
     height: screenHeight * 0.35,
-    marginTop: screenHeight * 0.3,
+    marginTop: "30%",
+    backgroundColor: "Red",
   },
   topLeftCorner: {
     position: "absolute",
@@ -204,7 +233,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   button: {
-    marginTop: screenHeight * 0.5,
+    marginTop: "30%",
     alignItems: "center",
     justifyContent: "center",
     width: screenWidth * 0.17,
@@ -213,9 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 5,
     borderColor: "white",
-    position: "absolute",
     alignSelf: "center",
-    top: screenHeight * 0.25,
   },
   innerCircle: {
     width: screenWidth * 0.12,

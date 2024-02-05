@@ -12,19 +12,27 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Logo = ({ name, style }) => {
+const Logo = ({ name, style, logoSource, isGoBack }) => {
   const navigator = useNavigation();
+  if (!logoSource) {
+    logoSource = require("../assets/logoAutonetics.png");
+  }
+  const handleNavigation = () => {
+    if (isGoBack) {
+      navigator.goBack();
+    } else {
+      navigator.navigate("Home", { screen: "Головне меню" });
+    }
+  };
+
   return (
     <View style={[styles.container]}>
-      <TouchableOpacity
-        style={styles.logoIcon}
-        onPress={() => navigator.navigate("Home", { screen: "Головне меню" })}
-      >
+      <TouchableOpacity style={styles.logoIcon} onPress={handleNavigation}>
         <View style={styles.containerLogo}>
           <Image
             style={styles.logoIcon}
             contentFit="contain"
-            source={require("../assets/logoAutonetics.png")}
+            source={logoSource}
           />
         </View>
       </TouchableOpacity>
@@ -55,6 +63,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneBold,
     color: Color.colorDarkBlue,
+    textAlign: "center",
   },
   containerText: {
     flex: 2,
