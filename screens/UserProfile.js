@@ -15,14 +15,11 @@ import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
-import { updateProfile, updateEmail } from "firebase/auth";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import * as ImagePicker from "expo-image-picker";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, setDoc} from "firebase/firestore";
 import { useRef } from "react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -33,7 +30,9 @@ import Logo from "../components/Logo";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const UserProfile = () => {
+const UserProfile = (props) => {
+  const user = props.user;
+
   const navigator = useNavigation();
   const [initials, setInitials] = useState("");
   const fullnameRef = React.useRef();
@@ -60,30 +59,23 @@ const UserProfile = () => {
   }
 
   useEffect(() => {
-    const user = auth.currentUser;
     if (user) {
-      const userRef = doc(firestore, "users", user.email);
-      getDoc(userRef).then((docSnap) => {
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          fullnameRef.current = userData.fullname;
-          emailRef.current = userData.email;
-          if (userData.phone) {
-            phoneRef.current = userData.phone.substring(4);
-          }
-          const birthdate = userData.birthdate;
-          setDay(birthdate.day);
-          setMonth(birthdate.month);
-          setYear(birthdate.year);
-          setGender(userData.gender);
-          setImage(userData.profileImage);
-          handleEveryImageChange(userData.profileImage);
-        } else {
-          console.log("No such document!");
-        }
-      });
+      const dateparts = user.birthDate.split("-");
+      const [year, month, day] = dateparts.map((part) => parseInt(part, 10));
+      console.log("Dateparts: ", year, month, day);
+      setInitials(getInitials(user.firstName + " " + user.lastName));
+      setGender(user.gender);
+      setDay(day);
+      setMonth(month);
+      setYear(year);
+      phoneRef.current = user.phoneNumber.substring(4);
+      emailRef.current = user.email;
+      fullnameRef.current = user.firstName + " " + user.lastName;
+      const date = new Date(`${year}-${month}-${day}`);//Convert to date object
+      //console.log(date.toISOString().split('T')[0]);//Get the date in the format yyyy-mm-dd
     }
-  }, []);
+}, [user]);
+
   useEffect(() => {
     if (fullnameRef.current) {
       setInitials(getInitials(fullnameRef.current));
@@ -112,155 +104,12 @@ const UserProfile = () => {
     setIsEditingContacts(false);
   }, [phoneRef]);
 
-  const handleMainSave = useCallback(() => {
-    const user = auth.currentUser;
-    const oldEmail = user.email;
-    if (user) {
-      if (oldEmail !== emailRef.current) {
-        updateEmail(user, emailRef.current)
-          .then(() => {
-            const newUserDoc = doc(firestore, "users", emailRef.current);
-            const birthdate = { day: day, month: month, year: year };
-
-            setDoc(
-              newUserDoc,
-              {
-                email: emailRef.current,
-                fullname: fullnameRef.current,
-                phone: "+380" + phoneRef.current,
-                birthdate: birthdate,
-                gender: gender,
-              },
-              { merge: true }
-            )
-              .then(() => {
-                getUpdatedUserDataFromFirestore(newUserDoc);
-
-                const oldUserDoc = doc(firestore, "users", oldEmail);
-                deleteDoc(oldUserDoc);
-              })
-              .catch((error) => {
-                console.error("Error updating document: ", error);
-              });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        updateProfile(user, {
-          displayName: fullnameRef.current,
-          email: emailRef.current,
-        }).then(() => {
-          const userDoc = doc(firestore, "users", emailRef.current);
-          const birthdate = { day: day, month: month, year: year };
-
-          setDoc(
-            userDoc,
-            {
-              fullname: fullnameRef.current,
-              birthdate: birthdate,
-              gender: gender,
-            },
-            { merge: true }
-          )
-            .then(() => {
-              getUpdatedUserDataFromFirestore(userDoc);
-            })
-            .catch((error) => {
-              console.error("Error updating document: ", error);
-            });
-        });
-      }
-      if (image) {
-        const storage = getStorage();
-        const storageRef = ref(storage, "images/" + emailRef.current);
-
-        fetch(image)
-          .then((res) => res.blob())
-          .then((blob) => {
-            uploadBytes(storageRef, blob).then((snapshot) => {
-              getDownloadURL(snapshot.ref).then((url) => {
-                const userDoc = doc(firestore, "users", emailRef.current);
-                setDoc(
-                  userDoc,
-                  {
-                    profileImage: url,
-                  },
-                  { merge: true }
-                );
-              });
-            });
-          });
-      }
-    }
-    setIsEditing(false);
-  }, [emailRef, fullnameRef, phoneRef, day, month, gender, image]);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-    });
-
-    if (!result.canceled) {
-      delete result.canceled;
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
-      const storage = getStorage();
-      const storageRef = ref(
-        storage,
-        "images/" + emailRef.current + "/profile.jpg"
-      );
-      const snapshot = await uploadBytes(storageRef, blob);
-      const url = await getDownloadURL(snapshot.ref);
-
-      setImage(url);
-
-      const userDoc = doc(firestore, "users", emailRef.current);
-      setDoc(userDoc, { profileImage: url }, { merge: true });
-    }
-  };
-
-  const getUpdatedUserDataFromFirestore = (userDoc) => {
-    getDoc(userDoc).then((docSnap) => {
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        fullnameRef.current = userData.fullname;
-        emailRef.current = userData.email;
-        const birthdate = userData.birthdate;
-        setDay(birthdate.day);
-        setMonth(birthdate.month);
-        setYear(birthdate.year);
-        setGender(userData.gender);
-        setImage(userData.profileImage);
-      } else {
-        console.log("No such document!");
-      }
-    });
-  };
-
   const handleEdit = () => {
     setIsEditing(true);
   };
   const handleContactEdit = () => {
     setIsEditingContacts(true);
   };
-
-  const handleEveryImageChange = useCallback(
-    (image) => {
-      if (image) {
-        const storage = getStorage();
-        const storageRef = ref(
-          storage,
-          "images/" + emailRef.current + "/profile.jpg"
-        );
-        getDownloadURL(storageRef).then((url) => {
-          setImage(url);
-        });
-      }
-    },
-    [image]
-  );
 
   const handleFullnameChange = useCallback((fullname) => {
     fullnameRef.current = fullname;
@@ -439,7 +288,6 @@ const UserProfile = () => {
             {isEditing && (
               <TouchableOpacity
                 styles={styles.saveIcon}
-                onPress={handleMainSave}
               >
                 <Image
                   style={styles.saveIcon}
@@ -560,7 +408,7 @@ const UserProfile = () => {
         <Logo name={"Профіль"} />
         <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
           <View style={styles.scrollView}>
-            <View style={styles.userIcon} onTouchEnd={pickImage}>
+            <View style={styles.userIcon}>
               {image ? (
                 <Image source={{ uri: image }} style={styles.userIconImage} />
               ) : (

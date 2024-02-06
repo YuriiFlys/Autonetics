@@ -8,7 +8,6 @@ import BottomMenu from "./screens/BottomMenu";
 import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import SalesScreen from "./screens/SalesScreen";
-import Settings from "./screens/Settings";
 import ProductInfo from "./screens/ProductInfo";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LogBox } from "react-native";
@@ -72,11 +71,6 @@ const App = () => {
             <Stack.Screen
               name="ProductInfo"
               component={ProductInfo}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Settings"
-              component={Settings}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
