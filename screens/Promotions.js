@@ -63,6 +63,7 @@ const Promotions = () => {
     },
     {
       name: "Cуперціна",
+
       item: [
         {
           name: "Вода 0,5 л Боржомі мінеральна сильногазована",
@@ -101,6 +102,7 @@ const Promotions = () => {
     },
     {
       name: "Новинки",
+
       item: [
         {
           name: "Вода 0,5 л Боржомі мінеральна сильногазована",
@@ -180,13 +182,27 @@ const Promotions = () => {
       <FlatList
         data={data}
         renderItem={({ item }) => (
-          <View>
-            <View style={styles.namePromotionContainer}>
-              <Text style={styles.namePrmotionText}>{item.name}</Text>
-              <View style={styles.nameCounterPromotion}>
-                <Text style={styles.nameCounterText}>{item.item.length}</Text>
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity style={styles.namePromotionContainer}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "80%",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.namePrmotionText}>{item.name}</Text>
+                <View style={styles.nameCounterPromotion}>
+                  <Text style={styles.nameCounterText}>{item.item.length}</Text>
+                </View>
               </View>
-            </View>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require("../assets/Profile/arrow.svg")}
+                  style={styles.arrowImage}
+                />
+              </View>
+            </TouchableOpacity>
             <FlatList
               data={item.item}
               renderItem={({ item }) => <PromotionsWidget item={item} />}
@@ -220,19 +236,39 @@ const styles = StyleSheet.create({
     color: Color.colorDarkBlue,
     margin: 10,
   },
-  namePromotionContainer: { flexDirection: "row", alignItems: "center" },
+  namePromotionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.05,
+  },
   nameCounterPromotion: {
     backgroundColor: Color.colorLightGray,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    padding: 3,
     paddingHorizontal: 15,
+    paddingVertical: 5,
+    height: "60%",
   },
   nameCounterText: {
     fontFamily: FontFamily.CommissioneBold,
     fontSize: FontSize.size_s,
     color: Color.colorWhite,
+  },
+  imageContainer: {
+    width: "10%",
+    alignItems: "center",
+  },
+  imagePromotion: {
+    width: 30,
+    height: 30,
+    contentFit: "contain",
+  },
+  arrowImage: {
+    width: 20,
+    height: 20,
+    contentFit: "contain",
   },
 });
 export default Promotions;

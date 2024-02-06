@@ -1,10 +1,19 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { Image } from "expo-image";
+import { useNavigation } from "@react-navigation/native";
 
 import { Color, FontFamily } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const PromotionsWidget = ({ item }) => {
+  const navigator = useNavigation();
+
   const price =
     item.discount > 0
       ? ((item.price * (100 - item.discount)) / 100)
@@ -15,7 +24,10 @@ const PromotionsWidget = ({ item }) => {
 
   const dataTime = item.dataTime;
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigator.navigate("ProductInfo")}
+    >
       {item.discount ? (
         <View
           style={[
@@ -71,7 +83,7 @@ const PromotionsWidget = ({ item }) => {
         </Text>
         <Image style={styles.imageSourceShop} source={item.shopLogo} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -138,7 +150,7 @@ const styles = StyleSheet.create({
   imageSourceShop: {
     width: "50%",
     height: "100%",
-    resizeMode: "contain",
+    contentFit: "contain",
   },
 });
 
