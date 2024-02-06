@@ -9,13 +9,9 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
-import { useNavigation } from "@react-navigation/native";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
+import { useNavigation} from "@react-navigation/native";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
-import { doc, onSnapshot } from "firebase/firestore";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,14 +22,20 @@ function getInitials(name) {
   return initials;
 }
 
-const Promotions = () => {
+
+
+const Profile = (props) => {
+  const user = props.user;
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
-  const emailRef = React.useRef("");
   const [profileImage, setImage] = React.useState(null);
-  const auth = FIREBASE_AUTH;
-  //const user = auth.currentUser;
-  //emailRef.current = user.email;
+  React.useEffect(() => {
+    if (user) {
+      setUserName(user.firstName + " " + user.lastName);
+      //setImage(user.image);
+    }
+  }, [user]);
+
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
@@ -61,10 +63,10 @@ const Promotions = () => {
                 style={styles.userIconImage}
               />
             ) : (
-              <Text style={styles.userIconText}>{getInitials("NoName NoName")}</Text>
+              <Text style={styles.userIconText}>{getInitials(userName)}</Text>
             )}
           </View>
-          <Text style={styles.userName}>{"NoName NoName"}</Text>
+          <Text style={styles.userName}>{userName}</Text>
         </View>
         <GrayLine />
         <ButtonMenu
@@ -172,4 +174,4 @@ const styles = StyleSheet.create({
     contentFit: "contain",
   },
 });
-export default Promotions;
+export default Profile;

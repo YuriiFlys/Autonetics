@@ -22,7 +22,6 @@ const screenHeight = Dimensions.get("window").height;
 const LoginMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
-  const [, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -32,10 +31,8 @@ const LoginMenu = () => {
     try {
       const response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
       const data = await response.json();
-  
       if (data.password === password) {
-        console.log(data);
-        navigator.navigate("BottomMenu", { screen: "Home" });
+        navigator.navigate("BottomMenu", { user: data , screen: "Home" });
       } else {
         setErrorMessage("Неправильний email або пароль");
       }

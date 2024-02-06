@@ -13,38 +13,33 @@ import Settings from "./Settings";
 const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
 
-function HomeScreen() {
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    navigation.navigate("Головне меню");
-  }, []);
-
-  return <MyTabs />;
-}
-function ProfileStackScreen() {
+function ProfileStackScreen({ user }) {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen
         name="ProfileHome"
-        component={Profile}
         options={{ headerShown: false }}
-      />
+      >
+        {(props) => <Profile {...props} user={user} />}
+      </ProfileStack.Screen>
       <ProfileStack.Screen
         name="UserProfile"
-        component={UserProfile}
         options={{ headerShown: false }}
-      />
+      >
+        {(props) => <UserProfile {...props} user={user} />}
+      </ProfileStack.Screen>
       <ProfileStack.Screen
         name="Settings"
-        component={Settings}
         options={{ headerShown: false }}
-      />
+      >
+        {(props) => <Settings {...props} user={user} />}
+      </ProfileStack.Screen>
     </ProfileStack.Navigator>
   );
 }
 
-export default function BottomMenu() {
+export default function BottomMenu({ route }) {
+  const user = route.params?.user;
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -64,7 +59,7 @@ export default function BottomMenu() {
           return (
             <Image
               source={iconName}
-              style={{ width: size, height: size, resizeMode: "contain" }}
+              style={{ width: size, height: size, objectFit: "contain" }}
             />
           );
         },
@@ -72,9 +67,10 @@ export default function BottomMenu() {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
         options={{ headerShown: false }}
-      />
+      >
+        {(props) => <MyTabs {...props} user={user} />}
+      </Tab.Screen>
       <Tab.Screen
         name="Promotions"
         component={Promotions}
@@ -87,9 +83,10 @@ export default function BottomMenu() {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileStackScreen}
         options={{ headerShown: false }}
-      />
+      >
+        {(props) => <ProfileStackScreen {...props} user={user} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
