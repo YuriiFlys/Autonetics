@@ -64,11 +64,6 @@ const ProductInfo = () => {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <Logo
-        name="Інформація про товар"
-        logoSource={require("../assets/Arrow_blue.svg")}
-        isGoBack={true}
-      />
       <ScrollView
         ref={scrollViewRef}
         automaticallyAdjustContentInsets={true}
@@ -174,7 +169,6 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.3,
     width: screenWidth,
     padding: 10,
-    marginTop: 15,
   },
   productimage: {
     height: "100%",

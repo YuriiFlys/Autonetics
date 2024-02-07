@@ -26,7 +26,7 @@ const PromotionsWidget = ({ item }) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigator.navigate("ProductInfo")}
+      onPress={() => navigator.navigate("Інформація про товар")}
     >
       {item.discount ? (
         <View
