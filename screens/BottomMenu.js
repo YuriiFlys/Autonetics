@@ -9,32 +9,41 @@ import Basket from "./Basket";
 import Profile from "./Profile";
 import UserProfile from "./UserProfile";
 import Settings from "./Settings";
+import ListPromotions from "./ListPromotions";
 
 const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
+const PromotionsStack = createStackNavigator();
 
 function ProfileStackScreen({ user }) {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen
-        name="ProfileHome"
-        options={{ headerShown: false }}
-      >
+      <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
         {(props) => <Profile {...props} user={user} />}
       </ProfileStack.Screen>
-      <ProfileStack.Screen
-        name="UserProfile"
-        options={{ headerShown: false }}
-      >
+      <ProfileStack.Screen name="UserProfile" options={{ headerShown: false }}>
         {(props) => <UserProfile {...props} user={user} />}
       </ProfileStack.Screen>
-      <ProfileStack.Screen
-        name="Settings"
-        options={{ headerShown: false }}
-      >
+      <ProfileStack.Screen name="Settings" options={{ headerShown: false }}>
         {(props) => <Settings {...props} user={user} />}
       </ProfileStack.Screen>
     </ProfileStack.Navigator>
+  );
+}
+function PromotionsStackScreen() {
+  return (
+    <PromotionsStack.Navigator>
+      <PromotionsStack.Screen
+        name="PromotionsHome"
+        component={Promotions}
+        options={{ headerShown: false }}
+      />
+      <PromotionsStack.Screen
+        name="ListPromotions"
+        component={ListPromotions}
+        options={{ headerShown: false }}
+      />
+    </PromotionsStack.Navigator>
   );
 }
 
@@ -65,26 +74,18 @@ export default function BottomMenu({ route }) {
         },
       })}
     >
-      <Tab.Screen
-        name="Home"
-        options={{ headerShown: false }}
-      >
+      <Tab.Screen name="Home" options={{ headerShown: false }}>
         {(props) => <MyTabs {...props} user={user} />}
       </Tab.Screen>
-      <Tab.Screen
-        name="Promotions"
-        component={Promotions}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Promotions" options={{ headerShown: false }}>
+        {(props) => <PromotionsStackScreen {...props} />}
+      </Tab.Screen>
       <Tab.Screen
         name="Cart"
         component={Basket}
         options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="Profile"
-        options={{ headerShown: false }}
-      >
+      <Tab.Screen name="Profile" options={{ headerShown: false }}>
         {(props) => <ProfileStackScreen {...props} user={user} />}
       </Tab.Screen>
     </Tab.Navigator>

@@ -183,7 +183,12 @@ const Promotions = () => {
         data={data}
         renderItem={({ item }) => (
           <View style={{ alignItems: "center" }}>
-            <TouchableOpacity style={styles.namePromotionContainer}>
+            <TouchableOpacity
+              style={styles.namePromotionContainer}
+              onPress={() =>
+                navigator.navigate("ListPromotions", { list: item })
+              }
+            >
               <View
                 style={{
                   flexDirection: "row",
