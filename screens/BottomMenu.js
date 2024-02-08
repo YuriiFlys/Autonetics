@@ -21,10 +21,24 @@ function ProfileStackScreen({ user }) {
       <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
         {(props) => <Profile {...props} user={user} />}
       </ProfileStack.Screen>
-      <ProfileStack.Screen name="UserProfile" options={{ headerShown: false }}>
+      <ProfileStack.Screen
+        name="UserProfile"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Особистий кабінет",
+        }}
+      >
         {(props) => <UserProfile {...props} user={user} />}
       </ProfileStack.Screen>
-      <ProfileStack.Screen name="Settings" options={{ headerShown: false }}>
+      <ProfileStack.Screen
+        name="Settings"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Налаштування",
+        }}
+      >
         {(props) => <Settings {...props} user={user} />}
       </ProfileStack.Screen>
     </ProfileStack.Navigator>
@@ -39,9 +53,9 @@ function PromotionsStackScreen() {
         options={{ headerShown: false }}
       />
       <PromotionsStack.Screen
-        name="ListPromotions"
+        name="Акції"
         component={ListPromotions}
-        options={{ headerShown: false }}
+        options={{ headerShown: true, headerBackTitle: "Назад" }}
       />
     </PromotionsStack.Navigator>
   );

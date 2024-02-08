@@ -26,8 +26,7 @@ const Settings = () => {
       return !previousState;
     });
   return (
-    <SafeAreaView style={styles.container}>
-      <Logo name={"Налаштування"} />
+    <View style={styles.container}>
       <View style={styles.settingContainer}>
         <View style={styles.settingItem}>
           <View style={styles.buttonSetting}>
@@ -86,7 +85,7 @@ const Settings = () => {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

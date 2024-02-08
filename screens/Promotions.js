@@ -185,9 +185,7 @@ const Promotions = () => {
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
               style={styles.namePromotionContainer}
-              onPress={() =>
-                navigator.navigate("ListPromotions", { list: item })
-              }
+              onPress={() => navigator.navigate("Акції", { list: item })}
             >
               <View
                 style={{

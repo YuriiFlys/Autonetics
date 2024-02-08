@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { doc, setDoc} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { useRef } from "react";
 import { format, set } from "date-fns";
 import {
@@ -71,10 +71,10 @@ const UserProfile = (props) => {
       phoneRef.current = user.phoneNumber.substring(4);
       emailRef.current = user.email;
       fullnameRef.current = user.firstName + " " + user.lastName;
-      const date = new Date(`${year}-${month}-${day}`);//Convert to date object
+      const date = new Date(`${year}-${month}-${day}`); //Convert to date object
       //console.log(date.toISOString().split('T')[0]);//Get the date in the format yyyy-mm-dd
     }
-}, [user]);
+  }, [user]);
 
   useEffect(() => {
     if (fullnameRef.current) {
@@ -286,9 +286,7 @@ const UserProfile = (props) => {
             )}
             {isEditing && <View style={styles.sepLine}></View>}
             {isEditing && (
-              <TouchableOpacity
-                styles={styles.saveIcon}
-              >
+              <TouchableOpacity styles={styles.saveIcon}>
                 <Image
                   style={styles.saveIcon}
                   contentFit="contain"
@@ -398,14 +396,12 @@ const UserProfile = (props) => {
 
   const scrollViewRef = useRef();
 
-  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
-        <Logo name={"Профіль"} />
         <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
           <View style={styles.scrollView}>
             <View style={styles.userIcon}>
@@ -590,6 +586,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     alignItems: "center",
+    marginTop: screenHeight * 0.02,
   },
 });
 export default UserProfile;

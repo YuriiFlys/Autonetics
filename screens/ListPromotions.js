@@ -16,7 +16,6 @@ const ListPromotions = ({ route }) => {
   console.log("list: ", list);
   return (
     <SafeAreaView style={styles.container}>
-      <Logo name={list.name} isGoBack={true} />
       <FlatList
         data={list.item}
         renderItem={({ item }) => <PromotionsWidget item={item} />}
