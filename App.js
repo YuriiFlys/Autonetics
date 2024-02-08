@@ -69,9 +69,9 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="Інформація про товар"
+              name="ProductInfo"
               component={ProductInfo}
-              options={{ headerShown: true }}
+              options={{ headerShown: true, title: "Інформація про товар" }}
             />
           </Stack.Navigator>
         ) : null}

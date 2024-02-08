@@ -53,9 +53,13 @@ function PromotionsStackScreen() {
         options={{ headerShown: false }}
       />
       <PromotionsStack.Screen
-        name="Акції"
+        name="ListPromotions"
         component={ListPromotions}
-        options={{ headerShown: true, headerBackTitle: "Назад" }}
+        options={{
+          headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Акції",
+        }}
       />
     </PromotionsStack.Navigator>
   );

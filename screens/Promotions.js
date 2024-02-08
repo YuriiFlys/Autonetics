@@ -62,7 +62,7 @@ const Promotions = () => {
       ],
     },
     {
-      name: "Cуперціна",
+      name: "Cуперціни",
 
       item: [
         {
@@ -185,7 +185,9 @@ const Promotions = () => {
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
               style={styles.namePromotionContainer}
-              onPress={() => navigator.navigate("Акції", { list: item })}
+              onPress={() =>
+                navigator.navigate("ListPromotions", { list: item })
+              }
             >
               <View
                 style={{
@@ -207,7 +209,10 @@ const Promotions = () => {
               </View>
             </TouchableOpacity>
             <FlatList
-              data={item.item}
+              data={item.item.slice(0, 5).concat({
+                name: item.name,
+                end: true,
+              })}
               renderItem={({ item }) => <PromotionsWidget item={item} />}
               keyExtractor={(item) => item.name}
               horizontal={true}
