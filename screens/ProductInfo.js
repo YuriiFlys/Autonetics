@@ -6,11 +6,11 @@ import {
   SafeAreaView,
   Text,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
 import SmallWidget from "../components/SmallWidget";
-import { FlatList } from "react-native-gesture-handler";
 import Logo from "../components/Logo";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -64,11 +64,6 @@ const ProductInfo = () => {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <Logo
-        name="Інформація про товар"
-        logoSource={require("../assets/Arrow_blue.svg")}
-        isGoBack={true}
-      />
       <ScrollView
         ref={scrollViewRef}
         automaticallyAdjustContentInsets={true}
@@ -150,7 +145,12 @@ const ProductInfo = () => {
         </View>
         <View style={styles.productOffersContainer}>
           <Text style={styles.title}>Ваші пропозиції</Text>
-          <SmallWidget item={item} />
+          <FlatList
+            data={[item, item, item, item, item]}
+            renderItem={({ item }) => <SmallWidget item={item} />}
+            keyExtractor={(item) => item.id}
+            horizontal={true}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.3,
     width: screenWidth,
     padding: 10,
-    marginTop: 15,
   },
   productimage: {
     height: "100%",

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -13,95 +13,213 @@ import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
-import { SafeAreaFrameContext } from "react-native-safe-area-context";
-
+import PromotionsWidget from "../components/PromotionsWidget";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Promotions = () => {
   const navigator = useNavigation();
-  const MainWidget = ({ name, price, image, brand, description }) => {
-    return (
-      <View style={styles.mainWidgetView}>
-        <View style={styles.widgetInfoRow}>
-          <Text style={[styles.widgetProductMainInfo]}>{name}</Text>
-          <Text style={styles.widgetProductMainInfo}>{price}</Text>
-        </View>
-        <View style={styles.widgetImageRow}>
-          <View style={styles.widgetImageBox}>
-            <Image source={image} style={styles.widgetProductImage} />
-          </View>
-          <View style={[styles.widgetImageBox]}>
-            <Image source={brand} style={styles.widgetProductBrandLogo} />
-          </View>
-        </View>
-        <View style={styles.widgetProductDescriptionContainer}>
-          <Text style={styles.widgetProductDescription}>{description}</Text>
-        </View>
-      </View>
-    );
-  };
-  const SmallWidget = ({ name, price, image, brand }) => {
-    return (
-      <View style={styles.smallWidgetView}>
-        <View style={styles.smallWidgetInfoRow}>
-          <Text style={[styles.widgetProductMainInfo]}>{name}</Text>
-          <Text style={styles.widgetProductMainInfo}>{price}</Text>
-        </View>
-        <View style={styles.widgetImageRow}>
-          <View style={styles.widgetImageBox}>
-            <Image source={image} style={styles.widgetProductImage} />
-          </View>
-          <View style={[styles.widgetImageBox]}>
-            <Image source={brand} style={styles.widgetProductBrandLogo} />
-          </View>
-        </View>
-      </View>
-    );
-  };
+
   const scrollViewRef = useRef();
+  const [isNew, setIsNew] = useState(false);
+  data = [
+    {
+      name: "Акції дня",
+      item: [
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+      ],
+    },
+    {
+      name: "Cуперціни",
+
+      item: [
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+      ],
+    },
+    {
+      name: "Новинки",
+
+      item: [
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: "New",
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: "New",
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: "New",
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+      ],
+    },
+    {
+      name: "Ваші пропозиції",
+      item: [
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          discount: 20,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+        {
+          name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+          price: 67.99,
+          imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+          shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+          dataTime: {
+            start: "01.01.2022",
+            end: "01.01.2023",
+          },
+        },
+      ],
+    },
+  ];
   return (
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Акції"} />
-      <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
-        <MainWidget
-          name={"Банани"}
-          price={"47.59₴"}
-          image={require("../assets/Image_Product_or_Shop/bananas.jpeg")}
-          brand={require("../assets/Image_Product_or_Shop/atbLogo.png")}
-          description={
-            "Банани - смачний та корисний фрукт, багатий на калій та вітаміни. Їх аромат та смак завжди радують. Ідеальний перекус для енергії!"
-          }
-        />
-        <View style={styles.smallWidgets}>
-          <SmallWidget
-            name={"Пиво"}
-            price={"34.95₴"}
-            image={require("../assets/Image_Product_or_Shop/beer.png")}
-            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
-          />
-          <SmallWidget
-            name={"Пиво"}
-            price={"34.95₴"}
-            image={require("../assets/Image_Product_or_Shop/beer.png")}
-            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
-          />
-        </View>
-        <View style={styles.smallWidgets}>
-          <SmallWidget
-            name={"Пиво"}
-            price={"34.95₴"}
-            image={require("../assets/Image_Product_or_Shop/beer.png")}
-            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
-          />
-          <SmallWidget
-            name={"Пиво"}
-            price={"34.95₴"}
-            image={require("../assets/Image_Product_or_Shop/beer.png")}
-            brand={require("../assets/Image_Product_or_Shop/blizenkoLogo.png")}
-          />
-        </View>
-      </ScrollView>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.namePromotionContainer}
+              onPress={() =>
+                navigator.navigate("ListPromotions", { list: item })
+              }
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "80%",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.namePrmotionText}>{item.name}</Text>
+                <View style={styles.nameCounterPromotion}>
+                  <Text style={styles.nameCounterText}>{item.item.length}</Text>
+                </View>
+              </View>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require("../assets/Profile/arrow.svg")}
+                  style={styles.arrowImage}
+                />
+              </View>
+            </TouchableOpacity>
+            <FlatList
+              data={item.item.slice(0, 5).concat({
+                name: item.name,
+                end: true,
+              })}
+              renderItem={({ item }) => <PromotionsWidget item={item} />}
+              keyExtractor={(item) => item.name}
+              horizontal={true}
+            />
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 };
@@ -111,74 +229,54 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: Color.colorWhite,
   },
-  mainWidgetView: {
-    flexDirection: "column",
-    width: screenWidth * 0.9,
-    backgroundColor: "lightgrey",
-    borderRadius: 20,
-    overflow: "hidden",
-    padding: 20,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  widgetInfoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
-  },
-  widgetProductMainInfo: {
-    fontFamily: FontFamily.CommissioneBold,
-    fontSize: 24,
-    color: "#404040",
-  },
-  widgetImageRow: {
-    flexDirection: "row",
-    height: screenHeight * 0.15,
-    justifyContent: "space-between",
-  },
-  widgetImageBox: {
+  mainContainer: {
+    width: screenWidth,
     flex: 1,
+    flexDirection: "column",
+    backgroundColor: Color.colorSuperLightGray,
+    alignItems: "center",
+  },
+  namePrmotionText: {
+    fontFamily: FontFamily.CommissioneBold,
+    fontSize: FontSize.size_m,
+    color: Color.colorDarkBlue,
+    margin: 10,
+  },
+  namePromotionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.05,
+  },
+  nameCounterPromotion: {
+    backgroundColor: Color.colorLightGray,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    height: "60%",
   },
-  widgetProductImage: {
-    flex: 1,
-    width: "150%",
+  nameCounterText: {
+    fontFamily: FontFamily.CommissioneBold,
+    fontSize: FontSize.size_s,
+    color: Color.colorWhite,
+  },
+  imageContainer: {
+    width: "10%",
+    alignItems: "center",
+  },
+  imagePromotion: {
+    width: 30,
+    height: 30,
     contentFit: "contain",
   },
-  widgetProductBrandLogo: {
-    width: "30%",
-    height: "30%",
-  },
-  widgetProductDescription: {
-    fontFamily: FontFamily.Commissione,
-    fontSize: 16,
-    color: "#404040",
-  },
-  widgetProductDescriptionContainer: {
-    width: "90%",
-  },
-  smallWidgets: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  smallWidgetView: {
-    flexDirection: "column",
-    width: screenWidth * 0.43,
-    backgroundColor: "lightgrey",
-    borderRadius: 20,
-    overflow: "hidden",
-    padding: 20,
-    alignItems: "center",
-    margin: screenWidth * 0.01,
-  },
-  smallWidgetInfoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 10,
+  arrowImage: {
+    width: 20,
+    height: 20,
+    contentFit: "contain",
   },
 });
 export default Promotions;

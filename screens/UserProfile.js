@@ -371,14 +371,12 @@ const UserProfile = (props) => {
 
   const scrollViewRef = useRef();
 
-  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
-        <Logo name={"Профіль"} />
         <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
           <View style={styles.scrollView}>
             <View style={styles.userIcon}>
