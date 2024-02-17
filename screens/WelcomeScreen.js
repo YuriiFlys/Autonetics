@@ -1,5 +1,7 @@
 import * as React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useRoute } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CheckBox } from 'react-native-elements';
 import { Image } from "expo-image";
 import {
   StyleSheet,
@@ -13,38 +15,54 @@ import {
   Keyboard,
 } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
-import { updateProfile } from "firebase/auth";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const WelcomeScreen = () => {
-  const [name, setName] = React.useState("");
-  const [surname, setSurname] = React.useState("");
-  const surnameRef = React.useRef();
-  const auth = FIREBASE_AUTH;
-  const firestore = FIREBASE_DB;
+  const route = useRoute();
+  const user = route.params?.user;
+  const [password, setPassword] = React.useState("");
+  const [repeatPassword, setRepeatPassword] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [isSelected, setSelection] = React.useState(false); 
+  const repeatPasswordRef = React.useRef();
   const navigator = useNavigation();
-  const handleUpdate = async () => {
+  const handleFinalRegister = async () => {
+    if (password !== repeatPassword) {
+      setErrorMessage("Паролі не співпадають");
+      return;
+    }
+      const email= user.Email;
+      const phoneNumber= user.PhoneNumber;
     try {
-      const user = auth.currentUser;
-      await updateProfile(user, { displayName: `${name} ${surname}` });
-      navigator.navigate("BottomMenu", { screen: "Home" });
-      console.log("Ім'я та прізвище оновлено");
-      const userDocRef = doc(firestore, "users", user.email);
-      const birthdate = { day: 1, month: 1, year: 1900 };
-      const gender = "Не вказано";
-      await setDoc(userDocRef, {
-        fullname: `${name} ${surname}`,
-        email: user.email,
-        birthdate: birthdate,
-        gender: gender,
+      const response = await fetch(`http://23.100.50.204:8080/client`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "Email": email,
+          "PhoneNumber": phoneNumber,
+          "Password": password,
+        }),
       });
+  
+      if (!response.ok) {
+        throw new Error('HTTP status ' + response.status);
+      }
+  
+      const data = await response.json();
+      const clientId = data.clientId;
+      await AsyncStorage.setItem(email, clientId);
+      const response2 = await fetch(`http://23.100.50.204:8080/client/${clientId}`);
+      const user = await response2.json();
+      navigator.navigate("BottomMenu", { user: user, screen: "Home" });
     } catch (error) {
       console.error(error);
+      setErrorMessage("Сталася помилка під час реєстрації");
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
@@ -67,32 +85,52 @@ const WelcomeScreen = () => {
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-          <View style={styles.namesurname}>
-            <Text style={styles.namesurnametext}>Введіть ім'я</Text>
+          <View style={styles.password}>
+            <Text style={styles.passwordtext}>Пароль</Text>
             <TextInput
               style={styles.field}
-              placeholder="Ім'я"
-              onSubmitEditing={() => surnameRef.current.focus()}
-              onChangeText={setName}
+              placeholder="Password"
+              onSubmitEditing={() => repeatPasswordRef.current.focus()}
+              onChangeText={setPassword}
+              secureTextEntry
             />
           </View>
-          <View style={styles.namesurname}>
-            <Text style={styles.namesurnametext}>Введіть прізвище</Text>
+          <View style={styles.password}>
+            <Text style={styles.passwordtext}>Повторіть пароль</Text>
             <TextInput
               style={styles.field}
-              placeholder="Прізвище"
-              onChangeText={setSurname}
-              ref={surnameRef}
+              placeholder="Password"
+              onChangeText={setRepeatPassword}
+              ref={repeatPasswordRef}
+              secureTextEntry
             />
           </View>
+          {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
         </View>
       </TouchableWithoutFeedback>
-      <Pressable style={styles.submit} onPress={handleUpdate}>
+      <CheckBox
+        title='Я погоджуюсь з правилами конфіденційності'
+        containerStyle={{backgroundColor: Color.colorLightCyan,borderWidth:0,marginLeft: screenWidth * 0.07}}
+        checked={isSelected}
+        onPress={() => setSelection(!isSelected)}
+      />
+      <Pressable style={styles.submit} onPress={handleFinalRegister} disabled={!isSelected}>
         <Text style={styles.submitText}>Submit</Text>
+      </Pressable>
+      <Pressable
+        style={styles.vector}
+        onPress={() => navigator.navigate("Signup")}
+      >
+        <Image
+          style={styles.vector}
+          contentFit="contain"
+          source={require("../assets/Vector.svg")}
+        />
       </Pressable>
     </KeyboardAvoidingView>
   );
 };
+
 
 const styles = StyleSheet.create({
   welcome: {
@@ -121,19 +159,25 @@ const styles = StyleSheet.create({
     paddingLeft: screenWidth * 0.02,
     paddingRight: screenWidth * 0.02,
   },
-  namesurnametext: {
+  errormessage: {
+    color: Color.colorErrorRed,
+    fontFamily: FontFamily.CommissioneRegular,
+    marginTop: screenHeight * 0.01,
+    textAlign: "center",
+  },
+  
+  passwordtext: {
     marginLeft: screenWidth * 0.1,
     color: Color.colorDarkslategray_200,
-    fontSize: 16,
+    fontSize: FontSize.size_xl,
     fontFamily: FontFamily.CommissioneBold,
   },
 
-  namesurname: {
+  password: {
     marginTop: screenHeight * 0.01,
   },
 
   submit: {
-    marginTop: screenHeight * 0.02,
     alignSelf: "center",
     height: screenHeight < 600 ? screenHeight * 0.06 : screenHeight * 0.05,
     width: screenWidth * 0.5,

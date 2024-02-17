@@ -13,53 +13,48 @@ import {
   Dimensions,
 } from "react-native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-import { FIREBASE_AUTH } from "../FirebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const SignUpMenu = () => {
   const navigator = useNavigation();
-  const passwordRef = React.useRef();
-  const repeatpasswordRef = React.useRef();
+  const phoneRef = React.useRef();
   const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [repeatPassword, setRepeatPassword] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  const auth = FIREBASE_AUTH;
+
+  const handleNumberChange = (text) => {
+    if (text.startsWith("+380") && text.length <= 13) {
+      setPhoneNumber(text);
+    }
+  }
   const handleRegister = async () => {
-    if (password !== repeatPassword) {
-      setErrorMessage("Паролі не співпадають");
-      return;
-    }
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigator.navigate("Welcome");
-    } catch (error) {
-      console.error(error);
-      let errorMessage = "";
-      switch (error.code) {
-        case "auth/invalid-email":
-          errorMessage = "Неправильний формат електронної пошти";
-          break;
-        case "auth/weak-password":
-          errorMessage = "Пароль повинен містити принаймні 6 символів";
-          break;
-        case "auth/email-already-in-use":
-          errorMessage = "Електронна пошта вже використовується";
-          break;
-        default:
-          errorMessage = "Сталася помилка під час реєстрації";
+    
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setErrorMessage("Неправильний формат електронної пошти");
+        return;
       }
-      setErrorMessage(errorMessage);
-    }
+
+      const phoneRegex = /^\+380\d{9}$/;
+      if (!phoneRegex.test(phoneNumber)) {
+        setErrorMessage("Неправильний формат номера телефону");
+        return;
+      }
+
+      const user = {
+        "Email": email,
+        "PhoneNumber": phoneNumber,
+      };
+
+      navigator.navigate("Welcome", { user: user });
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.signupmenu}
       behavior="position"
-      keyboardVerticalOffset={-screenHeight * 0.15}
+      keyboardVerticalOffset={-screenHeight * 0.25}
       enabled
     >
       <Text style={styles.signUp}>Sign Up</Text>
@@ -76,37 +71,33 @@ const SignUpMenu = () => {
               <TextInput
                 style={styles.field}
                 onChangeText={setEmail}
-                onSubmitEditing={() => passwordRef.current.focus()}
+                onSubmitEditing={() => phoneRef.current.focus()}
                 blurOnSubmit={false}
                 keyboardType="email-address"
+                placeholder="example@domain.com"
                 autoCapitalize="none"
               />
             </View>
-            <View style={styles.enterPass}>
-              <Text style={styles.enterPasstext}>Пароль</Text>
+            <View style={styles.phone}>
+              <Text style={styles.phonetext}>Номер телефону</Text>
               <TextInput
+                ref={phoneRef}
                 style={styles.field}
-                secureTextEntry
-                ref={passwordRef}
-                onChangeText={setPassword}
-                textContentType="oneTimeCode"
-                onSubmitEditing={() => repeatpasswordRef.current.focus()}
+                onChangeText={handleNumberChange}
+                onFocus={() => {
+                  if (!phoneNumber.startsWith("+380")) {
+                    setPhoneNumber("+380");
+                  }
+                }}
+                value={phoneNumber}
+                blurOnSubmit={false}
+                keyboardType="phone-pad"
+                placeholder="+380123456789"
+                autoCapitalize="none"
               />
-            </View>
-            <View style={styles.repeatPass}>
-              <Text style={styles.repeatPasstext}>Підтвердіть пароль</Text>
-              <TextInput
-                style={styles.field}
-                secureTextEntry
-                ref={repeatpasswordRef}
-                onChangeText={setRepeatPassword}
-                textContentType="oneTimeCode"
-              />
-              {errorMessage ? (
-                <Text style={styles.errormessage}>{errorMessage}</Text>
-              ) : null}
             </View>
           </View>
+          {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
         </View>
       </TouchableWithoutFeedback>
       <Pressable style={styles.register} onPress={handleRegister}>
@@ -154,6 +145,15 @@ const styles = StyleSheet.create({
     paddingRight: screenWidth * 0.02,
   },
   emailtext: {
+    marginLeft: screenWidth * 0.1,
+    color: Color.colorDarkslategray_200,
+    fontSize: FontSize.size_xl,
+    fontFamily: FontFamily.CommissioneBold,
+  },
+  phone: {
+    marginTop: screenHeight * 0.01,
+  },
+  phonetext: {
     marginLeft: screenWidth * 0.1,
     color: Color.colorDarkslategray_200,
     fontSize: FontSize.size_xl,

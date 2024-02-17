@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   StyleSheet,
   Text,
@@ -28,32 +29,25 @@ const LoginMenu = () => {
   
 
   const handleLogin = async () => {
-    try {
-      const response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
-      const data = await response.json();
-      if (data.password === password) {
-        navigator.navigate("BottomMenu", { user: data , screen: "Home" });
-      } else {
-        setErrorMessage("Неправильний email або пароль");
-      }
-    } catch (error) {
-      console.error(error);
-      let errorMessage = "";
-      switch (error.code) {
-        case "auth/missing-password":
-          errorMessage = "Будь ласка, введіть пароль";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "Неправильний формат електронної пошти";
-          break;
-        case "auth/invalid-credential":
-          errorMessage = "Неправильний email або пароль";
-          break;
-        default:
-          errorMessage = "Сталася помилка під час входу в систему";
-      }
-      setErrorMessage(errorMessage);
-    }
+    // try {
+    //   const response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
+    //   const data = await response.json();
+    //   const userID= await AsyncStorage.getItem(email);
+    //   if (data.password === password) {
+    //     navigator.navigate("BottomMenu", { user: {...data,userID} , screen: "Home" });
+    //   } else {
+    //     setErrorMessage("Неправильний email або пароль");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   let errorMessage = "";
+    //   switch (error.code) {
+    //     default:
+    //       errorMessage = "Сталася помилка під час входу в систему";
+    //   }
+    //   setErrorMessage(errorMessage);
+    // }
+    navigator.navigate("BottomMenu", { screen: "Home" });
   };
   
 
@@ -78,6 +72,7 @@ const LoginMenu = () => {
               style={styles.field}
               autoCapitalize="none"
               onChangeText={setEmail}
+              keyboardType="email-address"
               onSubmitEditing={() => passwordRef.current.focus()}
               blurOnSubmit={false}
             />

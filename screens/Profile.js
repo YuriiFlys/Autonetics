@@ -17,9 +17,13 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 function getInitials(name) {
-  const words = name.split(" ");
-  const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
-  return initials;
+  try {
+    const words = name.split(" ");
+    const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
+    return initials;
+  } catch (error) {
+    return "";
+  }
 }
 
 
@@ -30,12 +34,17 @@ const Profile = (props) => {
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
   React.useEffect(() => {
-    if (user) {
-      setUserName(user.firstName + " " + user.lastName);
-      //setImage(user.image);
-    }
-  }, [user]);
-
+    const unsubscribe = navigator.addListener("focus",async () => {
+      const response = await fetch('http://23.100.50.204:8080/client/' + user.userID);
+      const data = await response.json();
+      if (data.firstName === null || data.lastName === null) {
+        setUserName(" ");
+      }else{
+      setUserName(data.firstName + " " + data.lastName);}
+    });
+    return unsubscribe;
+  }, [navigator]);
+  
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>

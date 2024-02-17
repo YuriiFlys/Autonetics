@@ -6,20 +6,19 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Modal,
   SafeAreaView,
   ScrollView,
   Alert,
 } from "react-native";
 import { Image } from "expo-image";
+import RNPickerSelect from "react-native-picker-select";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../FirebaseConfig";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { doc, setDoc} from "firebase/firestore";
 import { useRef } from "react";
-import { format, set } from "date-fns";
+import { format} from "date-fns";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -27,82 +26,112 @@ import {
 } from "react-native";
 import Logo from "../components/Logo";
 
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const UserProfile = (props) => {
-  const user = props.user;
-
+  const userData = props.user;
   const navigator = useNavigation();
   const [initials, setInitials] = useState("");
   const fullnameRef = React.useRef();
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState(" ");
-  const phoneRef = useRef("123456789");
+  const [date, setDate] = useState(new Date());
+  const phoneRef = useRef("");
   const [gender, setGender] = useState("Не вказано ");
-  const [modalVisible, setModalVisible] = useState(false);
+  const [, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
-  const dayRef = useRef();
-  const monthRef = useRef();
-  const yearRef = useRef();
   const emailRef = useRef();
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingContacts, setIsEditingContacts] = useState(false);
-  const auth = FIREBASE_AUTH;
-  const firestore = FIREBASE_DB;
-
-  function getInitials(fullName) {
-    const names = fullName.split(" ");
-    let initials = names.map((name) => name.charAt(0).toUpperCase());
-    return initials.join("");
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [user, setUser] = useState(null);
+  
+  function getInitials(name) {
+    try {
+      const words = name.split(" ");
+      const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
+      return initials;
+    } catch (error) {
+      return "";
+    }
   }
-
+  useEffect(() => {
+    const unsubscribed = navigator.addListener("focus", async () => {
+      const response = await fetch(`http://23.100.50.204:8080/client/${userData.userID}`);
+      const data = await response.json();
+      setUser(data);
+    }
+    );
+    return unsubscribed;
+  }, []);
+  
   useEffect(() => {
     if (user) {
-      const dateparts = user.birthDate.split("-");
-      const [year, month, day] = dateparts.map((part) => parseInt(part, 10));
-      console.log("Dateparts: ", year, month, day);
-      setInitials(getInitials(user.firstName + " " + user.lastName));
-      setGender(user.gender);
-      setDay(day);
-      setMonth(month);
-      setYear(year);
-      phoneRef.current = user.phoneNumber.substring(4);
-      emailRef.current = user.email;
-      fullnameRef.current = user.firstName + " " + user.lastName;
-      const date = new Date(`${year}-${month}-${day}`);//Convert to date object
-      //console.log(date.toISOString().split('T')[0]);//Get the date in the format yyyy-mm-dd
+      setGender(user.gender || "Не вказано");
+      phoneRef.current = user.phoneNumber ? user.phoneNumber.substring(4) : "Не вказано";
+      emailRef.current = user.email || "";
+      fullnameRef.current = user.firstName && user.lastName ? user.firstName + " " + user.lastName : "Не вказано";
     }
-}, [user]);
-
+  }, [user]);
   useEffect(() => {
-    if (fullnameRef.current) {
+    if (fullnameRef.current==="Не вказано") {
+      setInitials(" ");
+    }
+    else{
       setInitials(getInitials(fullnameRef.current));
     }
   }, [fullnameRef.current]);
 
-  const handleContactSave = useCallback(() => {
-    const user = auth.currentUser;
-    if (user) {
-      const userDoc = doc(firestore, "users", emailRef.current);
-      setDoc(
-        userDoc,
-        {
-          phone: "+380" + phoneRef.current,
-          email: emailRef.current,
-        },
-        { merge: true }
-      )
-        .then(() => {
-          getUpdatedUserDataFromFirestore(userDoc);
-        })
-        .catch((error) => {
-          console.error("Error updating document: ", error);
-        });
+  const handleContactSave = useCallback(async() => {
+    const UpdatedData={
+      "phoneNumber":`+380${phoneRef.current}`,
+      "email":emailRef.current,
+    };
+    try{
+      const response = await fetch(`http://23.100.50.204:8080/client/${userData.userID}`, {
+        method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(UpdatedData),
+    });
+    if (!response.ok) {
+      throw new Error('HTTP status ' + response.status);
     }
+    const data = await response.text();
+    }
+    catch (error) {
+      console.error(error);
+    }
+
     setIsEditingContacts(false);
-  }, [phoneRef]);
+  }, [phoneRef, emailRef]);
+
+  const handleMainSave = useCallback(async() => {  
+    const UpdatedData={
+      "firstName":fullnameRef.current.split(" ")[0],
+      "lastName":fullnameRef.current.split(" ")[1],
+      "birthDate":format(date, "yyyy-MM-dd"),
+      "gender":gender
+    };
+    try{
+      const response = await fetch(`http://23.100.50.204:8080/client/${userData.userID}`, {
+        method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(UpdatedData),
+    });
+    if (!response.ok) {
+      throw new Error('HTTP status ' + response.status);
+    }
+    const data = await response.text();
+    }
+    catch (error) {
+      console.error(error);
+    }
+    setIsEditing(false);
+  }, [fullnameRef, date, gender]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -121,63 +150,27 @@ const UserProfile = (props) => {
   const handleEmailChange = useCallback((email) => {
     emailRef.current = email;
   }, []);
+  
 
-  const handleDateChange = useCallback((text, type) => {
-    const num = parseInt(text, 10);
-    if (type === "day") {
-      setDay(num);
-    } else if (type === "month") {
-      setMonth(num);
-    } else if (type === "year") {
-      setYear(num);
-    }
-  }, []);
-  const GenderModal = ({ modalVisible, setModalVisible, setGender }) => {
-    const handleGenderSelect = (selectedGender) => {
-      setGender(selectedGender);
-      setModalVisible(false);
-    };
+  const genderlist = [
+    { label: "Чоловіча", value: "Male" },
+    { label: "Жіноча", value: "Female" },
+    { label: "Не вказано", value: "null" },
+  ];
 
-    return (
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalLabel}>Оберіть стать</Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => handleGenderSelect("Не вказано ")}
-            >
-              <Text style={styles.modalText}>Не вказано </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => handleGenderSelect("Чоловіча ")}
-            >
-              <Text style={styles.modalText}>Чоловіча </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => handleGenderSelect("Жіноча ")}
-            >
-              <Text style={styles.modalText}>Жіноча </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.modalText}>Скасувати </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    );
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setDate(date);
+    hideDatePicker();
+  };
+  
 
   const MainInfo = ({ widgetname }) => {
     return (
@@ -214,80 +207,65 @@ const UserProfile = (props) => {
               <Text style={styles.EditedText}>{fullnameRef.current}</Text>
             )}
             <View style={styles.sepLine}></View>
-            <Text style={styles.MainWidgetText}>{"Дата народження"}</Text>
+            <Text style={styles.MainWidgetText} onPress={showDatePicker}>
+              {"Дата народження"}
+            </Text>
             {isEditing ? (
-              <View style={styles.datepicker}>
-                <TextInput
-                  ref={dayRef}
-                  style={styles.dateplaceholder}
-                  defaultValue={day.toString()}
-                  placeholder="DD"
-                  keyboardType="numeric"
-                  maxLength={2}
-                  onChangeText={(text) => {
-                    if (text.length === 2) {
-                      handleDateChange(text, "day");
-                      setTimeout(() => monthRef.current.focus(), 0);
-                    }
-                  }}
-                />
-                <Text style={styles.dateSeparator}>.</Text>
-                <TextInput
-                  ref={monthRef}
-                  style={styles.dateplaceholder}
-                  defaultValue={month.toString()}
-                  placeholder="MM"
-                  keyboardType="numeric"
-                  maxLength={2}
-                  onChangeText={(text) => {
-                    if (text.length === 2) {
-                      handleDateChange(text, "month");
-                      setTimeout(() => yearRef.current.focus(), 0);
-                    } else if (text.length === 0) {
-                      setMonth("");
-                      setTimeout(() => dayRef.current.focus(), 0);
-                    }
-                  }}
-                />
-                <Text style={styles.dateSeparator}>.</Text>
-                <TextInput
-                  ref={yearRef}
-                  style={styles.dateplaceholder}
-                  defaultValue={year.toString()}
-                  placeholder="YYYY"
-                  keyboardType="numeric"
-                  maxLength={4}
-                  onChangeText={(text) => {
-                    if (text.length === 4) {
-                      handleDateChange(text, "year");
-                    } else if (text.length === 0) {
-                      setYear("");
-                      setTimeout(() => monthRef.current.focus(), 0);
-                    }
-                  }}
+              <TouchableOpacity onPress={showDatePicker}>
+                <Text style={styles.dateplaceholder}>
+                  {format(date, "dd-MM-yyyy")}
+                </Text>
+              <View>
+                <DateTimePickerModal
+                  isVisible={isDatePickerVisible}
+                  textColor="black"
+                  mode="date"
+                  maximumDate={new Date()}
+                  onConfirm={handleConfirm}
+                  onCancel={hideDatePicker}
                 />
               </View>
+              </TouchableOpacity>
             ) : (
               <Text style={styles.EditedText}>
-                {format(new Date(year, month - 1, day), "dd.MM.yyyy")}
+                {format(date, "dd-MM-yyyy")}
               </Text>
             )}
             <View style={styles.sepLine}></View>
-            <Text style={styles.MainWidgetText}>{"Стать "}</Text>
-
+            <Text style={styles.MainWidgetText}>Стать</Text>
             {isEditing ? (
               <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={[styles.EditedText]}>{gender}</Text>
+                <RNPickerSelect
+                  style={{
+                    inputIOS: styles.pickerText,
+                    inputAndroid: styles.pickerText,
+                  }}
+                  onValueChange={(value) => setGender(value)}
+                  items={genderlist}
+                  placeholder={{}}
+                  value={gender}
+                />
               </TouchableOpacity>
             ) : (
               <View style={{ flexDirection: "column" }}>
-                <Text style={[styles.EditedText]}>{gender}</Text>
+                <RNPickerSelect
+                  style={{
+                    inputIOS: styles.pickerText,
+                    inputAndroid: styles.pickerText,
+                  }}
+                  onValueChange={(value) => setGender(value)}
+                  items={genderlist}
+                  disabled={true}
+                  placeholder={{}}
+                  value={gender}
+                />
               </View>
             )}
             {isEditing && <View style={styles.sepLine}></View>}
             {isEditing && (
               <TouchableOpacity
                 styles={styles.saveIcon}
+                onPress={handleMainSave}
               >
                 <Image
                   style={styles.saveIcon}
@@ -296,11 +274,8 @@ const UserProfile = (props) => {
                 />
               </TouchableOpacity>
             )}
-            <GenderModal
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-              setGender={setGender}
-            />
+
+            
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -375,9 +350,7 @@ const UserProfile = (props) => {
 
   const SignOut = () => {
     const handleSignOut = () => {
-      auth.signOut().then(() => {
         navigator.navigate("StartMenu");
-      });
     };
     const confirmation = () => {
       Alert.alert("Вихід", "Чи справді ви хочете вийти?", [
@@ -590,6 +563,11 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     alignItems: "center",
+  },
+  pickerText: {
+    fontFamily: FontFamily.CommissioneBold,
+    fontSize: FontSize.size_l,
+    color: Color.colorDarkBlue,
   },
 });
 export default UserProfile;
