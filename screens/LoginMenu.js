@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
   Text,
@@ -15,18 +15,15 @@ import {
 } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 
-
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
-const LoginMenu = () => {
+const LoginMenu = ({ isAdmin, setIsAdmin }) => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  
 
   const handleLogin = async () => {
     // try {
@@ -47,9 +44,12 @@ const LoginMenu = () => {
     //   }
     //   setErrorMessage(errorMessage);
     // }
-    navigator.navigate("BottomMenu", { screen: "Home" });
+    if (isAdmin) {
+      navigator.navigate("AdminMenu");
+    } else {
+      navigator.navigate("BottomMenu", { screen: "Home" });
+    }
   };
-  
 
   return (
     <KeyboardAvoidingView
@@ -109,6 +109,16 @@ const LoginMenu = () => {
           contentFit="contain"
           source={require("../assets/Vector.svg")}
         />
+      </Pressable>
+      {/*Admin button*/}
+      <Pressable
+        style={styles.adminButton}
+        onPress={() => {
+          setIsAdmin(!isAdmin);
+          console.log(isAdmin);
+        }}
+      >
+        <Text style={styles.adminButtonText}>{isAdmin ? "Адмін" : "Лох"}</Text>
       </Pressable>
     </KeyboardAvoidingView>
   );

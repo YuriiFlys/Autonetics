@@ -10,13 +10,14 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AdminMenu from "./screens/AdminMenu";
 import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
   const [hideSplashScreen] = React.useState(true);
-
+  const [isAdmin, setIsAdmin] = React.useState(false);
   return (
     <>
       <NavigationContainer>
@@ -35,22 +36,14 @@ const App = () => {
             />
             <Stack.Screen
               name="Login"
-              component={LoginMenu}
+              component={() => (
+                <LoginMenu isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+              )}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Signup"
               component={SignupMenu}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MyTabs"
-              component={MyTabs}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="BottomMenu"
-              component={BottomMenu}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -63,16 +56,36 @@ const App = () => {
               component={WelcomeScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="SalesScreen"
-              component={SalesScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ProductInfo"
-              component={ProductInfo}
-              options={{ headerShown: true, title: "Інформація про товар" }}
-            />
+            {isAdmin ? (
+              <Stack.Screen
+                name="AdminMenu"
+                component={AdminMenu}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              <>
+                <Stack.Screen
+                  name="MyTabs"
+                  component={MyTabs}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="BottomMenu"
+                  component={BottomMenu}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="SalesScreen"
+                  component={SalesScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ProductInfo"
+                  component={ProductInfo}
+                  options={{ headerShown: true, title: "Інформація про товар" }}
+                />
+              </>
+            )}
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
