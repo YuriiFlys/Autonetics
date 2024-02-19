@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
   const [hideSplashScreen] = React.useState(true);
-  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [isAdmin, setIsAdmin] = React.useState(true);
   return (
     <>
       <NavigationContainer>
