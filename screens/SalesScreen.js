@@ -79,7 +79,7 @@ const SalesScreen = () => {
   const navigator = useNavigation();
   const bottomSheetRef = React.useRef();
   const bottomSheetRef1 = React.useRef();
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false); // Додана змінна стану
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const handleClosePress = () => {
     if (bottomSheetRef1.current) {

@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Image } from "expo-image";
-import Logo from "../components/Logo";
-import { Color, FontFamily, FontSize } from "../GlobalStyles";
-import GrayLine from "../components/GrayLine";
+import Logo from "../../components/Logo";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import GrayLine from "../../components/GrayLine";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -18,31 +18,31 @@ const screenHeight = Dimensions.get("window").height;
 const AdminWindow = () => {
   const data = [
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../../assets/Admin/SaleSVG.svg"),
       name: "Продати товар",
     },
     {
-      imageSource: require("../assets/Admin/Storage.svg"),
+      imageSource: require("../../assets/Admin/Storage.svg"),
       name: "Склад",
     },
     {
-      imageSource: require("../assets/Admin/analysis.svg"),
+      imageSource: require("../../assets/Admin/analysis.svg"),
       name: "Аналіз даних",
     },
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../../assets/Admin/SaleSVG.svg"),
       name: "Поповнення товарів",
     },
     {
-      imageSource: require("../assets/Admin/interest.svg"),
+      imageSource: require("../../assets/Admin/interest.svg"),
       name: "Акції",
     },
     {
-      imageSource: require("../assets/Admin/history.svg"),
+      imageSource: require("../../assets/Admin/history.svg"),
       name: "Історія продаж",
     },
     {
-      imageSource: require("../assets/Admin/Order.svg"),
+      imageSource: require("../../assets/Admin/Order.svg"),
       name: "Замовлення",
     },
   ];
@@ -56,11 +56,12 @@ const AdminWindow = () => {
         <Text style={styles.buttonName}>{item.name}</Text>
         <Image
           style={styles.buttonArrow}
-          source={require("../assets/Profile/arrow.svg")}
+          source={require("../../assets/Profile/arrow.svg")}
         />
       </TouchableOpacity>
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <Logo name="Головне меню" />

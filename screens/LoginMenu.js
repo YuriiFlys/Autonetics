@@ -118,7 +118,9 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
           console.log(isAdmin);
         }}
       >
-        <Text style={styles.adminButtonText}>{isAdmin ? "Адмін" : "Лох"}</Text>
+        <Text style={styles.adminButtonText}>
+          {isAdmin ? "Адмін" : "Користувач"}
+        </Text>
       </Pressable>
     </KeyboardAvoidingView>
   );

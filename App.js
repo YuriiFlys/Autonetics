@@ -10,14 +10,14 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AdminMenu from "./screens/AdminMenu";
+import AdminMenu from "./screens/Admin/AdminMenu";
 import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
   const [hideSplashScreen] = React.useState(true);
-  const [isAdmin, setIsAdmin] = React.useState(true);
+  const [isAdmin, setIsAdmin] = React.useState(false);
   return (
     <>
       <NavigationContainer>
