@@ -14,13 +14,18 @@ import SmallWidget from "../components/SmallWidget";
 import Logo from "../components/Logo";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+import Swiper from "react-native-swiper";
 
 const ProductInfo = () => {
   const product = {
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
     discount: 20,
-    imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
+    imageSource: [
+      require("../assets/Image_Product_or_Shop/voda.png"),
+      require("../assets/Image_Product_or_Shop/voda.png"),
+      require("../assets/Image_Product_or_Shop/voda.png"),
+    ],
     shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
     isAvailable: true,
     description:
@@ -70,8 +75,14 @@ const ProductInfo = () => {
         style={{ backgroundColor: Color.colorSuperLightGray }}
       >
         <View style={styles.productImageContainer}>
+          <Swiper showsPagination={false}>
+            {product.imageSource.map((image, index) => (
+              <View key={index} style={{ flex: 1 }}>
+                <Image source={image} style={styles.productimage} />
+              </View>
+            ))}
+          </Swiper>
           <Image source={product.shopLogo} style={styles.shopLogo} />
-          <Image source={product.imageSource} style={styles.productimage} />
         </View>
         <View style={styles.productNameContainer}>
           <Text style={styles.productNameText}>{product.name}</Text>
