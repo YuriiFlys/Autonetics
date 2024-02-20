@@ -8,80 +8,95 @@ import {
   SafeAreaView,
   FlatList,
 } from "react-native";
+import HistoryElement from "../components/HistoryElement";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
+import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+
 import Logo from "../components/Logo";
+import GrayLine from "../components/GrayLine";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Basket = () => {
   const navigator = useNavigation();
-  const toggleFavorites = () => {
-    setFavoritesVisible(!favoritesVisible);
-  };
-  const toggleHystory = () => {
-    setHystoryVisible(!hystoryVisible);
-  };
-  const data = [
+  const list = [
     {
+      id: 1,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
       nameCart: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
       price: "99.99",
+      isFavorite: false,
     },
     {
+      id: 2,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "Святковий кошик",
+      nameCart: "Щоденний кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
       price: "99.99",
+      isFavorite: true,
     },
     {
+      id: 3,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "Святковий кошик",
+      nameCart: "Студенський наборчик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99",
+      price: "112.60",
+      isFavorite: true,
     },
     {
+      id: 4,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "Святковий кошик",
+      nameCart: "19:00 23.06.2024",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
       price: "99.99",
+      isFavorite: false,
     },
   ];
-
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.itemBasket}>
-        <View style={[styles.itemContentContainer, styles.startContainer]}>
-          <Image
-            source={require("../assets/Star.svg")}
-            style={styles.starImage}
-          />
-        </View>
-        <View style={[styles.itemContentContainer, styles.shopLogoContainer]}>
-          <Image source={item.shopLogo} style={styles.shopLogo} />
-        </View>
-        <View style={[styles.itemContentContainer, styles.mainInfoContainer]}>
-          <Text>{item.nameCart}</Text>
-          <Text>{item.shopAddress}</Text>
-        </View>
-        <View style={[styles.itemContentContainer, styles.priceContainer]}>
-          <Text>{item.price}</Text>
-        </View>
-        <View style={[styles.itemContentContainer, styles.arrowContainer]}>
-          <Image
-            source={require("../assets/Star.svg")}
-            style={styles.arrowImage}
-          />
-        </View>
-      </View>
+  const [data, setData] = React.useState(
+    list.sort((a, b) => {
+      if (a.isFavorite === b.isFavorite) {
+        return 0;
+      } else if (a.isFavorite) {
+        return -1;
+      } else {
+        return 1;
+      }
+    })
+  );
+  const sortData = (data) => {
+    setData(
+      data.sort((a, b) => {
+        if (a.isFavorite === b.isFavorite) {
+          return 0;
+        } else if (a.isFavorite) {
+          return -1;
+        } else {
+          return 1;
+        }
+      })
     );
+    return data;
   };
-
+  const updateData = (id) => {
+    const newData = data.map((item) => {
+      if (item.id === id) {
+        return { ...item, isFavorite: !item.isFavorite };
+      }
+      return item;
+    });
+    sortData(newData);
+  };
   return (
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Історія та улюблені"} />
-      <FlatList data={data} renderItem={renderItem} />
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <HistoryElement item={item} updateData={updateData} />
+        )}
+      />
     </SafeAreaView>
   );
 };
@@ -96,31 +111,36 @@ const styles = StyleSheet.create({
   },
   itemBasket: {
     height: screenHeight * 0.1,
-    width: screenWidth,
     flexDirection: "row",
+    borderTopWidth: 1,
+    borderTopColor: Color.colorLightGray,
   },
   itemContentContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
   startContainer: {
-    width: screenHeight * 0.05,
+    width: screenWidth * 0.11,
     height: "100%",
   },
   shopLogoContainer: {
-    width: screenHeight * 0.05,
+    width: screenWidth * 0.15,
     height: "100%",
+    padding: 5,
   },
   mainInfoContainer: {
-    width: screenHeight * 0.25,
+    width: screenWidth * 0.65,
     height: "100%",
+    alignItems: "flex-start",
+    paddingLeft: 10,
+    paddingTop: 10,
   },
   priceContainer: {
-    width: screenHeight * 0.05,
+    width: screenWidth * 0.05,
     height: "100%",
   },
   arrowContainer: {
-    width: screenHeight * 0.05,
+    width: screenWidth * 0.05,
     height: "100%",
   },
   starImage: {
@@ -132,6 +152,21 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     contentFit: "contain",
+  },
+  nameCart: {
+    fontSize: FontSize.size_m,
+    fontFamily: FontFamily.CommissioneMedium,
+    color: Color.colorDarkBlue,
+  },
+  price: {
+    fontSize: FontSize.size_m,
+    fontFamily: FontFamily.CommissioneMedium,
+    color: Color.colorDarkBlue,
+  },
+  shopAddress: {
+    fontFamily: FontFamily.CommissioneRegular,
+    color: Color.colorLightGray,
+    paddingTop: 5,
   },
   arrowImage: {
     height: "30%",
