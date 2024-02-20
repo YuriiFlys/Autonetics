@@ -151,7 +151,7 @@ const SalesScreen = () => {
                 <Text style={[styles.addressText, { marginTop: 10 }]}>
                   {formattedDateTime}
                 </Text>
-                <Text style={styles.sumText}>До cплати: {sum}$</Text>
+                <Text style={styles.sumText}>До cплати: {sum.toFixed(2)}$</Text>
               </View>
               <PayButton
                 payLogo={require("../assets/ApplePayLogo.svg")}
