@@ -44,15 +44,15 @@ const data = [
     },
   },
   {
-    id:3,
+    id: 3,
     name: "Хата Тімліда",
     street: "Вулиця Варшавська,201А",
     distance: "100м",
     imageSource: require("../assets/logoAutonetics.png"),
     coordinate: {
-    latitude: 49.869481,
-    longitude: 24.015616,
-  },
+      latitude: 49.869481,
+      longitude: 24.015616,
+    },
   },
 ];
 
@@ -155,13 +155,20 @@ const Map = () => {
           </View>
           <View>
             <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
-              <Image source={require("../assets/cross_Blue.svg")} />
+              <Image
+                source={require("../assets/cross_Blue.svg")}
+                style={styles.closeImage}
+              />
             </TouchableOpacity>
           </View>
         </Animated.View>
       )}
       <TouchableOpacity style={styles.centerButton} onPress={centerMapOnUser}>
-        <Text style={{ color: "#fff" }}>Центрувати карту</Text>
+        {/* <Text style={{ color: "#fff" }}>Центрувати карту</Text> */}
+        <Image
+          source={require("../assets/gps.svg")}
+          style={{ width: "100%", height: "100%" }}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -228,16 +235,24 @@ const styles = StyleSheet.create({
     color: "#808080",
   },
   closeButton: {
-    backgroundColor: "transparent",
+    padding: 10,
+  },
+  closeImage: {
+    width: screenWidth * 0.05,
+    height: screenWidth * 0.05,
+    contentFit: "contain",
   },
   centerButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
-    backgroundColor: "#007BFF",
     padding: 10,
-    borderRadius: 5,
+    top: screenHeight * 0.3,
+    right: screenWidth * 0.03,
+    backgroundColor: "#0067D7",
+    borderRadius: 100,
+    height: 50,
+    width: 50,
     alignItems: "center",
+    justifyContent: "center",
   },
 });
 
