@@ -22,11 +22,11 @@ const AdminWindow = () => {
       name: "Продати товар",
     },
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../assets/Admin/Storage.svg"),
       name: "Склад",
     },
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../assets/Admin/analysis.svg"),
       name: "Аналіз даних",
     },
     {
@@ -34,15 +34,15 @@ const AdminWindow = () => {
       name: "Поповнення товарів",
     },
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../assets/Admin/interest.svg"),
       name: "Акції",
     },
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../assets/Admin/history.svg"),
       name: "Історія продаж",
     },
     {
-      imageSource: require("../assets/Admin/SaleSVG.svg"),
+      imageSource: require("../assets/Admin/Order.svg"),
       name: "Замовлення",
     },
   ];
@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     borderTopColor: Color.colorLightGray,
   },
   buttonIcon: {
-    width: screenWidth * 0.1,
-    height: screenWidth * 0.1,
+    width: screenWidth * 0.08,
+    height: screenWidth * 0.08,
   },
   buttonName: {
     fontSize: FontSize.normal,
