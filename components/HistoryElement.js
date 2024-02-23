@@ -10,7 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { Image } from "expo-image";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -19,8 +18,11 @@ const HistoryElement = ({ item, updateData }) => {
 
   return (
     <TouchableOpacity
-      style={{ width: screenWidth, alignItems: "center" }}
-      onPress={() => navigator.navigate("")}
+      style={[
+        { width: screenWidth, alignItems: "center" },
+        item.isFavorite ? { backgroundColor: Color.colorSuperLightGray } : {},
+      ]}
+      onPress={() => navigator.navigate("HistoryScreen")}
     >
       <View style={styles.itemBasket}>
         <TouchableOpacity

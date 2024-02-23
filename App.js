@@ -9,6 +9,7 @@ import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
+import HistoryScreen from "./screens/HistoryScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AdminMenu from "./screens/Admin/AdminMenu";
 import { LogBox } from "react-native";
@@ -83,6 +84,15 @@ const App = () => {
                   name="ProductInfo"
                   component={ProductInfo}
                   options={{ headerShown: true, title: "Інформація про товар" }}
+                />
+                <Stack.Screen
+                  name="HistoryScreen"
+                  component={HistoryScreen}
+                  options={{
+                    headerShown: true,
+                    headerBackTitle: "Назад",
+                    title: "Історія",
+                  }}
                 />
               </>
             )}
