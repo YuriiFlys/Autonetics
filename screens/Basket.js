@@ -7,6 +7,7 @@ import {
   Dimensions,
   SafeAreaView,
   FlatList,
+  Alert,
 } from "react-native";
 import HistoryElement from "../components/HistoryElement";
 import { Image } from "expo-image";
@@ -77,12 +78,29 @@ const Basket = () => {
         }
       })
     );
+    // console.log(data);
     return data;
   };
+  const [countFavorite, setCountFavorite] = React.useState(
+    data.filter((item) => item.isFavorite === true).length
+  );
   const updateData = (id) => {
     const newData = data.map((item) => {
       if (item.id === id) {
-        return { ...item, isFavorite: !item.isFavorite };
+        if (item.isFavorite) {
+          setCountFavorite(countFavorite - 1);
+          return { ...item, isFavorite: false };
+        } else {
+          if (countFavorite < 3) {
+            setCountFavorite(countFavorite + 1);
+            return { ...item, isFavorite: true };
+          } else {
+            Alert.alert(
+              "Ви досягли максимальну кількість улюблених товарів",
+              `Максимальна кількість улюблених товарів - 3`
+            );
+          }
+        }
       }
       return item;
     });
