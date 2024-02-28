@@ -27,27 +27,26 @@ const SignUpMenu = () => {
     if (text.startsWith("+380") && text.length <= 13) {
       setPhoneNumber(text);
     }
-  }
+  };
   const handleRegister = async () => {
-    
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        setErrorMessage("Неправильний формат електронної пошти");
-        return;
-      }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Неправильний формат електронної пошти");
+      return;
+    }
 
-      const phoneRegex = /^\+380\d{9}$/;
-      if (!phoneRegex.test(phoneNumber)) {
-        setErrorMessage("Неправильний формат номера телефону");
-        return;
-      }
+    const phoneRegex = /^\+380\d{9}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setErrorMessage("Неправильний формат номера телефону");
+      return;
+    }
 
-      const user = {
-        "Email": email,
-        "PhoneNumber": phoneNumber,
-      };
+    const user = {
+      Email: email,
+      PhoneNumber: phoneNumber,
+    };
 
-      navigator.navigate("Welcome", { user: user });
+    navigator.navigate("Welcome", { user: user });
   };
 
   return (
@@ -97,7 +96,9 @@ const SignUpMenu = () => {
               />
             </View>
           </View>
-          {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
+          {errorMessage ? (
+            <Text style={styles.errormessage}>{errorMessage}</Text>
+          ) : null}
         </View>
       </TouchableWithoutFeedback>
       <Pressable style={styles.register} onPress={handleRegister}>
