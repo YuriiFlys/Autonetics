@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
-import { useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
 
@@ -26,25 +26,26 @@ function getInitials(name) {
   }
 }
 
-
-
 const Profile = (props) => {
   const user = props.user;
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
   React.useEffect(() => {
-    const unsubscribe = navigator.addListener("focus",async () => {
-      const response = await fetch('http://23.100.50.204:8080/client/' + user.userID);
+    const unsubscribe = navigator.addListener("focus", async () => {
+      const response = await fetch(
+        "https://23.100.50.204:8080/client/" + user.userID
+      );
       const data = await response.json();
       if (data.firstName === null || data.lastName === null) {
         setUserName(" ");
-      }else{
-      setUserName(data.firstName + " " + data.lastName);}
+      } else {
+        setUserName(data.firstName + " " + data.lastName);
+      }
     });
     return unsubscribe;
   }, [navigator]);
-  
+
   const ButtonMenu = ({ image, name, navig }) => {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
@@ -57,8 +58,6 @@ const Profile = (props) => {
       </TouchableOpacity>
     );
   };
-  
-  
 
   return (
     <SafeAreaView style={styles.container}>
