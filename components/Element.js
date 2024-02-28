@@ -105,7 +105,6 @@ const Element = ({ item, updateData, deleteElement }) => {
               { backgroundColor: Color.colorDarkBlue },
             ]}
             onPress={() => {
-              console.log("sadasdsad");
               setModalVisible(true);
             }}
           >
