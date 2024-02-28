@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   centerButton: {
     position: "absolute",
     padding: 10,
-    top: screenHeight * 0.3,
+    top: screenHeight * 0.05,
     right: screenWidth * 0.03,
     backgroundColor: "#0067D7",
     borderRadius: 100,
