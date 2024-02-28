@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
   Text,

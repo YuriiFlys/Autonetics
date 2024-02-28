@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Dimensions, SafeAreaView, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Dimensions, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import BottomSheet, { TouchableHighlight } from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import PopupWindow from "../components/PopupWindow";
 import Scanner from "../components/ScannerCamera";

@@ -6,7 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
-  Linking
+  Linking,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.1,
     borderTopWidth: 5,
     borderLeftWidth: 5,
-    borderColor: "white",
+    borderColor: Color.colorWhite,
     borderRadius: 3,
   },
   topRightCorner: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.1,
     borderTopWidth: 5,
     borderRightWidth: 5,
-    borderColor: "white",
+    borderColor: Color.colorWhite,
     borderRadius: 3,
   },
   bottomLeftCorner: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.1,
     borderBottomWidth: 5,
     borderLeftWidth: 5,
-    borderColor: "white",
+    borderColor: Color.colorWhite,
     borderRadius: 3,
   },
   bottomRightCorner: {
@@ -250,11 +250,6 @@ const styles = StyleSheet.create({
     height: screenWidth * 0.12,
     borderRadius: (screenWidth * 0.12) / 2,
     backgroundColor: "white",
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "blue",
-    textDecorationLine: "underline",
   },
 });
 

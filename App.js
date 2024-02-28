@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import StartMenu from "./screens/StartMenu";
 import LoginMenu from "./screens/LoginMenu";
 import SignupMenu from "./screens/SignupMenu";
-import MyTabs from "./screens/MyTabs";
 import BottomMenu from "./screens/BottomMenu";
 import ForgotPass from "./screens/ForgotPass";
 import WelcomeScreen from "./screens/WelcomeScreen";
@@ -12,8 +11,6 @@ import ProductInfo from "./screens/ProductInfo";
 import HistoryScreen from "./screens/HistoryScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AdminMenu from "./screens/Admin/AdminMenu";
-// import BottomMenuAdmin from "./screens/Admin/BottomMenuAdmin";
-import Storage from "./screens/Admin/Storage";
 import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();
@@ -60,20 +57,13 @@ const App = () => {
               options={{ headerShown: false }}
             />
             {isAdmin ? (
-              <>
-                <Stack.Screen
-                  name="AdminMenu"
-                  component={AdminMenu}
-                  options={{ headerShown: false }}
-                />
-              </>
+              <Stack.Screen
+                name="AdminMenu"
+                component={AdminMenu}
+                options={{ headerShown: false }}
+              />
             ) : (
               <>
-                {/* <Stack.Screen
-                  name="MyTabs"
-                  component={MyTabs}
-                  options={{ headerShown: false }}
-                /> */}
                 <Stack.Screen
                   name="BottomMenu"
                   component={BottomMenu}

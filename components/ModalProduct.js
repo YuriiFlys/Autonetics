@@ -6,7 +6,6 @@ import {
   Modal,
   Text,
   TouchableOpacity,
-  Alert,
   TouchableWithoutFeedback,
 } from "react-native";
 import { Image } from "expo-image";

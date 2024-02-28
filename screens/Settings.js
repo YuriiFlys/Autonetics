@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Dimensions, Text, Button } from "react-native";
+import { View, StyleSheet, Dimensions, Text } from "react-native";
 import Slider from "react-native-slider";
 import RNPickerSelect from "react-native-picker-select";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../components/Logo";
 import { Switch } from "react-native-gesture-handler";
-import { set } from "date-fns";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 

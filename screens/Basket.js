@@ -1,9 +1,6 @@
 import * as React from "react";
 import {
   StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
   Dimensions,
   SafeAreaView,
   FlatList,

@@ -10,7 +10,7 @@ import { Color, FontFamily } from "../GlobalStyles";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+
 const SmallWidget = ({ item }) => {
   const navigator = useNavigation();
   const price = item.price.toString().split(".");

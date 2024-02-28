@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,9 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
-  Easing,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -140,7 +139,6 @@ const Element = ({ item, updateData, deleteElement }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   shopelement: {
     flexDirection: "row",

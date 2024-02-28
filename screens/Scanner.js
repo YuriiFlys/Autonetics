@@ -1,7 +1,6 @@
 import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 import ScannerCamera from "../components/ScannerCamera";
-const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function Scanner() {

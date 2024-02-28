@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  ScrollView,
   FlatList,
 } from "react-native";
 import { Image } from "expo-image";
@@ -20,7 +19,6 @@ const screenHeight = Dimensions.get("window").height;
 const Promotions = () => {
   const navigator = useNavigation();
 
-  const scrollViewRef = useRef();
   const [isNew, setIsNew] = useState(false);
   data = [
     {

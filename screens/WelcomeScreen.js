@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useNavigation,useRoute } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CheckBox } from 'react-native-elements';
+import { useNavigation, useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CheckBox } from "react-native-elements";
 import { Image } from "expo-image";
 import {
   StyleSheet,
@@ -24,7 +24,7 @@ const WelcomeScreen = () => {
   const [password, setPassword] = React.useState("");
   const [repeatPassword, setRepeatPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  const [isSelected, setSelection] = React.useState(false); 
+  const [isSelected, setSelection] = React.useState(false);
   const repeatPasswordRef = React.useRef();
   const navigator = useNavigation();
   const handleFinalRegister = async () => {
@@ -32,8 +32,8 @@ const WelcomeScreen = () => {
       setErrorMessage("Паролі не співпадають");
       return;
     }
-      const email= user.Email;
-      const phoneNumber= user.PhoneNumber;
+    const email = user.Email;
+    const phoneNumber = user.PhoneNumber;
     try {
       const response = await fetch(`http://23.100.50.204:8080/client`, {
         method: "POST",
@@ -41,20 +41,22 @@ const WelcomeScreen = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "Email": email,
-          "PhoneNumber": phoneNumber,
-          "Password": password,
+          Email: email,
+          PhoneNumber: phoneNumber,
+          Password: password,
         }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('HTTP status ' + response.status);
+        throw new Error("HTTP status " + response.status);
       }
-  
+
       const data = await response.json();
       const clientId = data.clientId;
       await AsyncStorage.setItem(email, clientId);
-      const response2 = await fetch(`http://23.100.50.204:8080/client/${clientId}`);
+      const response2 = await fetch(
+        `http://23.100.50.204:8080/client/${clientId}`
+      );
       const user = await response2.json();
       navigator.navigate("BottomMenu", { user: user, screen: "Home" });
     } catch (error) {
@@ -62,7 +64,6 @@ const WelcomeScreen = () => {
       setErrorMessage("Сталася помилка під час реєстрації");
     }
   };
-  
 
   return (
     <KeyboardAvoidingView
@@ -105,16 +106,26 @@ const WelcomeScreen = () => {
               secureTextEntry
             />
           </View>
-          {errorMessage ? <Text style={styles.errormessage}>{errorMessage}</Text> : null}
+          {errorMessage ? (
+            <Text style={styles.errormessage}>{errorMessage}</Text>
+          ) : null}
         </View>
       </TouchableWithoutFeedback>
       <CheckBox
-        title='Я погоджуюсь з правилами конфіденційності'
-        containerStyle={{backgroundColor: Color.colorLightCyan,borderWidth:0,marginLeft: screenWidth * 0.07}}
+        title="Я погоджуюсь з правилами конфіденційності"
+        containerStyle={{
+          backgroundColor: Color.colorLightCyan,
+          borderWidth: 0,
+          marginLeft: screenWidth * 0.07,
+        }}
         checked={isSelected}
         onPress={() => setSelection(!isSelected)}
       />
-      <Pressable style={styles.submit} onPress={handleFinalRegister} disabled={!isSelected}>
+      <Pressable
+        style={styles.submit}
+        onPress={handleFinalRegister}
+        disabled={!isSelected}
+      >
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
       <Pressable
@@ -130,7 +141,6 @@ const WelcomeScreen = () => {
     </KeyboardAvoidingView>
   );
 };
-
 
 const styles = StyleSheet.create({
   welcome: {
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.01,
     textAlign: "center",
   },
-  
+
   passwordtext: {
     marginLeft: screenWidth * 0.1,
     color: Color.colorDarkslategray_200,

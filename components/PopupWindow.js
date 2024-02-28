@@ -12,7 +12,6 @@ import {
 import Element from "./Element";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import GrayLine from "./GrayLine";
-import { set } from "date-fns";
 import SmallWidget from "./SmallWidget";
 import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;

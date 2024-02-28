@@ -3,7 +3,6 @@ import { View, StyleSheet, Dimensions, Text } from "react-native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import { Image } from "expo-image";
 
-const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const ShopReceipt = ({ shop, info }) => {

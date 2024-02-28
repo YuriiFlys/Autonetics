@@ -7,7 +7,6 @@ import {
   FlatList,
 } from "react-native";
 import { Color } from "../GlobalStyles";
-import Logo from "../components/Logo";
 import PromotionsWidget from "../components/PromotionsWidget";
 const screenWidth = Dimensions.get("window").width;
 

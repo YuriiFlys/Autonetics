@@ -11,7 +11,6 @@ import {
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
 import SmallWidget from "../components/SmallWidget";
-import Logo from "../components/Logo";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import Swiper from "react-native-swiper";

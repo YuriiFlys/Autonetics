@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";

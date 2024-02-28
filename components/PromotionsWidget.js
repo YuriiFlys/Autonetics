@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-
 import { Color, FontFamily } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const PromotionsWidget = ({ item }) => {
