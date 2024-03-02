@@ -10,7 +10,10 @@ import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
 import HistoryScreen from "./screens/HistoryScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AdminMenu from "./screens/Admin/AdminMenu";
+import AdminMenu from "./screens/Admin/AdminMenu2";
+import Storage from "./screens/Admin/Storage";
+import SearchBarcode from "./screens/Admin/SearchByBarcode";
+// import BottomMenuAdmin from "./screens/Admin/BottomMenuAdmin";
 import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();
@@ -56,12 +59,29 @@ const App = () => {
               component={WelcomeScreen}
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="ProductInfo"
+              component={() => <ProductInfo isAdmin={isAdmin} />}
+              options={{ headerShown: true, title: "Інформація про товар" }}
+            />
             {isAdmin ? (
-              <Stack.Screen
-                name="AdminMenu"
-                component={AdminMenu}
-                options={{ headerShown: false }}
-              />
+              <>
+                <Stack.Screen
+                  name="Storage"
+                  component={Storage}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="SearchBarcode"
+                  component={SearchBarcode}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="AdminMenu"
+                  component={AdminMenu}
+                  options={{ headerShown: false }}
+                />
+              </>
             ) : (
               <>
                 <Stack.Screen
@@ -73,11 +93,6 @@ const App = () => {
                   name="SalesScreen"
                   component={SalesScreen}
                   options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="ProductInfo"
-                  component={ProductInfo}
-                  options={{ headerShown: true, title: "Інформація про товар" }}
                 />
                 <Stack.Screen
                   name="HistoryScreen"

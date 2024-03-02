@@ -15,7 +15,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import Swiper from "react-native-swiper";
 
-const ProductInfo = () => {
+const ProductInfo = (isAdmin) => {
   const product = {
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
@@ -26,7 +26,7 @@ const ProductInfo = () => {
       require("../assets/Image_Product_or_Shop/voda.png"),
     ],
     shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    isAvailable: true,
+    count: 10,
     description:
       "Вода Боржомі - природна мінеральна вода, батьківщиною добування якої є Грузія. Історія води налічує понад тисячу років. Вона має чудовий смак і відмінний гідрокарбонатно-натрієвий склад. Містить багато мінералів і мікроелементів: натрій, кальцій, хлор, сірка, кремній, фтор і магній. Дуже добре підходить для попередження і лікування в якості додаткової терапії гастритів, виразки дванадцятипалої кишки та інших захворювань шлунково-кишкового тракту. Але не підходить в періоди загострення виразки.",
 
@@ -96,12 +96,18 @@ const ProductInfo = () => {
               <Image
                 style={styles.isAvailableImage}
                 source={
-                  product.isAvailable
+                  product.count > 0
                     ? require("../assets/confirmation.svg")
                     : require("../assets/denial.svg")
                 }
               />
-              <Text>{product.isAvailable ? "В наявності" : "Немає"}</Text>
+              {isAdmin ? (
+                <Text>
+                  {product.count > 0 ? `В наявності ${product.count}` : "Немає"}
+                </Text>
+              ) : (
+                <Text>{product.count > 0 ? "В наявності" : "Немає"}</Text>
+              )}
             </View>
             <View style={styles.priceContainer}>
               {/* стара ціна */}
@@ -203,7 +209,11 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_xl,
     color: Color.colorDarkBlue,
   },
-
+  countText: {
+    fontFamily: FontFamily.CommissioneMedium,
+    fontSize: FontSize.size_s,
+    color: Color.colorDarkBlue,
+  },
   productAvailavilityContainer: {
     flex: 1,
     flexDirection: "row",

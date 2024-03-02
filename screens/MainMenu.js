@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import GrayLine from "../components/GrayLine";
+import Search from "../components/Search";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -91,17 +92,7 @@ const MainMenu = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: "row", marginTop: 20 }}>
-        <TextInput style={styles.field} />
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => {
-            console.log("Пошук");
-          }}
-        >
-          <Text style={styles.buttonSearch}>Пошук</Text>
-        </TouchableOpacity>
-      </View>
+      <Search />
       <GrayLine style={{ marginTop: 20 }} />
       <FlatList
         data={data}
