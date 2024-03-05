@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -7,15 +7,17 @@ import {
   Text,
   ScrollView,
   FlatList,
+  Button,
 } from "react-native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
 import SmallWidget from "../components/SmallWidget";
+import Swiper from "react-native-swiper";
+import ProductChart from "../components/ProductChart.js";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-import Swiper from "react-native-swiper";
-
-const ProductInfo = (isAdmin) => {
+const ProductInfo = ({ isAdmin }) => {
   const product = {
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
@@ -45,6 +47,11 @@ const ProductInfo = (isAdmin) => {
       "Калій (K)": "15-45 мг/дм.куб.",
       "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
     },
+    numberSales: [
+      [110, 290, 360, 40, 50, 60],
+      [20, 230, 30, 420, 500, 610],
+      [120, 201, 300, 40, 50, 620],
+    ],
   };
 
   const item = {
@@ -149,6 +156,29 @@ const ProductInfo = (isAdmin) => {
             </View>
           </View>
         </View>
+        {isAdmin ? (
+          <View style={styles.charContainer}>
+            <View style={styles.buttonContainer}>
+              <Button
+                title="Роки"
+                onPress={() => {
+                  /* Handle years button press here */
+                }}
+              />
+              <Button
+                title="Місяць"
+                onPress={() => {
+                  /* Handle month button press here */
+                }}
+              />
+            </View>
+            <Swiper showsPagination={false}>
+              {product.numberSales.map((countSales) => (
+                <ProductChart countSales={countSales} />
+              ))}
+            </Swiper>
+          </View>
+        ) : null}
         <View style={styles.descriptionContainer}>
           <Text style={styles.title}>Опис та характеристики</Text>
           <Text style={styles.descriptionText}>{product.description}</Text>
@@ -277,6 +307,12 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.02,
     width: screenWidth,
     padding: 10,
+  },
+  charContainer: {
+    backgroundColor: Color.colorWhite,
+    marginTop: screenHeight * 0.02,
+    width: screenWidth,
+    height: screenHeight * 0.4,
   },
 });
 
