@@ -16,4 +16,4 @@ const ShopAccount = () => {
 
 const styles = StyleSheet.create({});
 
-export default Storage;
+export default ShopAccount;

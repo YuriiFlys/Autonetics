@@ -44,7 +44,7 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
     //   setErrorMessage(errorMessage);
     // }
     if (isAdmin) {
-      navigator.navigate("Storage");
+      navigator.navigate("BottomAdminMenu", { screen: "Home" });
     } else {
       navigator.navigate("BottomMenu", { screen: "Home" });
     }

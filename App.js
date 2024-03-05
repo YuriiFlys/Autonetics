@@ -10,10 +10,10 @@ import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
 import HistoryScreen from "./screens/HistoryScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AdminMenu from "./screens/Admin/AdminMenu2";
-import Storage from "./screens/Admin/Storage";
+
+
 import SearchBarcode from "./screens/Admin/SearchByBarcode";
-// import BottomMenuAdmin from "./screens/Admin/BottomMenuAdmin";
+import BottomAdminMenu from "./screens/Admin/BottomAdminMenu";
 import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();
@@ -66,21 +66,18 @@ const App = () => {
             />
             {isAdmin ? (
               <>
-                <Stack.Screen
-                  name="Storage"
-                  component={Storage}
+                  <Stack.Screen
+                  name="BottomAdminMenu"
+                  component={BottomAdminMenu}
                   options={{ headerShown: false }}
                 />
+                
                 <Stack.Screen
                   name="SearchBarcode"
                   component={SearchBarcode}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
-                  name="AdminMenu"
-                  component={AdminMenu}
-                  options={{ headerShown: false }}
-                />
+                
               </>
             ) : (
               <>
