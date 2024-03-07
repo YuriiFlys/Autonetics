@@ -9,12 +9,14 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
 import HistoryScreen from "./screens/HistoryScreen";
+import Employees from "./screens/Admin/Employees";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 
 import SearchBarcode from "./screens/Admin/SearchByBarcode";
 import BottomAdminMenu from "./screens/Admin/BottomAdminMenu";
 import { LogBox } from "react-native";
+import ManageEmployee from "./screens/Admin/ManageEmployee";
 
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
@@ -35,14 +37,12 @@ const App = () => {
             <Stack.Screen
               name="StartMenu"
               component={StartMenu}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Login"
               component={() => (
                 <LoginMenu isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
               )}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Signup"
@@ -77,7 +77,16 @@ const App = () => {
                   component={SearchBarcode}
                   options={{ headerShown: false }}
                 />
-                
+                <Stack.Screen
+                name="Employees"
+                component={Employees}
+                options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                name="ManageEmployee"
+                component={ManageEmployee}
+                options={{ headerShown: false }}
+                />
               </>
             ) : (
               <>
