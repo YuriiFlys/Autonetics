@@ -13,26 +13,24 @@ import Employees from "./Employees";
 const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
 
-
 function ProfileAdminScreen({ user }) {
-    return (
-        <ProfileStack.Navigator>
-        <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
-          {(props) => <Profile {...props} user={user} />}
-        </ProfileStack.Screen>
-        <ProfileStack.Screen
-          name="UserAccount"
-          options={{
-            headerShown: true,
-            headerBackTitle: "Назад",
-            title: "Особистий кабінет",
-          }}
-        >
-          {(props) => <UserProfile {...props} user={user} />}
-        </ProfileStack.Screen>
-                
-      </ProfileStack.Navigator> 
-    );
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
+        {(props) => <Profile {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+        name="UserAccount"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Особистий кабінет",
+        }}
+      >
+        {(props) => <UserProfile {...props} user={user} />}
+      </ProfileStack.Screen>
+    </ProfileStack.Navigator>
+  );
 }
 function ProfileShopScreen({ user }) {
     return (
@@ -57,9 +55,9 @@ function ProfileShopScreen({ user }) {
 
 
 export default function BottomAdminMenu({ route }) {
-    const user = route.params?.user;
-    return (
-        <Tab.Navigator
+  const user = route.params?.user;
+  return (
+    <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
