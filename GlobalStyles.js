@@ -43,6 +43,7 @@ export const Color = {
   colorBlack: "black",
   colorGainsboro: "#d9d9d9",
   colorSteelblue: "#2469a2",
+  colorTransparent: "transparent",
 
   // our colors
   colorDarkBlue: "#26364D",

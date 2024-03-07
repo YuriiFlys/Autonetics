@@ -10,8 +10,16 @@ const GrayLine = ({ style }) => {
 const styles = StyleSheet.create({
   grayLine: {
     width: screenWidth,
+    backgroundColor:"blue",
     borderBottomWidth: 1,
     borderBottomColor: Color.colorLightGray,
+    shadowColor: Color.colorDarkBlue,
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3.84,
   },
 });
 
