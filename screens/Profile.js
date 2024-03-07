@@ -12,19 +12,12 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
+import UserComponent from "../components/User";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-function getInitials(name) {
-  try {
-    const words = name.split(" ");
-    const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
-    return initials;
-  } catch (error) {
-    return "";
-  }
-}
+
 
 const Profile = (props) => {
   const user = props.user;
@@ -63,19 +56,7 @@ const Profile = (props) => {
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
-        <View style={styles.userData}>
-          <View style={styles.userIcon}>
-            {profileImage ? (
-              <Image
-                source={{ uri: profileImage }}
-                style={styles.userIconImage}
-              />
-            ) : (
-              <Text style={styles.userIconText}>{getInitials(userName)}</Text>
-            )}
-          </View>
-          <Text style={styles.userName}>{userName}</Text>
-        </View>
+        <UserComponent userName={"Ростислав Пастернак"} profileImage={profileImage} imageSize={0.35} />
         <GrayLine />
         <ButtonMenu
           image={require("../assets/Profile/user.svg")}

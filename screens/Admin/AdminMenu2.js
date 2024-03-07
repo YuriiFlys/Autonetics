@@ -50,7 +50,7 @@ const AdminWindow = () => {
     return (
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={console.log("a")}
+        
       >
         <Image style={styles.buttonIcon} source={item.imageSource} />
         <Text style={styles.buttonText}>{item.name}</Text>

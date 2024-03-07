@@ -176,7 +176,6 @@ const UserProfile = (props) => {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.mainWidgetView}>
-          <View style={styles.widgetInfoRow}>
             <View style={styles.mainWidgetLabel}>
               <Image
                 style={{
@@ -274,9 +273,7 @@ const UserProfile = (props) => {
                 />
               </TouchableOpacity>
             )}
-
-            
-          </View>
+          
         </View>
       </TouchableWithoutFeedback>
     );
