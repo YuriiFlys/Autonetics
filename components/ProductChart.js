@@ -5,9 +5,9 @@ import { Color } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const ProductChart = ({ countSales }) => {
+const ProductChart = ({ countSales, name, axisY }) => {
   const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
+    labels: axisY.filter((_, index) => index % 2 === 0),
     datasets: [
       {
         data: countSales,
@@ -15,7 +15,7 @@ const ProductChart = ({ countSales }) => {
         strokeWidth: 1, // optional
       },
     ],
-    legend: ["Кількість продаж"],
+    legend: [name],
   };
   return (
     <View>

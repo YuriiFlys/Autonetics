@@ -1,14 +1,19 @@
 import React from "react";
 import { useState } from "react";
-import { StyleSheet, SafeAreaView, Dimensions,View,Text, Switch } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  View,
+  Text,
+  Switch,
+} from "react-native";
 import Logo from "../../components/Logo";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import UserComponent from "../../components/User";
 
-
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-
 
 const Permissions = ({ widgetname, fields }) => {
   const [switchStates, setSwitchStates] = useState(
@@ -31,7 +36,7 @@ const Permissions = ({ widgetname, fields }) => {
             <Text style={styles.MainWidgetText}>{field}</Text>
             <Switch
               trackColor={{ false: "#767577", true: "#00FF00" }}
-              thumbColor={switchStates[field] ? "#f4f3f4" : "#f4f3f4"}
+              thumbColor={switchStates[index] ? "#f4f3f4" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={() => toggleSwitch(field)}
               value={switchStates[field]}
@@ -43,10 +48,8 @@ const Permissions = ({ widgetname, fields }) => {
   );
 };
 
-  
-
-const ManageEmployee = ({route}) => {
-    const {employee} = route.params;
+const ManageEmployee = ({ route }) => {
+  const { employee } = route.params;
   return (
     <SafeAreaView style={styles.container}>
       <Logo name="Керування правами" />
@@ -55,9 +58,9 @@ const ManageEmployee = ({route}) => {
         profileImage={employee.profileImage}
         description={employee.description}
         imageSize={0.25}
-        />
-        
-        <Permissions
+      />
+
+      <Permissions
         widgetname={"Права доступу"}
         fields={[
           "Продажа товару",
@@ -66,71 +69,64 @@ const ManageEmployee = ({route}) => {
           "Списання товарів",
           "Аналіз даних",
         ]}
-        />
-        <Permissions
+      />
+      <Permissions
         widgetname={"Права адміністратора"}
-        fields={[
-          "Керування магазином",
-          "Керування персоналом",
-          
-        ]}
-        />
+        fields={["Керування магазином", "Керування персоналом"]}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Color.colorWhite,
-        alignItems: "center",
-        justifyContent: "flex-start",
-    },
-    mainWidgetView: {
-        marginTop: screenHeight * 0.05,
-        padding: 10,
-        width: screenWidth * 0.9,
-        justifyContent: "center",
-        backgroundColor: "#fff",
-        borderColor: "grey",
-        borderWidth: 2,
-        borderRadius: 20,
-        
-      },
-    row: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-      },
-    mainWidgetLabel: {
-        textAlign: "left",
-      },
-    widgetProfileName: {
-        fontSize: FontSize.size_m,
-        fontFamily: FontFamily.CommissioneBold,
-        color: Color.colorDarkBlue,
-
-    },
-    sepLine: {
-        borderBottomColor: "#E5E5E5",
-        borderBottomWidth: 1,
-        marginRight: 10,
-        marginTop: 5,
-        marginBottom: 5,
-        shadowColor: "black",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 2,
-
-      },
-    MainWidgetText: {
-        fontFamily: FontFamily.CommissioneRegular,
-        fontSize: FontSize.size_s,
-        color: Color.black,
-        textAlign: "left",
-        marginTop: screenWidth * 0.02,
-        marginBottom: screenWidth * 0.02,
-      },
+  container: {
+    flex: 1,
+    backgroundColor: Color.colorWhite,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  mainWidgetView: {
+    marginTop: screenHeight * 0.05,
+    padding: 10,
+    width: screenWidth * 0.9,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    borderColor: "grey",
+    borderWidth: 2,
+    borderRadius: 20,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  mainWidgetLabel: {
+    textAlign: "left",
+  },
+  widgetProfileName: {
+    fontSize: FontSize.size_m,
+    fontFamily: FontFamily.CommissioneBold,
+    color: Color.colorDarkBlue,
+  },
+  sepLine: {
+    borderBottomColor: "#E5E5E5",
+    borderBottomWidth: 1,
+    marginRight: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+  },
+  MainWidgetText: {
+    fontFamily: FontFamily.CommissioneRegular,
+    fontSize: FontSize.size_s,
+    color: Color.black,
+    textAlign: "left",
+    marginTop: screenWidth * 0.02,
+    marginBottom: screenWidth * 0.02,
+  },
 });
 
 export default ManageEmployee;

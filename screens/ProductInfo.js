@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   FlatList,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
@@ -47,12 +48,14 @@ const ProductInfo = ({ isAdmin }) => {
       "Калій (K)": "15-45 мг/дм.куб.",
       "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
     },
-    numberSales: [
-      [110, 290, 360, 40, 50, 60],
-      [20, 230, 30, 420, 500, 610],
-      [120, 201, 300, 40, 50, 620],
-    ],
+    numberSales: {
+      2024: [110, 290, 360, 40, 50, 60, 80, 120, 23, 43, 34, 32], //2024
+      2023: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2023
+      2022: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2022
+      2021: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2021
+    },
   };
+  const [isYear, setIsYear] = useState(true);
 
   const item = {
     id: 1,
@@ -159,22 +162,45 @@ const ProductInfo = ({ isAdmin }) => {
         {isAdmin ? (
           <View style={styles.charContainer}>
             <View style={styles.buttonContainer}>
-              <Button
-                title="Роки"
-                onPress={() => {
-                  /* Handle years button press here */
-                }}
-              />
-              <Button
-                title="Місяць"
-                onPress={() => {
-                  /* Handle month button press here */
-                }}
-              />
+              <TouchableOpacity
+                style={[
+                  styles.buttonChar,
+                  isYear ? { backgroundColor: Color.colorWhite } : null,
+                ]}
+                onPress={() => setIsYear(true)}
+              >
+                <Text>Рік</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.buttonChar,
+                  !isYear ? { backgroundColor: Color.colorWhite } : null,
+                ]}
+                onPress={() => setIsYear(false)}
+              >
+                <Text>Місяць</Text>
+              </TouchableOpacity>
             </View>
             <Swiper showsPagination={false}>
-              {product.numberSales.map((countSales) => (
-                <ProductChart countSales={countSales} />
+              {Object.entries(product.numberSales).map(([year, salesArray]) => (
+                <ProductChart
+                  countSales={salesArray}
+                  name={year}
+                  axisY={[
+                    "Січень",
+                    "Лютий",
+                    "Березень",
+                    "Квітень",
+                    "Травень",
+                    "Червень",
+                    "Липень",
+                    "Серпень",
+                    "Вересень",
+                    "Жовтень",
+                    "Листопад",
+                    "Грудень",
+                  ]}
+                />
               ))}
             </Swiper>
           </View>
@@ -313,6 +339,21 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.02,
     width: screenWidth,
     height: screenHeight * 0.4,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: Color.colorSuperLightGray,
+    margin: 10,
+    padding: 2,
+    borderRadius: 10,
+  },
+  buttonChar: {
+    borderRadius: 10,
+    padding: 10,
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
