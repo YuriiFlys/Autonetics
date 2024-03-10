@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Dimensions,TouchableOpacity, Text } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import Logo from "../../components/Logo";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
@@ -28,31 +34,38 @@ const ShopAccount = () => {
   const navigator = useNavigation();
   React.useEffect(() => {
     //setImage to profile image
-    setImage("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
+    setImage(
+      "https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png"
+    );
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <Logo name="Керування магазином"/>
-      <UserComponent userName={"Магазин АТБ"} profileImage={profileImage} description={"Вул Шевченка 234, Львівська обл, 79888"} imageSize={0.25} />
-      <GrayLine style={{marginTop:10}} />
-        <ButtonMenu
-          image={require("../../assets/Admin/Shop.svg")}
-          name={"Дані магазину"}
-          //navig={() => navigator.navigate("UserProfile")}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../../assets/Profile/user.svg")}
-          name={"Працівники"}
-          navig={() => navigator.navigate("Employees")}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../../assets/Profile/Settings.svg")}
-          name={"Налаштування"}
-          navig={() => navigator.navigate("Settings")}
-        />
-        <GrayLine />
+      <Logo name="Керування магазином" />
+      <UserComponent
+        userName={"Магазин АТБ"}
+        profileImage={profileImage}
+        description={"Вул Шевченка 234, Львівська обл, 79888"}
+        imageSize={0.25}
+      />
+      <GrayLine style={{ marginTop: 10 }} />
+      <ButtonMenu
+        image={require("../../assets/Admin/shop.svg")}
+        name={"Дані магазину"}
+        //navig={() => navigator.navigate("UserProfile")}
+      />
+      <GrayLine />
+      <ButtonMenu
+        image={require("../../assets/Profile/user.svg")}
+        name={"Працівники"}
+        navig={() => navigator.navigate("Employees")}
+      />
+      <GrayLine />
+      <ButtonMenu
+        image={require("../../assets/Profile/Settings.svg")}
+        name={"Налаштування"}
+        navig={() => navigator.navigate("Settings")}
+      />
+      <GrayLine />
     </SafeAreaView>
   );
 };

@@ -1,5 +1,5 @@
 import Profile from "../Profile";
-import {Image} from "expo-image";
+import { Image } from "expo-image";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import AdminMenu from "./AdminMenu2";
@@ -31,26 +31,22 @@ function ProfileAdminScreen({ user }) {
   );
 }
 function ProfileShopScreen({ user }) {
-    return (
-        <ProfileStack.Navigator>
-        <ProfileStack.Screen name="ShopHome" options={{ headerShown: false }}>
-          {(props) => <ShopAccount {...props} user={user} />}
-        </ProfileStack.Screen>
-        <ProfileStack.Screen
-          name="Employees"
-          options={{
-            headerShown: false,
-            
-          }}
-        >
-          {(props) => <Employees {...props} user={user} />}
-        </ProfileStack.Screen>
-                
-      </ProfileStack.Navigator> 
-    );
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="ShopHome" options={{ headerShown: false }}>
+        {(props) => <ShopAccount {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+        name="Employees"
+        options={{
+          headerShown: false,
+        }}
+      >
+        {(props) => <Employees {...props} user={user} />}
+      </ProfileStack.Screen>
+    </ProfileStack.Navigator>
+  );
 }
-
-
 
 export default function BottomAdminMenu({ route }) {
   const user = route.params?.user;
@@ -61,12 +57,11 @@ export default function BottomAdminMenu({ route }) {
           let iconName;
 
           if (route.name === "Home") {
-            iconName= require("../../assets/home.svg");
-          }else if (route.name === "Storage") {
+            iconName = require("../../assets/home.svg");
+          } else if (route.name === "Storage") {
             iconName = require("../../assets/Admin/Storage.svg");
-          }  
-          else if (route.name === "Shop") {
-            iconName = require("../../assets/Admin/Shop.svg");
+          } else if (route.name === "Shop") {
+            iconName = require("../../assets/Admin/shop.svg");
           } else if (route.name === "Profile") {
             iconName = require("../../assets/user.png");
           }
