@@ -7,7 +7,7 @@ import Storage from "./Storage";
 import ShopAccount from "./ShopAccount";
 import UserAccount from "./UserAccount";
 import Employees from "./Employees";
-
+import UserProfile from "../UserProfile";
 
 
 const Tab = createBottomTabNavigator();
@@ -17,17 +17,15 @@ function ProfileAdminScreen({ user }) {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
-        {(props) => <Profile {...props} user={user} />}
+        {(props) => <UserAccount {...props} user={user} />}
       </ProfileStack.Screen>
       <ProfileStack.Screen
-        name="UserAccount"
-        options={{
-          headerShown: true,
-          headerBackTitle: "Назад",
-          title: "Особистий кабінет",
-        }}
+        name="UserProfile"
+        options={{ headerShown: false }
+
+        }
       >
-        {(props) => <UserProfile {...props} user={user} />}
+         {(props) => <UserProfile {...props} user={user} />}
       </ProfileStack.Screen>
     </ProfileStack.Navigator>
   );
@@ -100,7 +98,7 @@ export default function BottomAdminMenu({ route }) {
         <Tab.Screen name="Profile"
         options={{ headerShown: false }}
         >
-         {(props) => <UserAccount {...props} user={user} />}
+         {(props) => <ProfileAdminScreen {...props} user={user} />}
         </Tab.Screen>
         </Tab.Navigator>
     );

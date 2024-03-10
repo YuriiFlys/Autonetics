@@ -18,14 +18,31 @@ import BottomAdminMenu from "./screens/Admin/BottomAdminMenu";
 import { LogBox } from "react-native";
 import ManageEmployee from "./screens/Admin/ManageEmployee";
 
+
+const AdminContext = React.createContext();
+
+const LoginMenuWrapper=({navigation})=> {
+  const {isAdmin, setIsAdmin} = React.useContext(AdminContext);
+  return (
+    <LoginMenu isAdmin={isAdmin} setIsAdmin={setIsAdmin}/>
+  );
+}
+const ProductInfoWrapper=({navigation})=> {
+  const {isAdmin} = React.useContext(AdminContext);
+  return (
+    <ProductInfo isAdmin={isAdmin}/>
+  );
+}
+
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
-  const [hideSplashScreen] = React.useState(true);
   const [isAdmin, setIsAdmin] = React.useState(false);
+  const [hideSplashScreen] = React.useState(true);
   return (
     <>
       <NavigationContainer>
+        <AdminContext.Provider value={{isAdmin, setIsAdmin}}>
         {hideSplashScreen ? (
           <Stack.Navigator
             screenOptions={{
@@ -40,9 +57,8 @@ const App = () => {
             />
             <Stack.Screen
               name="Login"
-              component={() => (
-                <LoginMenu isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
-              )}
+              component={LoginMenuWrapper}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Signup"
@@ -61,7 +77,7 @@ const App = () => {
             />
             <Stack.Screen
               name="ProductInfo"
-              component={() => <ProductInfo isAdmin={isAdmin} />}
+              component={ProductInfoWrapper}
               options={{ headerShown: true, title: "Інформація про товар" }}
             />
             {isAdmin ? (
@@ -113,6 +129,7 @@ const App = () => {
             )}
           </Stack.Navigator>
         ) : null}
+        </AdminContext.Provider>
       </NavigationContainer>
     </>
   );

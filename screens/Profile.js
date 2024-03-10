@@ -56,8 +56,8 @@ const Profile = (props) => {
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
-        <UserComponent userName={"Ростислав Пастернак"} profileImage={profileImage} imageSize={0.35} />
-        <GrayLine />
+        <UserComponent userName={"Ростислав Пастернак"} profileImage={profileImage} imageSize={0.25} />
+        <GrayLine style={{marginTop:10}} />
         <ButtonMenu
           image={require("../assets/Profile/user.svg")}
           name={"Особисті дані"}
