@@ -93,16 +93,7 @@ const App = () => {
                   component={SearchBarcode}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
-                name="Employees"
-                component={Employees}
-                options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                name="ManageEmployee"
-                component={ManageEmployee}
-                options={{ headerShown: false }}
-                />
+                
               </>
             ) : (
               <>

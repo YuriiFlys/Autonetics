@@ -49,7 +49,7 @@ const ShopAccount = () => {
       />
       <GrayLine style={{ marginTop: 10 }} />
       <ButtonMenu
-        image={require("../../assets/Admin/shop.svg")}
+        image={require("../../assets/Admin/Shop.svg")}
         name={"Дані магазину"}
         //navig={() => navigator.navigate("UserProfile")}
       />

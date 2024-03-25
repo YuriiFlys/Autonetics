@@ -8,6 +8,14 @@ import ShopAccount from "./ShopAccount";
 import UserAccount from "./UserAccount";
 import Employees from "./Employees";
 import UserProfile from "../UserProfile";
+import SalescreenAdmin from "./SalescreenAdmin";
+import Analysis from "./Analysis";
+import AddProducts from "./AddProducts";
+import PromotionsAdmin from "./PromotionsAdmin";
+import SellHistory from "./SellHistory";
+import Order from "./Order";
+import ManageEmployee from "./ManageEmployee";
+
 
 
 const Tab = createBottomTabNavigator();
@@ -15,7 +23,9 @@ const ProfileStack = createStackNavigator();
 
 function ProfileAdminScreen({ user }) {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator
+    screenOptions={{ headerShown: false, animationEnabled: false}}
+    >
       <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
         {(props) => <UserAccount {...props} user={user} />}
       </ProfileStack.Screen>
@@ -27,12 +37,20 @@ function ProfileAdminScreen({ user }) {
       >
          {(props) => <UserProfile {...props} user={user} />}
       </ProfileStack.Screen>
+      <ProfileStack.Screen
+        name="SellHistory"
+        options={{ headerShown: false }}
+      >
+        {(props) => <SellHistory {...props} user={user} />}
+      </ProfileStack.Screen>
     </ProfileStack.Navigator>
   );
 }
 function ProfileShopScreen({ user }) {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator
+    screenOptions={{ headerShown: false, animationEnabled: false}}
+    >
       <ProfileStack.Screen name="ShopHome" options={{ headerShown: false }}>
         {(props) => <ShopAccount {...props} user={user} />}
       </ProfileStack.Screen>
@@ -44,6 +62,60 @@ function ProfileShopScreen({ user }) {
       >
         {(props) => <Employees {...props} user={user} />}
       </ProfileStack.Screen>
+      <ProfileStack.Screen
+        name="ManageEmployee"
+        options={{
+          headerShown: false,
+        }}
+      >
+        {(props) => <ManageEmployee {...props} user={user} />}
+      </ProfileStack.Screen>
+    </ProfileStack.Navigator>
+  );
+}
+
+function ProfileHomeScreen({ user }) {
+  return (
+    <ProfileStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animationEnabled: false,
+      }}
+    >
+      <ProfileStack.Screen name="AdminHome" options={{ headerShown: false }}>
+        {(props) => <AdminMenu {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+        name="SalescreenAdmin"
+        options={{ headerShown: false }}
+      >
+        {(props) => <SalescreenAdmin {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+      name="Analysis"
+      options={{ headerShown: false }}
+      >
+        {(props) => <Analysis {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+      name="AddProducts"
+      options={{ headerShown: false }}
+      >
+        {(props) => <AddProducts {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+      name="PromotionsAdmin"
+      options={{ headerShown: false }}
+      >
+        {(props) => <PromotionsAdmin {...props} user={user} />}
+      </ProfileStack.Screen>
+      <ProfileStack.Screen
+      name="Order"
+      options={{ headerShown: false }}
+      >
+        {(props) => <Order {...props} user={user} />}
+      </ProfileStack.Screen>
+
     </ProfileStack.Navigator>
   );
 }
@@ -52,7 +124,8 @@ export default function BottomAdminMenu({ route }) {
   const user = route.params?.user;
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={
+        ({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -61,7 +134,7 @@ export default function BottomAdminMenu({ route }) {
           } else if (route.name === "Storage") {
             iconName = require("../../assets/Admin/Storage.svg");
           } else if (route.name === "Shop") {
-            iconName = require("../../assets/Admin/shop.svg");
+            iconName = require("../../assets/Admin/Shop.svg");
           } else if (route.name === "Profile") {
             iconName = require("../../assets/user.png");
           }
@@ -78,7 +151,7 @@ export default function BottomAdminMenu({ route }) {
         <Tab.Screen name="Home"
         options={{ headerShown: false }}
        >
-         {(props) => <AdminMenu {...props} user={user} />}
+         {(props) => <ProfileHomeScreen {...props} user={user} />}
         </Tab.Screen>
         <Tab.Screen name ="Storage"
         options={{ headerShown: false }}

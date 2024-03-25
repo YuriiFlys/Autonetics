@@ -6,14 +6,14 @@ import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Storage = () => {
+const Order = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Logo name="замовлення" />
+      <Logo name="Замовлення товарів" />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({});
 
-export default Storage;
+export default Order;
