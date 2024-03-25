@@ -8,7 +8,7 @@ import ShopAccount from "./ShopAccount";
 import UserAccount from "./UserAccount";
 import Employees from "./Employees";
 import UserProfile from "../UserProfile";
-import SalescreenAdmin from "./SalescreenAdmin";
+// import SalescreenAdmin from "./SalescreenAdmin";
 import Analysis from "./Analysis";
 import AddProducts from "./AddProducts";
 import PromotionsAdmin from "./PromotionsAdmin";
@@ -77,9 +77,9 @@ function HomeScreen({ user }) {
       <HomeStack.Screen name="AdminHome" options={{ headerShown: false }}>
         {(props) => <AdminMenu {...props} user={user} />}
       </HomeStack.Screen>
-      <HomeStack.Screen name="SalescreenAdmin" options={{ headerShown: false }}>
+      {/* <HomeStack.Screen name="SalescreenAdmin" options={{ headerShown: false }}>
         {(props) => <SalescreenAdmin {...props} user={user} />}
-      </HomeStack.Screen>
+      </HomeStack.Screen> */}
       <HomeStack.Screen name="Analysis" options={{ headerShown: false }}>
         {(props) => <Analysis {...props} user={user} />}
       </HomeStack.Screen>

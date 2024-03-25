@@ -16,14 +16,13 @@ import GrayLine from "../../components/GrayLine";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
 const AdminWindow = () => {
   const navigation = useNavigation();
   const data = [
     {
       imageSource: require("../../assets/Admin/SaleSVG.svg"),
       name: "Продати товар",
-      navigate: "SalescreenAdmin",
+      navigate: "SalesScreen",
     },
     {
       imageSource: require("../../assets/Admin/Storage.svg"),
@@ -49,7 +48,7 @@ const AdminWindow = () => {
       imageSource: require("../../assets/Admin/history.svg"),
       name: "Історія продаж",
       navigate: "Profile",
-      params: { screen: "SellHistory" }
+      params: { screen: "SellHistory" },
     },
     {
       imageSource: require("../../assets/Admin/Order.svg"),
@@ -60,9 +59,8 @@ const AdminWindow = () => {
       imageSource: require("../../assets/Profile/user.svg"),
       name: "Працівники",
       navigate: "Shop",
-      params: { screen: "Employees" }
+      params: { screen: "Employees" },
     },
-    
   ];
   const renderItem = ({ item }) => {
     return (
