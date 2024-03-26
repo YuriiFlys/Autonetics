@@ -13,7 +13,7 @@ import { Color, FontFamily } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const PromotionsWidget = ({ item }) => {
   const navigator = useNavigation();
-  if (item.end) {
+  if (item.end || item.start) {
     return (
       <TouchableOpacity
         style={[styles.container, { padding: 0 }]}
@@ -24,7 +24,7 @@ const PromotionsWidget = ({ item }) => {
           style={styles.backgroundImage}
           borderRadius={10}
         >
-          <Text style={styles.textEndWidget}>Дивитись всі {item.name}</Text>
+          <Text style={styles.textEndWidget}>{item.name}:</Text>
         </ImageBackground>
       </TouchableOpacity>
     );

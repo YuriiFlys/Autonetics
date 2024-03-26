@@ -208,7 +208,7 @@ const Promotions = () => {
             </TouchableOpacity>
             <FlatList
               data={item.item.slice(0, 5).concat({
-                name: item.name,
+                name: "Дививтись всі " + item.name,
                 end: true,
               })}
               renderItem={({ item }) => <PromotionsWidget item={item} />}

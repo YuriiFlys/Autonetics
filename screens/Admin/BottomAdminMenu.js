@@ -86,7 +86,14 @@ function HomeScreen({ user }) {
       <HomeStack.Screen name="AddProducts" options={{ headerShown: false }}>
         {(props) => <AddProducts {...props} user={user} />}
       </HomeStack.Screen>
-      <HomeStack.Screen name="PromotionsAdmin" options={{ headerShown: false }}>
+      <HomeStack.Screen
+        name="PromotionsAdmin"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Акції",
+        }}
+      >
         {(props) => <PromotionsAdmin {...props} user={user} />}
       </HomeStack.Screen>
       <HomeStack.Screen name="Order" options={{ headerShown: false }}>
