@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Dimensions, TouchableOpacity, Text} from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { Image } from "expo-image";
 import Logo from "../../components/Logo";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
@@ -10,28 +16,25 @@ import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
-  
-
-  const ButtonMenu = ({ image, name, navig }) => {
-    return (
-      <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
-        <Image style={styles.buttonIcon} source={image} />
-        <Text style={styles.buttonName}>{name}</Text>
-        <Image
-          style={styles.buttonArrow}
-          source={require("../../assets/Profile/arrow.svg")}
-        />
-      </TouchableOpacity>
-    );
-  };
+const ButtonMenu = ({ image, name, navig }) => {
+  return (
+    <TouchableOpacity style={styles.buttonContainer} onPress={navig}>
+      <Image style={styles.buttonIcon} source={image} />
+      <Text style={styles.buttonName}>{name}</Text>
+      <Image
+        style={styles.buttonArrow}
+        source={require("../../assets/Profile/arrow.svg")}
+      />
+    </TouchableOpacity>
+  );
+};
 
 const UserAcount = (props) => {
   const [profileImage, setImage] = React.useState(null);
   const user = props.user;
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
-  
+
   React.useEffect(() => {
     const unsubscribe = navigator.addListener("focus", async () => {
       const response = await fetch(
@@ -48,35 +51,38 @@ const UserAcount = (props) => {
   }, [navigator]);
   return (
     <SafeAreaView style={styles.container}>
-      <Logo name="Особистий кабінет"/>
-      <UserComponent userName={"Ростислав Пастернак"} profileImage={profileImage} description={"Директор"} imageSize={0.25} />
-      <GrayLine style={{marginTop:10}} />
-        <ButtonMenu
-
-          image={require("../../assets/Profile/user.svg")}
-          name={"Особисті дані"}
-          navig={() => navigator.navigate("UserProfile")}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../../assets/Profile/history.svg")}
-          name={"Історія"}
-          navig={() => navigator.navigate("Cart", { screen: "Історія" })}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../../assets/Profile/help.svg")}
-          name={"Допомога"}
-          navig={() => console.log("Допомога")}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../../assets/Profile/Settings.svg")}
-          name={"Налаштування"}
-          navig={() => navigator.navigate("Settings")}
-        />
-        <GrayLine />
-      
+      <Logo name="Особистий кабінет" />
+      <UserComponent
+        userName={"Ростислав Пастернак"}
+        profileImage={profileImage}
+        description={"Директор"}
+        imageSize={0.25}
+      />
+      <GrayLine style={{ marginTop: 10 }} />
+      <ButtonMenu
+        image={require("../../assets/Profile/user.svg")}
+        name={"Особисті дані"}
+        navig={() => navigator.navigate("UserProfile")}
+      />
+      <GrayLine />
+      <ButtonMenu
+        image={require("../../assets/Profile/history.svg")}
+        name={"Історія"}
+        navig={() => navigator.navigate("Cart", { screen: "Історія" })}
+      />
+      <GrayLine />
+      <ButtonMenu
+        image={require("../../assets/Profile/help.svg")}
+        name={"Допомога"}
+        navig={() => console.log("Допомога")}
+      />
+      <GrayLine />
+      <ButtonMenu
+        image={require("../../assets/Profile/Settings.svg")}
+        name={"Налаштування"}
+        navig={() => navigator.navigate("Settings")}
+      />
+      <GrayLine />
     </SafeAreaView>
   );
 };

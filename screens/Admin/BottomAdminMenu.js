@@ -32,9 +32,6 @@ function ProfileAdminScreen({ user }) {
       <ProfileStack.Screen name="UserProfile" options={{ headerShown: false }}>
         {(props) => <UserProfile {...props} user={user} />}
       </ProfileStack.Screen>
-      <ProfileStack.Screen name="SellHistory" options={{ headerShown: false }}>
-        {(props) => <SellHistory {...props} user={user} />}
-      </ProfileStack.Screen>
     </ProfileStack.Navigator>
   );
 }
@@ -80,6 +77,9 @@ function HomeScreen({ user }) {
       {/* <HomeStack.Screen name="SalescreenAdmin" options={{ headerShown: false }}>
         {(props) => <SalescreenAdmin {...props} user={user} />}
       </HomeStack.Screen> */}
+      <HomeStack.Screen name="SellHistory" options={{ headerShown: false }}>
+        {(props) => <SellHistory {...props} user={user} />}
+      </HomeStack.Screen>
       <HomeStack.Screen name="Analysis" options={{ headerShown: false }}>
         {(props) => <Analysis {...props} user={user} />}
       </HomeStack.Screen>

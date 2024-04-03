@@ -31,6 +31,7 @@ export const FontFamily = {
 };
 /* font sizes */
 export const FontSize = {
+  size_xs: 12,
   size_s: 15,
   size_m: 18,
   size_xl: 20,

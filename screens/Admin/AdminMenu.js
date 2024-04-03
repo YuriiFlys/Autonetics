@@ -48,7 +48,7 @@ const AdminWindow = () => {
       imageSource: require("../../assets/Admin/history.svg"),
       name: "Історія продаж",
       navigate: "Profile",
-      params: { screen: "SellHistory" },
+      params: "SellHistory",
     },
     {
       imageSource: require("../../assets/Admin/Order.svg"),
