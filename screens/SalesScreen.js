@@ -14,63 +14,8 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const SalesScreen = () => {
-  list = [
-    {
-      id: 1,
-      name: "Моршинська1",
-      price: 123.28,
-      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-      number: 10,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 2,
-      name: "Моршинська2",
-      price: 123.28,
-      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 3,
-      name: "Моршинська3",
-      price: 123.28,
-      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 4,
-      name: "Моршинська4",
-      price: 123.28,
-      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 5,
-      name: "Моршинська5",
-      price: 123.28,
-      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-    {
-      id: 6,
-      name: "Моршинська6",
-      price: 123.28,
-      imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-      number: 1,
-      description:
-        "Природна мінеральна вода «Моршинська» походить з Прикарпаття, з моршинської долини, що розташована в курортному регіоні поблизу східного схилу Карпатського хребта і оточена з усіх боків лісами.",
-    },
-  ];
-  const [data, setData] = useState(list);
+  let list = []; // воно потрібно але я хз як це забрати
+  const [data, setData] = useState([]);
   shop = {
     name: "Магазин АТБ",
     address: "вул. Шевченка, 1, Львів, Львівська область, 79000",
@@ -97,8 +42,28 @@ const SalesScreen = () => {
   };
 
   const [sum, setSum] = useState(
-    data.reduce((acc, item) => acc + item.number * item.price, 0)
+    data.reduce((acc, item) => acc + item.number * item.goodPriceOut, 0)
   );
+
+  const handleScanned = (barcode) => {
+    fetch(`http://23.100.50.204:8080/goods/byBarCode/${barcode}`)
+      .then((res) => res.json())
+      .then((res) => {
+        let existingIndex = list.findIndex(
+          (item) => item.goodID === res.goodID
+        );
+        if (existingIndex !== -1) {
+          list[existingIndex].number += 1;
+        } else {
+          res.number = 1;
+          list.push(res);
+        }
+        setData([...list]);
+        console.log("res", res);
+        console.log("barcode", barcode);
+        console.log("data", data);
+      });
+  };
 
   const currentDateTime = new Date();
   const formattedDateTime = currentDateTime.toLocaleString();
@@ -106,7 +71,7 @@ const SalesScreen = () => {
   return (
     <SafeAreaProvider style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
-        <Scanner isCross={true} />
+        <Scanner isCross={true} handleScanned={handleScanned} />
         <BottomSheet
           ref={bottomSheetRef}
           index={0}

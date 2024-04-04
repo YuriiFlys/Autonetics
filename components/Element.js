@@ -66,10 +66,13 @@ const Element = ({ item, updateData, deleteElement }) => {
               navigator.navigate("ProductInfo", { item: item });
             }}
           >
-            <Image source={item.imageSource} style={styles.imageSource} />
+            <Image
+              source={require("../assets/Image_Product_or_Shop/voda.png")} //todo
+              style={styles.imageSource}
+            />
             <View style={styles.nameContainer}>
-              <Text style={styles.shopName}>{item.name}</Text>
-              <Text style={styles.counterText}>Ціна: {item.price}$</Text>
+              <Text style={styles.shopName}>{item.goodName}</Text>
+              <Text style={styles.counterText}>Ціна: {item.goodPriceOut}$</Text>
             </View>
             <View style={styles.counterContainer}>
               <View style={{ flexDirection: "row", marginRight: 20 }}>
@@ -80,7 +83,7 @@ const Element = ({ item, updateData, deleteElement }) => {
                     { fontFamily: FontFamily.CommissioneBold },
                   ]}
                 >
-                  {item.number}
+                  1 {/* todo */}
                 </Text>
               </View>
               <View
@@ -93,7 +96,7 @@ const Element = ({ item, updateData, deleteElement }) => {
                     { fontFamily: FontFamily.CommissioneBold },
                   ]}
                 >
-                  {item.number * item.price}$
+                  {1 * item.goodPriceOut}$ {/* todo */}
                 </Text>
               </View>
             </View>
@@ -111,7 +114,7 @@ const Element = ({ item, updateData, deleteElement }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              deleteElement(item.id);
+              deleteElement(item.goodID);
             }}
             style={[styles.hiddenButton, { backgroundColor: "red" }]}
           >

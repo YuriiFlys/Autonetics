@@ -20,6 +20,7 @@ const Scanner = ({
   styleFrame,
   styleButtonScanner,
   isCross,
+  handleScanned,
 }) => {
   const navigator = useNavigation();
 
@@ -60,15 +61,7 @@ const Scanner = ({
   const handleBarCodeScanned = useCallback(({ type, data }) => {
     setScanned(true);
     setIsScanning(false);
-    const isUrl = /^(http|https):\/\/[^ "]+$/.test(data);
-
-    if (isUrl && Linking.canOpenURL(data)) {
-      Linking.openURL(data).catch((err) =>
-        console.error("Failed to open URL: ", err)
-      );
-    } else {
-      Alert.alert(data);
-    }
+    handleScanned(data);
   }, []);
 
   const startScan = () => {

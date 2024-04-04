@@ -80,7 +80,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
                 deleteElement={deleteElement}
               />
             )}
-            keyExtractor={(item) => item.id.toString()}
+            // keyExtractor={(item) => item.goodID.toString()}
           />
         </View>
         <GrayLine />
@@ -107,7 +107,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
           <FlatList
             data={data}
             renderItem={({ item }) => <SmallWidget item={item} />}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.goodID}
             horizontal={true}
           />
         </View>

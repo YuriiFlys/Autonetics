@@ -13,7 +13,9 @@ const screenWidth = Dimensions.get("window").width;
 
 const SmallWidget = ({ item }) => {
   const navigator = useNavigation();
-  const price = item.price.toString().split(".");
+  //todo: замінити на item.goodPriceOut
+  // const price = item.goodPriceOut.split(".");
+  price = ["100", "00"];
   return (
     <TouchableOpacity
       style={styles.container}
