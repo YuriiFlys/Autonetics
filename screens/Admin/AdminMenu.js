@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import Logo from "../../components/Logo";
+import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import GrayLine from "../../components/GrayLine";
 
@@ -16,48 +17,59 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const AdminWindow = () => {
+  const navigation = useNavigation();
   const data = [
     {
       imageSource: require("../../assets/Admin/SaleSVG.svg"),
       name: "Продати товар",
+      navigate: "SalesScreen",
     },
     {
       imageSource: require("../../assets/Admin/Storage.svg"),
       name: "Склад",
+      navigate: "Storage",
     },
     {
       imageSource: require("../../assets/Admin/analysis.svg"),
       name: "Аналіз даних",
+      navigate: "Analysis",
     },
     {
       imageSource: require("../../assets/Admin/SaleSVG.svg"),
       name: "Поповнення товарів",
+      navigate: "AddProducts",
     },
     {
       imageSource: require("../../assets/Admin/interest.svg"),
       name: "Акції",
+      navigate: "PromotionsAdmin",
     },
     {
       imageSource: require("../../assets/Admin/history.svg"),
       name: "Історія продаж",
+      navigate: "Profile",
+      params: "SellHistory",
     },
     {
       imageSource: require("../../assets/Admin/Order.svg"),
       name: "Замовлення",
+      navigate: "Order",
+    },
+    {
+      imageSource: require("../../assets/Profile/user.svg"),
+      name: "Працівники",
+      navigate: "Shop",
+      params: { screen: "Employees" },
     },
   ];
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={console.log("a")}
+        onPress={() => navigation.navigate(item.navigate, item.params)}
       >
         <Image style={styles.buttonIcon} source={item.imageSource} />
-        <Text style={styles.buttonName}>{item.name}</Text>
-        <Image
-          style={styles.buttonArrow}
-          source={require("../../assets/Profile/arrow.svg")}
-        />
+        <Text style={styles.buttonText}>{item.name}</Text>
       </TouchableOpacity>
     );
   };
@@ -69,6 +81,7 @@ const AdminWindow = () => {
         data={data}
         renderItem={renderItem}
         style={styles.shopContainer}
+        numColumns={2}
       />
     </SafeAreaView>
   );
@@ -81,31 +94,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   buttonContainer: {
-    paddingHorizontal: screenWidth * 0.075,
-    paddingVertical: screenHeight * 0.01,
-    width: screenWidth,
-    flexDirection: "row",
+    width: screenWidth * 0.35,
+    height: screenWidth * 0.35,
+    backgroundColor: Color.Primary,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Color.colorSuperLightGray,
     alignItems: "center",
-    justifyContent: "space-between",
-    borderTopWidth: 1,
-    borderTopColor: Color.colorLightGray,
+    justifyContent: "center",
+    margin: screenWidth * 0.03,
   },
   buttonIcon: {
-    width: screenWidth * 0.08,
-    height: screenWidth * 0.08,
+    width: screenWidth * 0.1,
+    height: screenWidth * 0.1,
   },
-  buttonName: {
-    fontSize: FontSize.normal,
-    fontFamily: FontFamily.normal,
+  buttonText: {
+    fontFamily: FontFamily.CommissioneMedium,
+    fontSize: FontSize.Medium,
     color: Color.colorDarkBlue,
-    flex: 4,
-    marginLeft: screenWidth * 0.05,
-    fontWeight: "bold",
-  },
-  buttonArrow: {
-    width: screenWidth * 0.05,
-    height: screenWidth * 0.05,
-    contentFit: "contain",
+    marginTop: screenHeight * 0.05,
   },
 });
 

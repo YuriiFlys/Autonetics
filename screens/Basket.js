@@ -111,6 +111,8 @@ const Basket = () => {
         renderItem={({ item }) => (
           <HistoryElement item={item} updateData={updateData} />
         )}
+        refreshing={false}
+        onRefresh={() => console.log("refresh")}
       />
     </SafeAreaView>
   );

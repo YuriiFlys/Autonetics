@@ -19,6 +19,8 @@ const ListPromotions = ({ route }) => {
         data={list.item}
         renderItem={({ item }) => <PromotionsWidget item={item} />}
         keyExtractor={(item) => item.name}
+        refreshing={false}
+        onRefresh={() => console.log("refresh")}
       />
     </SafeAreaView>
   );

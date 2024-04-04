@@ -99,6 +99,8 @@ const MainMenu = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         style={styles.shopContainer}
+        refreshing={false}
+        onRefresh={() => console.log("refresh")}
       />
     </View>
   );

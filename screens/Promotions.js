@@ -178,6 +178,8 @@ const Promotions = () => {
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Акції"} />
       <FlatList
+        refreshing={false}
+        onRefresh={() => console.log("refresh")}
         data={data}
         renderItem={({ item }) => (
           <View style={{ alignItems: "center" }}>
@@ -208,7 +210,7 @@ const Promotions = () => {
             </TouchableOpacity>
             <FlatList
               data={item.item.slice(0, 5).concat({
-                name: item.name,
+                name: "Дививтись всі " + item.name,
                 end: true,
               })}
               renderItem={({ item }) => <PromotionsWidget item={item} />}

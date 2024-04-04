@@ -38,7 +38,9 @@ const Permissions = ({ widgetname, fields }) => {
               trackColor={{ false: "#767577", true: "#00FF00" }}
               thumbColor={switchStates[index] ? "#f4f3f4" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={() => toggleSwitch(field)}
+              onValueChange={() => {
+                toggleSwitch(field);
+              }}
               value={switchStates[field]}
             />
           </View>
