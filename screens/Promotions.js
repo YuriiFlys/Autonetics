@@ -178,6 +178,8 @@ const Promotions = () => {
     <SafeAreaView style={[styles.container]}>
       <Logo name={"Акції"} />
       <FlatList
+        refreshing={false}
+        onRefresh={() => console.log("refresh")}
         data={data}
         renderItem={({ item }) => (
           <View style={{ alignItems: "center" }}>

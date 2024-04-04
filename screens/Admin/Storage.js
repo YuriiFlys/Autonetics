@@ -80,7 +80,12 @@ const Storage = () => {
           <Text style={styles.buttonSearch}>+</Text>
         </TouchableOpacity>
       </View>
-      <FlatList data={data} renderItem={renderItem} />
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        refreshing={false}
+        onRefresh={() => console.log("refresh")}
+      />
     </SafeAreaView>
   );
 };
