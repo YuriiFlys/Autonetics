@@ -22,7 +22,6 @@ const ModalProduct = ({
   deleteElement,
 }) => {
   const navigator = useNavigation();
-  const [selectedProduct, setSelectedProduct] = useState({});
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -58,11 +57,11 @@ const ModalProduct = ({
             onPress={(event) => event.stopPropagation()}
           >
             <View style={styles.modalcontainer}>
-              <Image source={item.imageSource} style={styles.productimage} />
+              <Image source={item.photo} style={styles.productimage} />
               <View style={styles.productinfocontainer}>
                 <View style={styles.productnamecontainer}>
-                  <Text style={styles.productName}>{item.name}</Text>
-                  <Text style={styles.productPrice}>{item.price}$</Text>
+                  <Text style={styles.productName}>{item.goodName}</Text>
+                  <Text style={styles.productPrice}>{item.goodPriceOut}$</Text>
                 </View>
                 <View style={[styles.productnamecontainer]}>
                   <View
@@ -88,7 +87,7 @@ const ModalProduct = ({
                       <Text style={styles.buttonTextPlusMinus}>+</Text>
                     </TouchableOpacity>
                   </View>
-                  <Text>Сума: {item.number * item.price}</Text>
+                  <Text>Сума: {item.number * item.goodPriceOut}$</Text>
                 </View>
               </View>
               <View

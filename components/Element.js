@@ -67,7 +67,7 @@ const Element = ({ item, updateData, deleteElement }) => {
             }}
           >
             <Image
-              source={require("../assets/Image_Product_or_Shop/voda.png")} //todo
+              source={item.photo} //todo
               style={styles.imageSource}
             />
             <View style={styles.nameContainer}>
@@ -83,7 +83,7 @@ const Element = ({ item, updateData, deleteElement }) => {
                     { fontFamily: FontFamily.CommissioneBold },
                   ]}
                 >
-                  1 {/* todo */}
+                  {item.number}
                 </Text>
               </View>
               <View
@@ -96,7 +96,7 @@ const Element = ({ item, updateData, deleteElement }) => {
                     { fontFamily: FontFamily.CommissioneBold },
                   ]}
                 >
-                  {1 * item.goodPriceOut}$ {/* todo */}
+                  {item.number * item.goodPriceOut}$ {/* todo */}
                 </Text>
               </View>
             </View>

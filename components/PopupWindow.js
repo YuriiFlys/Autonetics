@@ -29,7 +29,6 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
       const total = data.reduce((acc, item) => {
         return acc + item.number * item.price;
       }, 0);
-
       return total;
     });
   };
@@ -46,7 +45,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
         onPress: () => {
           setData((prevData) => {
             const updatedData = prevData.filter((item) => item.id !== id);
-            setSum((prevSum) => {
+            setSum(() => {
               const total = data.reduce((acc, item) => {
                 return acc + item.number * item.price;
               }, 0);
@@ -80,7 +79,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
                 deleteElement={deleteElement}
               />
             )}
-            // keyExtractor={(item) => item.goodID.toString()}
+            keyExtractor={(item) => item.goodID.toString()}
           />
         </View>
         <GrayLine />

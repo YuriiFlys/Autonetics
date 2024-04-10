@@ -47,21 +47,34 @@ const SalesScreen = () => {
 
   const handleScanned = (barcode) => {
     fetch(`http://23.100.50.204:8080/goods/byBarCode/${barcode}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Помилка при завантаженні даних");
+        }
+        return res.json();
+      })
       .then((res) => {
         let existingIndex = list.findIndex(
           (item) => item.goodID === res.goodID
         );
+        console.log("existingIndex", existingIndex);
+
         if (existingIndex !== -1) {
-          list[existingIndex].number += 1;
+          console.log("list[existingIndex].number", list[existingIndex].number);
+          list[existingIndex].number = list[existingIndex].number + 1;
+          console.log("list[existingIndex].number", list[existingIndex].number);
         } else {
+          res.photo = require("../assets/Image_Product_or_Shop/voda.png");
           res.number = 1;
           list.push(res);
         }
         setData([...list]);
-        console.log("res", res);
-        console.log("barcode", barcode);
-        console.log("data", data);
+        setSum(
+          list.reduce((acc, item) => acc + item.number * item.goodPriceOut, 0)
+        );
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
   };
 
