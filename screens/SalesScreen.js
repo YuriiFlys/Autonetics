@@ -60,9 +60,7 @@ const SalesScreen = () => {
         console.log("existingIndex", existingIndex);
 
         if (existingIndex !== -1) {
-          console.log("list[existingIndex].number", list[existingIndex].number);
           list[existingIndex].number = list[existingIndex].number + 1;
-          console.log("list[existingIndex].number", list[existingIndex].number);
         } else {
           res.photo = require("../assets/Image_Product_or_Shop/voda.png");
           res.number = 1;

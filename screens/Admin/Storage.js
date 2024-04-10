@@ -39,7 +39,7 @@ const Storage = () => {
     return (
       <TouchableOpacity
         style={styles.productContainer}
-        onPress={() => navigator.navigate("ProductInfo")}
+        onPress={() => navigator.navigate("ProductInfo", { id: 1 })} //todo
       >
         <Image
           source={item.imageSource}

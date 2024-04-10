@@ -23,10 +23,6 @@ const LoginMenuWrapper = ({ navigation }) => {
   const { isAdmin, setIsAdmin } = React.useContext(AdminContext);
   return <LoginMenu isAdmin={isAdmin} setIsAdmin={setIsAdmin} />;
 };
-const ProductInfoWrapper = ({ navigation }) => {
-  const { isAdmin } = React.useContext(AdminContext);
-  return <ProductInfo isAdmin={isAdmin} />;
-};
 
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
@@ -68,7 +64,8 @@ const App = () => {
               />
               <Stack.Screen
                 name="ProductInfo"
-                component={ProductInfoWrapper}
+                component={ProductInfo}
+                initialParams={{}} // Початкові параметри (може бути порожнім об'єктом)
                 options={{ headerShown: true, title: "Інформація про товар" }}
               />
               {isAdmin ? (
@@ -76,6 +73,11 @@ const App = () => {
                   <Stack.Screen
                     name="BottomAdminMenu"
                     component={BottomAdminMenu}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ProductInfoAdmin"
+                    component={ProductInfoAdmin}
                     options={{ headerShown: false }}
                   />
 

@@ -41,7 +41,7 @@ const PromotionsWidget = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.container}
-        onPress={() => navigator.navigate("ProductInfo")}
+        onPress={() => navigator.navigate("ProductInfo", { id: 1 })} //todo id
       >
         {item.discount ? (
           <View

@@ -53,7 +53,6 @@ const Element = ({ item, updateData, deleteElement }) => {
     ],
   }));
   const [isModalVisible, setModalVisible] = useState(false);
-
   return (
     <View>
       <Animated.View
@@ -63,13 +62,10 @@ const Element = ({ item, updateData, deleteElement }) => {
           <TouchableOpacity
             style={styles.shopelement}
             onPress={() => {
-              navigator.navigate("ProductInfo", { item: item });
+              navigator.navigate("ProductInfo", { id: 1 });
             }}
           >
-            <Image
-              source={item.photo} //todo
-              style={styles.imageSource}
-            />
+            <Image source={item.photo} style={styles.imageSource} />
             <View style={styles.nameContainer}>
               <Text style={styles.shopName}>{item.goodName}</Text>
               <Text style={styles.counterText}>Ціна: {item.goodPriceOut}$</Text>

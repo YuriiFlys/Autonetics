@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -7,72 +7,57 @@ import {
   Text,
   ScrollView,
   FlatList,
-  ActivityIndicator,
-  RefreshControl,
+  Button,
+  TouchableOpacity,
 } from "react-native";
-import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Image } from "expo-image";
 import SmallWidget from "../components/SmallWidget";
 import Swiper from "react-native-swiper";
+import ProductChart from "../components/ProductChart.js";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ProductInfo = ({ route }) => {
+  console.log(route);
   const { id } = route.params;
-  const [price, setPrice] = useState();
-  const [product, setProduct] = useState();
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const updateProduct = () => {
-    fetch(`http://23.100.50.204:8080/goods/${id}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Помилка при завантаженні даних");
-        }
-        return res.json();
-      })
-      .then((res) => {
-        res.imageSource = [
-          require("../assets/Image_Product_or_Shop/voda.png"),
-          require("../assets/Image_Product_or_Shop/voda.png"),
-          require("../assets/Image_Product_or_Shop/voda.png"),
-        ];
-        res.shopLogo = require("../assets/Image_Product_or_Shop/atbLogo.png");
-        res.count = 10;
-        res.characteristics = {
-          "Торгова марка": "Боржомі",
-          Склад:
-            "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
-          ГМО: "НІ",
-          Газованість: "СИЛЬНОГАЗОВАНА",
-          "Сульфати (SO4)": "<10 мг/дм.куб.м",
-          "Температура зберігання": "+3..+30 °C",
-          "Хлор (Cl)": "250-500 мг/дм.куб.",
-          "Кальцій (Ca)": "20-150 мг/дм.куб.",
-          "Органічний продукт": "НІ",
-          "Вид продукції": "ВОДА МІНЕРАЛЬНА",
-          "Калій (K)": "15-45 мг/дм.куб.",
-          "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
-        };
-        res.discount = 20;
-        if (res.discount === 0) {
-          setPrice(res.goodPriceOut.toString().split("."));
-        } else {
-          setPrice(
-            (res.goodPriceOut * (100 - res.discount)) /
-              (100).toString().split(".")
-          );
-        }
-        setProduct(res);
-        setLoading(true);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+  console.log("id", id);
+  const product = {
+    name: "Вода 0,5 л Боржомі мінеральна сильногазована",
+    price: 67.99,
+    discount: 20,
+    imageSource: [
+      require("../assets/Image_Product_or_Shop/voda.png"),
+      require("../assets/Image_Product_or_Shop/voda.png"),
+      require("../assets/Image_Product_or_Shop/voda.png"),
+    ],
+    shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+    count: 10,
+    description:
+      "Вода Боржомі - природна мінеральна вода, батьківщиною добування якої є Грузія. Історія води налічує понад тисячу років. Вона має чудовий смак і відмінний гідрокарбонатно-натрієвий склад. Містить багато мінералів і мікроелементів: натрій, кальцій, хлор, сірка, кремній, фтор і магній. Дуже добре підходить для попередження і лікування в якості додаткової терапії гастритів, виразки дванадцятипалої кишки та інших захворювань шлунково-кишкового тракту. Але не підходить в періоди загострення виразки.",
+
+    characteristics: {
+      "Торгова марка": "Боржомі",
+      Склад:
+        "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
+      ГМО: "НІ",
+      Газованість: "СИЛЬНОГАЗОВАНА",
+      "Сульфати (SO4)": "<10 мг/дм.куб.м",
+      "Температура зберігання": "+3..+30 °C",
+      "Хлор (Cl)": "250-500 мг/дм.куб.",
+      "Кальцій (Ca)": "20-150 мг/дм.куб.",
+      "Органічний продукт": "НІ",
+      "Вид продукції": "ВОДА МІНЕРАЛЬНА",
+      "Калій (K)": "15-45 мг/дм.куб.",
+      "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
+    },
+    numberSales: {
+      2024: [110, 290, 360, 40, 50, 60, 80, 120, 23, 43, 34, 32], //2024
+      2023: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2023
+      2022: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2022
+      2021: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2021
+    },
   };
-  if (!loading) {
-    updateProduct();
-  }
   const [isYear, setIsYear] = useState(true);
 
   const item = {
@@ -85,10 +70,19 @@ const ProductInfo = ({ route }) => {
     isAvailable: true,
   };
   const scrollViewRef = useRef();
-
-  return loading ? (
+  if (product.discount === 0) {
+    const price = product.price.toString().split(".");
+    console.log(price);
+  } else {
+    const price = ((product.price * (100 - product.discount)) / 100)
+      .toString()
+      .split(".");
+    console.log(price);
+  }
+  return (
     <SafeAreaView style={styles.container}>
       <ScrollView
+        ref={scrollViewRef}
         automaticallyAdjustContentInsets={true}
         style={{ backgroundColor: Color.colorSuperLightGray }}
       >
@@ -103,7 +97,7 @@ const ProductInfo = ({ route }) => {
           <Image source={product.shopLogo} style={styles.shopLogo} />
         </View>
         <View style={styles.productNameContainer}>
-          <Text style={styles.productNameText}>{product.goodName}</Text>
+          <Text style={styles.productNameText}>{product.name}</Text>
           <View
             style={{
               height: screenHeight * 0.05,
@@ -120,7 +114,10 @@ const ProductInfo = ({ route }) => {
                     : require("../assets/denial.svg")
                 }
               />
-              <Text>{product.count > 0 ? "В наявності" : "Немає"}</Text>
+
+              <Text>
+                {product.count > 0 ? `В наявності ${product.count}` : "Немає"}
+              </Text>
             </View>
             <View style={styles.priceContainer}>
               {/* стара ціна */}
@@ -162,6 +159,51 @@ const ProductInfo = ({ route }) => {
             </View>
           </View>
         </View>
+
+        <View style={styles.charContainer}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.buttonChar,
+                isYear ? { backgroundColor: Color.colorWhite } : null,
+              ]}
+              onPress={() => setIsYear(true)}
+            >
+              <Text>Рік</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.buttonChar,
+                !isYear ? { backgroundColor: Color.colorWhite } : null,
+              ]}
+              onPress={() => setIsYear(false)}
+            >
+              <Text>Місяць</Text>
+            </TouchableOpacity>
+          </View>
+          <Swiper showsPagination={false}>
+            {Object.entries(product.numberSales).map(([year, salesArray]) => (
+              <ProductChart
+                countSales={salesArray}
+                name={year}
+                axisY={[
+                  "Січень",
+                  "Лютий",
+                  "Березень",
+                  "Квітень",
+                  "Травень",
+                  "Червень",
+                  "Липень",
+                  "Серпень",
+                  "Вересень",
+                  "Жовтень",
+                  "Листопад",
+                  "Грудень",
+                ]}
+              />
+            ))}
+          </Swiper>
+        </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.title}>Опис та характеристики</Text>
           <Text style={styles.descriptionText}>{product.description}</Text>
@@ -183,10 +225,6 @@ const ProductInfo = ({ route }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  ) : (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ActivityIndicator size="large" />
-    </View>
   );
 };
 

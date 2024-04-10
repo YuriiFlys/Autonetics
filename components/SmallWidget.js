@@ -19,7 +19,7 @@ const SmallWidget = ({ item }) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigator.navigate("ProductInfo")}
+      onPress={() => navigator.navigate("ProductInfo", { id: 1 })} // todo id
     >
       <View style={styles.productImageContainer}>
         <Image source={item.imageSource} style={styles.productImage} />

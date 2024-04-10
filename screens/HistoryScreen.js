@@ -93,7 +93,7 @@ const HistoryScreen = ({ style }) => {
       <TouchableOpacity
         style={styles.shopelement}
         onPress={() => {
-          navigator.navigate("ProductInfo", { item: item });
+          navigator.navigate("ProductInfo", { id: 1 }); //todo
         }}
       >
         <Image source={item.imageSource} style={styles.imageSource} />
