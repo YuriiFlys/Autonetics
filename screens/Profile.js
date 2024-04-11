@@ -25,19 +25,12 @@ const Profile = (props) => {
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
   React.useEffect(() => {
-    const unsubscribe = navigator.addListener("focus", async () => {
-      const response = await fetch(
-        "https://23.100.50.204:8080/client/" + user.userID
-      );
-      const data = await response.json();
-      if (data.firstName === null || data.lastName === null) {
-        setUserName(" ");
-      } else {
-        setUserName(data.firstName + " " + data.lastName);
-      }
-    });
-    return unsubscribe;
-  }, [navigator]);
+    if (user.firstName === null || user.lastName === null) {
+      setUserName(" ");
+    } else {
+      setUserName(user.firstName + " " + user.lastName);
+    }
+  }, [user]);
 
   const ButtonMenu = ({ image, name, navig }) => {
     return (
@@ -56,7 +49,7 @@ const Profile = (props) => {
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
-        <UserComponent userName={"Ростислав Пастернак"} profileImage={profileImage} imageSize={0.25} />
+        <UserComponent userName={userName} profileImage={profileImage} imageSize={0.25} />
         <GrayLine style={{marginTop:10}} />
         <ButtonMenu
           image={require("../assets/Profile/user.svg")}

@@ -24,13 +24,12 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
-import Logo from "../components/Logo";
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const UserProfile = (props) => {
+const UserProfile = (props, isAdmin) => {
   const userData = props.user;
   const navigator = useNavigation();
   const [initials, setInitials] = useState("");
@@ -56,31 +55,19 @@ const UserProfile = (props) => {
     }
   }
   useEffect(() => {
-    const unsubscribed = navigator.addListener("focus", async () => {
-      const response = await fetch(`http://23.100.50.204:8080/client/${userData.userID}`);
-      const data = await response.json();
-      setUser(data);
-    }
-    );
-    return unsubscribed;
-  }, []);
+    setGender(userData.gender || "Не вказано");
+    setDate(new Date(userData.birthDate || Date.now()));
+    phoneRef.current = userData.phoneNumber ? userData.phoneNumber.substring(4) : "Не вказано";
+  emailRef.current = userData.email || "";
+  fullnameRef.current = userData.firstName && userData.lastName ? userData.firstName + " " + userData.lastName : "Не вказано";
+  if (fullnameRef.current==="Не вказано") {
+    setInitials(" ");
+  } else {
+    setInitials(getInitials(fullnameRef.current));
+  }
+  }, [userData]);
+
   
-  useEffect(() => {
-    if (user) {
-      setGender(user.gender || "Не вказано");
-      phoneRef.current = user.phoneNumber ? user.phoneNumber.substring(4) : "Не вказано";
-      emailRef.current = user.email || "";
-      fullnameRef.current = user.firstName && user.lastName ? user.firstName + " " + user.lastName : "Не вказано";
-    }
-  }, [user]);
-  useEffect(() => {
-    if (fullnameRef.current==="Не вказано") {
-      setInitials(" ");
-    }
-    else{
-      setInitials(getInitials(fullnameRef.current));
-    }
-  }, [fullnameRef.current]);
 
   const handleContactSave = useCallback(async() => {
     const UpdatedData={

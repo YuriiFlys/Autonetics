@@ -30,30 +30,23 @@ const ButtonMenu = ({ image, name, navig }) => {
 };
 
 const UserAcount = (props) => {
-  const [profileImage, setImage] = React.useState(null);
   const user = props.user;
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
-
+  const [profileImage, setImage] = React.useState(null);
   React.useEffect(() => {
-    const unsubscribe = navigator.addListener("focus", async () => {
-      const response = await fetch(
-        "https://23.100.50.204:8080/client/" + user.userID
-      );
-      const data = await response.json();
-      if (data.firstName === null || data.lastName === null) {
-        setUserName(" ");
-      } else {
-        setUserName(data.firstName + " " + data.lastName);
-      }
-    });
-    return unsubscribe;
-  }, [navigator]);
+    if (user.firstName === null || user.lastName === null) {
+      setUserName(" ");
+    } else {
+      setUserName(user.firstName + " " + user.lastName);
+    }
+  }, [user]);
+  
   return (
     <SafeAreaView style={styles.container}>
       <Logo name="Особистий кабінет" />
       <UserComponent
-        userName={"Ростислав Пастернак"}
+        userName={userName}
         profileImage={profileImage}
         description={"Директор"}
         imageSize={0.25}
