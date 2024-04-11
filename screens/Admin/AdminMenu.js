@@ -11,7 +11,6 @@ import { Image } from "expo-image";
 import Logo from "../../components/Logo";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
-import GrayLine from "../../components/GrayLine";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -47,8 +46,7 @@ const AdminWindow = () => {
     {
       imageSource: require("../../assets/Admin/history.svg"),
       name: "Історія продаж",
-      navigate: "Profile",
-      params: "SellHistory",
+      navigate: "SellHistory",
     },
     {
       imageSource: require("../../assets/Admin/Order.svg"),

@@ -29,7 +29,9 @@ function ProfileAdminScreen({ user }) {
       <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
         {(props) => <UserAccount {...props} user={user} />}
       </ProfileStack.Screen>
-      <ProfileStack.Screen name="UserProfile" options={{ headerShown: false }}>
+      <ProfileStack.Screen name="UserProfile" options={{ headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Особистий кабінет",}}>
         {(props) => <UserProfile {...props} user={user} />}
       </ProfileStack.Screen>
     </ProfileStack.Navigator>
