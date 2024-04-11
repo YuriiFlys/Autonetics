@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Dimensions, Text, View } from "react-native";
+import { StyleSheet, Dimensions, Text, View, Alert } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -72,7 +72,8 @@ const SalesScreen = () => {
         );
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("Error1:", error);
+        Alert.alert("Не знайдено товар", "Ой cхоже товар не знайдено");
       });
   };
 

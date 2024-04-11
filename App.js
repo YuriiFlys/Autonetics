@@ -16,6 +16,7 @@ import SearchBarcode from "./screens/Admin/SearchByBarcode";
 import BottomAdminMenu from "./screens/Admin/BottomAdminMenu";
 import { LogBox } from "react-native";
 import ManageEmployee from "./screens/Admin/ManageEmployee";
+import ProductInfoAdmin from "./screens/Admin/ProductInfoAdmin";
 
 const AdminContext = React.createContext();
 
@@ -62,12 +63,6 @@ const App = () => {
                 component={WelcomeScreen}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen
-                name="ProductInfo"
-                component={ProductInfo}
-                initialParams={{}} // Початкові параметри (може бути порожнім об'єктом)
-                options={{ headerShown: true, title: "Інформація про товар" }}
-              />
               {isAdmin ? (
                 <>
                   <Stack.Screen
@@ -91,6 +86,15 @@ const App = () => {
                     component={SalesScreen}
                     options={{ headerShown: false }}
                   />
+                  <Stack.Screen
+                    name="ProductInfo"
+                    component={ProductInfoAdmin}
+                    initialParams={{}}
+                    options={{
+                      headerShown: true,
+                      title: "Інформація про товар",
+                    }}
+                  />
                 </>
               ) : (
                 <>
@@ -111,6 +115,15 @@ const App = () => {
                       headerShown: true,
                       headerBackTitle: "Назад",
                       title: "Історія",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="ProductInfo"
+                    component={ProductInfo}
+                    initialParams={{}}
+                    options={{
+                      headerShown: true,
+                      title: "Інформація про товар",
                     }}
                   />
                 </>

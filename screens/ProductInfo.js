@@ -19,7 +19,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ProductInfo = ({ route }) => {
   const { id } = route.params;
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState([]);
   const [product, setProduct] = useState();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -39,21 +39,21 @@ const ProductInfo = ({ route }) => {
         ];
         res.shopLogo = require("../assets/Image_Product_or_Shop/atbLogo.png");
         res.count = 10;
-        res.characteristics = {
-          "Торгова марка": "Боржомі",
-          Склад:
-            "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
-          ГМО: "НІ",
-          Газованість: "СИЛЬНОГАЗОВАНА",
-          "Сульфати (SO4)": "<10 мг/дм.куб.м",
-          "Температура зберігання": "+3..+30 °C",
-          "Хлор (Cl)": "250-500 мг/дм.куб.",
-          "Кальцій (Ca)": "20-150 мг/дм.куб.",
-          "Органічний продукт": "НІ",
-          "Вид продукції": "ВОДА МІНЕРАЛЬНА",
-          "Калій (K)": "15-45 мг/дм.куб.",
-          "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
-        };
+        // res.characteristics = {
+        //   "Торгова марка": "Боржомі",
+        //   Склад:
+        //     "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
+        //   ГМО: "НІ",
+        //   Газованість: "СИЛЬНОГАЗОВАНА",
+        //   "Сульфати (SO4)": "<10 мг/дм.куб.м",
+        //   "Температура зберігання": "+3..+30 °C",
+        //   "Хлор (Cl)": "250-500 мг/дм.куб.",
+        //   "Кальцій (Ca)": "20-150 мг/дм.куб.",
+        //   "Органічний продукт": "НІ",
+        //   "Вид продукції": "ВОДА МІНЕРАЛЬНА",
+        //   "Калій (K)": "15-45 мг/дм.куб.",
+        //   "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
+        // };
         res.discount = 20;
         if (res.discount === 0) {
           setPrice(res.goodPriceOut.toString().split("."));
@@ -63,6 +63,8 @@ const ProductInfo = ({ route }) => {
               (100).toString().split(".")
           );
         }
+        setPrice(res.goodPriceOut.toFixed(2).toString().split("."));
+        console.log(".toFixed(2).toString()", price);
         setProduct(res);
         setLoading(true);
       })
@@ -135,7 +137,7 @@ const ProductInfo = ({ route }) => {
                     },
                   ]}
                 >
-                  20
+                  {price[0]}
                 </Text>
                 <Text
                   style={[
@@ -147,7 +149,7 @@ const ProductInfo = ({ route }) => {
                     },
                   ]}
                 >
-                  19
+                  {price[1]}
                 </Text>
               </View>
               {/* нова ціна */}
@@ -165,12 +167,55 @@ const ProductInfo = ({ route }) => {
         <View style={styles.descriptionContainer}>
           <Text style={styles.title}>Опис та характеристики</Text>
           <Text style={styles.descriptionText}>{product.description}</Text>
-          {Object.entries(product.characteristics).map(([key, value]) => (
+          {/* {Object.entries(product.characteristics).map(([key, value]) => (
             <View style={styles.characteristicsItemContainer}>
               <Text style={styles.characteristicsKey}>{key}</Text>
               <Text style={styles.characteristicsValue}>{value}</Text>
             </View>
-          ))}
+          ))} */}
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Тип продукту</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.goodsTypeID}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Виробник</Text>
+            <Text style={styles.characteristicsValue}>{product.producer}</Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Країна</Text>
+            <Text style={styles.characteristicsValue}>{product.countryID}</Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Термін придатності</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.expiryDate}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Умови зберігання</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.storageCondition}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Склад</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.composition}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Рейтинг</Text>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              {Array.from({ length: product.rating }).map((_, index) => (
+                <Image
+                  source={require("../assets/Star.svg")}
+                  style={{ width: 20, height: 20, marginHorizontal: 5 }}
+                />
+              ))}
+            </View>
+          </View>
         </View>
         <View style={styles.productOffersContainer}>
           <Text style={styles.title}>Ваші пропозиції</Text>

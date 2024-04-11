@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -7,57 +7,73 @@ import {
   Text,
   ScrollView,
   FlatList,
-  Button,
+  ActivityIndicator,
+  RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import { Image } from "expo-image";
-import SmallWidget from "../components/SmallWidget";
+import ProductChart from "../../components/ProductChart";
+import SmallWidget from "../../components/SmallWidget";
 import Swiper from "react-native-swiper";
-import ProductChart from "../components/ProductChart.js";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const ProductInfo = ({ route }) => {
-  console.log(route);
+const ProductInfoAdmin = ({ route }) => {
   const { id } = route.params;
-  console.log("id", id);
-  const product = {
-    name: "Вода 0,5 л Боржомі мінеральна сильногазована",
-    price: 67.99,
-    discount: 20,
-    imageSource: [
-      require("../assets/Image_Product_or_Shop/voda.png"),
-      require("../assets/Image_Product_or_Shop/voda.png"),
-      require("../assets/Image_Product_or_Shop/voda.png"),
-    ],
-    shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    count: 10,
-    description:
-      "Вода Боржомі - природна мінеральна вода, батьківщиною добування якої є Грузія. Історія води налічує понад тисячу років. Вона має чудовий смак і відмінний гідрокарбонатно-натрієвий склад. Містить багато мінералів і мікроелементів: натрій, кальцій, хлор, сірка, кремній, фтор і магній. Дуже добре підходить для попередження і лікування в якості додаткової терапії гастритів, виразки дванадцятипалої кишки та інших захворювань шлунково-кишкового тракту. Але не підходить в періоди загострення виразки.",
-
-    characteristics: {
-      "Торгова марка": "Боржомі",
-      Склад:
-        "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
-      ГМО: "НІ",
-      Газованість: "СИЛЬНОГАЗОВАНА",
-      "Сульфати (SO4)": "<10 мг/дм.куб.м",
-      "Температура зберігання": "+3..+30 °C",
-      "Хлор (Cl)": "250-500 мг/дм.куб.",
-      "Кальцій (Ca)": "20-150 мг/дм.куб.",
-      "Органічний продукт": "НІ",
-      "Вид продукції": "ВОДА МІНЕРАЛЬНА",
-      "Калій (K)": "15-45 мг/дм.куб.",
-      "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
-    },
-    numberSales: {
-      2024: [110, 290, 360, 40, 50, 60, 80, 120, 23, 43, 34, 32], //2024
-      2023: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2023
-      2022: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2022
-      2021: Array.from({ length: 12 }, () => Math.floor(Math.random() * 1000)), //2021
-    },
+  const [price, setPrice] = useState([]);
+  const [product, setProduct] = useState();
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const updateProduct = () => {
+    fetch(`http://23.100.50.204:8080/goods/${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Помилка при завантаженні даних");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        res.imageSource = [
+          require("../../assets/Image_Product_or_Shop/voda.png"),
+          require("../../assets/Image_Product_or_Shop/voda.png"),
+          require("../../assets/Image_Product_or_Shop/voda.png"),
+        ];
+        res.shopLogo = require("../../assets/Image_Product_or_Shop/atbLogo.png");
+        res.count = 10;
+        res.numberSales = {
+          2024: [110, 290, 360, 40, 50, 60, 80, 120, 23, 43, 34, 32], //2024
+          2023: Array.from({ length: 12 }, () =>
+            Math.floor(Math.random() * 1000)
+          ), //2023
+          2022: Array.from({ length: 12 }, () =>
+            Math.floor(Math.random() * 1000)
+          ), //2022
+          2021: Array.from({ length: 12 }, () =>
+            Math.floor(Math.random() * 1000)
+          ), //2021
+        };
+        res.discount = 20;
+        if (res.discount === 0) {
+          setPrice(res.goodPriceOut.toString().split("."));
+        } else {
+          setPrice(
+            (res.goodPriceOut * (100 - res.discount)) /
+              (100).toString().split(".")
+          );
+        }
+        setPrice(res.goodPriceOut.toFixed(2).toString().split("."));
+        console.log(".toFixed(2).toString()", price);
+        setProduct(res);
+        setLoading(true);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+  if (!loading) {
+    updateProduct();
+  }
   const [isYear, setIsYear] = useState(true);
 
   const item = {
@@ -65,24 +81,15 @@ const ProductInfo = ({ route }) => {
     name: "Вода 0,5 л Боржомі мінеральна сильногазована",
     price: 67.99,
     discount: 20,
-    imageSource: require("../assets/Image_Product_or_Shop/voda.png"),
-    shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+    imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
+    shopLogo: require("../../assets/Image_Product_or_Shop/atbLogo.png"),
     isAvailable: true,
   };
   const scrollViewRef = useRef();
-  if (product.discount === 0) {
-    const price = product.price.toString().split(".");
-    console.log(price);
-  } else {
-    const price = ((product.price * (100 - product.discount)) / 100)
-      .toString()
-      .split(".");
-    console.log(price);
-  }
-  return (
+
+  return loading ? (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        ref={scrollViewRef}
         automaticallyAdjustContentInsets={true}
         style={{ backgroundColor: Color.colorSuperLightGray }}
       >
@@ -97,7 +104,7 @@ const ProductInfo = ({ route }) => {
           <Image source={product.shopLogo} style={styles.shopLogo} />
         </View>
         <View style={styles.productNameContainer}>
-          <Text style={styles.productNameText}>{product.name}</Text>
+          <Text style={styles.productNameText}>{product.goodName}</Text>
           <View
             style={{
               height: screenHeight * 0.05,
@@ -110,14 +117,11 @@ const ProductInfo = ({ route }) => {
                 style={styles.isAvailableImage}
                 source={
                   product.count > 0
-                    ? require("../assets/confirmation.svg")
-                    : require("../assets/denial.svg")
+                    ? require("../../assets/confirmation.svg")
+                    : require("../../assets/denial.svg")
                 }
               />
-
-              <Text>
-                {product.count > 0 ? `В наявності ${product.count}` : "Немає"}
-              </Text>
+              <Text>{product.count > 0 ? "В наявності" : "Немає"}</Text>
             </View>
             <View style={styles.priceContainer}>
               {/* стара ціна */}
@@ -132,7 +136,7 @@ const ProductInfo = ({ route }) => {
                     },
                   ]}
                 >
-                  20
+                  {price[0]}
                 </Text>
                 <Text
                   style={[
@@ -144,7 +148,7 @@ const ProductInfo = ({ route }) => {
                     },
                   ]}
                 >
-                  19
+                  {price[1]}
                 </Text>
               </View>
               {/* нова ціна */}
@@ -159,7 +163,59 @@ const ProductInfo = ({ route }) => {
             </View>
           </View>
         </View>
-
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.title}>Опис та характеристики</Text>
+          <Text style={styles.descriptionText}>{product.description}</Text>
+          {/* {Object.entries(product.characteristics).map(([key, value]) => (
+            <View style={styles.characteristicsItemContainer}>
+              <Text style={styles.characteristicsKey}>{key}</Text>
+              <Text style={styles.characteristicsValue}>{value}</Text>
+            </View>
+          ))} */}
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Тип продукту</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.goodsTypeID}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Виробник</Text>
+            <Text style={styles.characteristicsValue}>{product.producer}</Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Країна</Text>
+            <Text style={styles.characteristicsValue}>{product.countryID}</Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Термін придатності</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.expiryDate}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Умови зберігання</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.storageCondition}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Склад</Text>
+            <Text style={styles.characteristicsValue}>
+              {product.composition}
+            </Text>
+          </View>
+          <View style={styles.characteristicsItemContainer}>
+            <Text style={styles.characteristicsKey}>Рейтинг</Text>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              {Array.from({ length: product.rating }).map((_, index) => (
+                <Image
+                  source={require("../../assets/Star.svg")}
+                  style={{ width: 20, height: 20, marginHorizontal: 5 }}
+                />
+              ))}
+            </View>
+          </View>
+        </View>
         <View style={styles.charContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -204,16 +260,6 @@ const ProductInfo = ({ route }) => {
             ))}
           </Swiper>
         </View>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.title}>Опис та характеристики</Text>
-          <Text style={styles.descriptionText}>{product.description}</Text>
-          {Object.entries(product.characteristics).map(([key, value]) => (
-            <View style={styles.characteristicsItemContainer}>
-              <Text style={styles.characteristicsKey}>{key}</Text>
-              <Text style={styles.characteristicsValue}>{value}</Text>
-            </View>
-          ))}
-        </View>
         <View style={styles.productOffersContainer}>
           <Text style={styles.title}>Ваші пропозиції</Text>
           <FlatList
@@ -225,6 +271,10 @@ const ProductInfo = ({ route }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
+  ) : (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
   );
 };
 
@@ -356,4 +406,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductInfo;
+export default ProductInfoAdmin;

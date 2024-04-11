@@ -99,7 +99,10 @@ const ModalProduct = ({
                 <Text style={styles.descriptionText}>{item.description}</Text>
               </View>
               <TouchableOpacity
-                onPress={() => console.log("Переходимо на сторінку продукту")}
+                onPress={() => {
+                  setModalVisible(false);
+                  navigator.navigate("ProductInfo", { id: item.goodID });
+                }}
                 style={styles.moreInfoButton}
               >
                 <Text style={styles.moreInfoText}>
