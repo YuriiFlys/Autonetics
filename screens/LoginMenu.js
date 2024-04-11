@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { CheckBox } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 
 const screenWidth = Dimensions.get("window").width;
@@ -25,30 +27,35 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleLogin = async () => {
-    // try {
-    //   const response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
-    //   const data = await response.json();
-    //   const userID= await AsyncStorage.getItem(email);
-    //   if (data.password === password) {
-    //     navigator.navigate("BottomMenu", { user: {...data,userID} , screen: "Home" });
-    //   } else {
-    //     setErrorMessage("Неправильний email або пароль");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   let errorMessage = "";
-    //   switch (error.code) {
-    //     default:
-    //       errorMessage = "Сталася помилка під час входу в систему";
-    //   }
-    //   setErrorMessage(errorMessage);
-    // }
-    if (isAdmin) {
-      navigator.navigate("BottomAdminMenu", { screen: "Home" });
-    } else {
-      navigator.navigate("BottomMenu", { screen: "Home" });
+    try {
+      let response;
+      if (isAdmin) {
+        response = await fetch(`http://23.100.50.204:8080/staff/byEmail/${email}`);
+      } else {
+        response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
+      }
+      const data = await response.json();
+      const userID= await AsyncStorage.getItem(email);
+      if (data.password === password) {
+        if (isAdmin) {
+          navigator.navigate("BottomAdminMenu", { user: {...data,userID} , screen: "Home" });
+        } else {
+          navigator.navigate("BottomMenu", { user: {...data,userID} , screen: "Home" });
+        }
+      } else {
+        setErrorMessage("Неправильний email або пароль");
+      }
+    } catch (error) {
+      console.error(error);
+      let errorMessage = "";
+      switch (error.code) {
+        default:
+          errorMessage = "Сталася помилка під час входу в систему";
+      }
+      setErrorMessage(errorMessage);
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
@@ -90,6 +97,17 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
           </View>
         </View>
       </TouchableWithoutFeedback>
+      <CheckBox
+        containerStyle={styles.adminCheckBox}
+        title={'Адмін'}
+        checked={isAdmin}
+        //when the checkbox is clicked, the value of isAdmin is changed and console.log checks if the value of isAdmin is changed
+        onPress={() => {
+          setIsAdmin(!isAdmin);
+          console.log(isAdmin);
+        }}
+        
+      />
       <Pressable style={styles.submit} onPress={handleLogin}>
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
@@ -110,17 +128,7 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
         />
       </Pressable>
       {/*Admin button*/}
-      <Pressable
-        style={styles.adminButton}
-        onPress={() => {
-          setIsAdmin(!isAdmin);
-          console.log(isAdmin);
-        }}
-      >
-        <Text style={styles.adminButtonText}>
-          {isAdmin ? "Адмін" : "Користувач"}
-        </Text>
-      </Pressable>
+      
     </KeyboardAvoidingView>
   );
 };
@@ -219,6 +227,12 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorLightCyan,
     justifyContent: "flex-start",
   },
+  adminCheckBox: {
+  backgroundColor: Color.colorLightCyan,
+  marginLeft: screenWidth * 0.05,
+  borderWidth: 0,
+  alignSelf:"center"
+  }
 });
 
 export default LoginMenu;
