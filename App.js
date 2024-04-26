@@ -10,6 +10,7 @@ import SalesScreen from "./screens/SalesScreen";
 import ProductInfo from "./screens/ProductInfo";
 import HistoryScreen from "./screens/HistoryScreen";
 import Employees from "./screens/Admin/Employees";
+import AddProductsScreen from "./screens/Admin/AddNewProduct";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SearchBarcode from "./screens/Admin/SearchByBarcode";
@@ -49,10 +50,19 @@ const App = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
+                name="AddProductsScreen"
+                component={AddProductsScreen}
+                options={{
+                  headerShown: true,
+                  title: "Добавити новий товар",
+                }}
+              />
+              <Stack.Screen
                 name="Signup"
                 component={SignupMenu}
                 options={{ headerShown: false }}
               />
+
               <Stack.Screen
                 name="ForgotPass"
                 component={ForgotPass}
@@ -94,6 +104,11 @@ const App = () => {
                       headerShown: true,
                       title: "Інформація про товар",
                     }}
+                  />
+                  <Stack.Screen
+                    name="AddProductsScreen"
+                    component={AddProductsScreen}
+                    options={{ headerShown: false }}
                   />
                 </>
               ) : (
