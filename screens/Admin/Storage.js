@@ -74,7 +74,7 @@ const Storage = () => {
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={() => {
-            console.log("+");
+            navigator.navigate("AddProductsScreen");
           }}
         >
           <Text style={styles.buttonSearch}>+</Text>

@@ -50,14 +50,6 @@ const App = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
-                name="AddProductsScreen"
-                component={AddProductsScreen}
-                options={{
-                  headerShown: true,
-                  title: "Добавити новий товар",
-                }}
-              />
-              <Stack.Screen
                 name="Signup"
                 component={SignupMenu}
                 options={{ headerShown: false }}
@@ -108,7 +100,10 @@ const App = () => {
                   <Stack.Screen
                     name="AddProductsScreen"
                     component={AddProductsScreen}
-                    options={{ headerShown: false }}
+                    options={{
+                      headerShown: true,
+                      title: "Добавити новий товар",
+                    }}
                   />
                 </>
               ) : (

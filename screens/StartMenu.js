@@ -46,7 +46,7 @@ const StartMenu = () => {
       </Pressable>
       <Pressable
         style={styles.signupButton}
-        onPress={() => navigation.navigate("AddProductsScreen")}
+        onPress={() => navigation.navigate("Signup")}
       >
         <View style={styles.signupButtonChild} />
         <Text style={styles.signUp}>Sign Up</Text>

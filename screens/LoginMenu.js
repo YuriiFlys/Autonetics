@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,17 +31,27 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
     try {
       let response;
       if (isAdmin) {
-        response = await fetch(`http://23.100.50.204:8080/staff/byEmail/${email}`);
+        response = await fetch(
+          `http://23.100.50.204:8080/staff/byEmail/${email}`
+        );
       } else {
-        response = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
+        response = await fetch(
+          `http://23.100.50.204:8080/client/byEmail/${email}`
+        );
       }
       const data = await response.json();
-      const userID= await AsyncStorage.getItem(email);
+      const userID = await AsyncStorage.getItem(email);
       if (data.password === password) {
         if (isAdmin) {
-          navigator.navigate("BottomAdminMenu", { user: {...data,userID} , screen: "Home" });
+          navigator.navigate("BottomAdminMenu", {
+            user: { ...data, userID },
+            screen: "Home",
+          });
         } else {
-          navigator.navigate("BottomMenu", { user: {...data,userID} , screen: "Home" });
+          navigator.navigate("BottomMenu", {
+            user: { ...data, userID },
+            screen: "Home",
+          });
         }
       } else {
         setErrorMessage("Неправильний email або пароль");
@@ -55,7 +66,6 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
       setErrorMessage(errorMessage);
     }
   };
-  
 
   return (
     <KeyboardAvoidingView
@@ -99,18 +109,17 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
       </TouchableWithoutFeedback>
       <CheckBox
         containerStyle={styles.adminCheckBox}
-        title={'Адмін'}
+        title={"Адмін"}
         checked={isAdmin}
         //when the checkbox is clicked, the value of isAdmin is changed and console.log checks if the value of isAdmin is changed
         onPress={() => {
           setIsAdmin(!isAdmin);
           console.log(isAdmin);
         }}
-        
       />
-      <Pressable style={styles.submit} onPress={handleLogin}>
+      <TouchableOpacity style={styles.submit} onPress={handleLogin}>
         <Text style={styles.submitText}>Submit</Text>
-      </Pressable>
+      </TouchableOpacity>
       <Text
         style={styles.forgotPassword}
         onPress={() => navigator.navigate("ForgotPass")}
@@ -128,7 +137,6 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
         />
       </Pressable>
       {/*Admin button*/}
-      
     </KeyboardAvoidingView>
   );
 };
@@ -228,11 +236,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   adminCheckBox: {
-  backgroundColor: Color.colorLightCyan,
-  marginLeft: screenWidth * 0.05,
-  borderWidth: 0,
-  alignSelf:"center"
-  }
+    backgroundColor: Color.colorLightCyan,
+    marginLeft: screenWidth * 0.05,
+    borderWidth: 0,
+    alignSelf: "center",
+  },
 });
 
 export default LoginMenu;
