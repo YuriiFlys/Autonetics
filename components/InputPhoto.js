@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
   containerImage: {
     height: "33%",
     width: 0.9 * screenWidth,
-    borderColor: Color.colorLightGray,
-    borderWidth: 2,
+    borderColor: Color.colorDarkBlue,
+    borderWidth: 1,
     borderRadius: 16,
     flexDirection: "row",
   },

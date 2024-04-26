@@ -28,8 +28,10 @@ const InputField = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
+    // width: "90%",
     padding: 20,
+    weight: "100%",
+    // height: "100%",
   },
   text: {
     fontFamily: FontFamily.CommissioneMedium,
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
+    weight: "100%",
     borderColor: Color.colorDarkBlue,
     borderWidth: 1,
     width: "100%",

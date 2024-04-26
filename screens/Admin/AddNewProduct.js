@@ -17,7 +17,7 @@ const screenHeight = Dimensions.get("window").height;
 const AddProductsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ weight: screenWidth * 0.9 }}>
         <InputPhoto />
         <InputField />
         <InputField />
@@ -38,13 +38,21 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorWhite,
   },
   button: {
-    width: "90%",
+    width: "100%",
     height: 50,
     backgroundColor: Color.colorDarkBlue,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
     marginVertical: 10,
+    // height: 40,
+    // // weight: "100%",
+    // // borderColor: Color.colorDarkBlue,
+    // borderWidth: 1,
+    // // width: "100%",
+    // // borderRadius: 5,
+    // // padding: 10,
+    // marginVertical: 10,
   },
   buttontext: {
     fontFamily: FontFamily.CommissioneMedium,
