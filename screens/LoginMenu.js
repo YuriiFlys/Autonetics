@@ -13,49 +13,50 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { CheckBox } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
+import { useUser } from "./UserContext";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const LoginMenu = ({ isAdmin, setIsAdmin }) => {
+const LoginMenu = ({}) => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
+  const {updateUser } = useUser(); 
 
   const handleLogin = async () => {
     try {
-      let response;
-      if (isAdmin) {
-        response = await fetch(
-          `http://23.100.50.204:8080/staff/byEmail/${email}`
-        );
-      } else {
-        response = await fetch(
-          `http://23.100.50.204:8080/client/byEmail/${email}`
-        );
-      }
-      const data = await response.json();
-      const userID = await AsyncStorage.getItem(email);
-      if (data.password === password) {
-        if (isAdmin) {
-          navigator.navigate("BottomAdminMenu", {
-            user: { ...data, userID },
-            screen: "Home",
-          });
-        } else {
-          navigator.navigate("BottomMenu", {
-            user: { ...data, userID },
-            screen: "Home",
-          });
+      const staffResponse = await fetch(`http://23.100.50.204:8080/staff/byEmail/${email}`);
+      const staffData = await staffResponse.json();
+      
+      if (!staffResponse.ok) {
+        const clientResponse = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
+        const clientData = await clientResponse.json();
+        
+        if (!clientResponse.ok) {
+          setErrorMessage("Неправильний email або пароль");
+          return;
         }
-      } else {
-        setErrorMessage("Неправильний email або пароль");
+        
+        if (clientData.password !== password) {
+          setErrorMessage("Неправильний email або пароль");
+          return;
+        }
+        updateUser({ ...clientData });
+        navigator.navigate("BottomMenu", { screen: "Home" });
+        return;
       }
+      
+      if (staffData.password !== password) {
+        setErrorMessage("Неправильний email або пароль");
+        return;
+      }
+      updateUser({ ...staffData });
+      navigator.navigate("BottomAdminMenu", { screen: "Home" });
     } catch (error) {
       console.error(error);
       let errorMessage = "";
@@ -66,6 +67,7 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
       setErrorMessage(errorMessage);
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
@@ -107,16 +109,6 @@ const LoginMenu = ({ isAdmin, setIsAdmin }) => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-      <CheckBox
-        containerStyle={styles.adminCheckBox}
-        title={"Адмін"}
-        checked={isAdmin}
-        //when the checkbox is clicked, the value of isAdmin is changed and console.log checks if the value of isAdmin is changed
-        onPress={() => {
-          setIsAdmin(!isAdmin);
-          console.log(isAdmin);
-        }}
-      />
       <TouchableOpacity style={styles.submit} onPress={handleLogin}>
         <Text style={styles.submitText}>Submit</Text>
       </TouchableOpacity>
@@ -235,12 +227,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorLightCyan,
     justifyContent: "flex-start",
   },
-  adminCheckBox: {
-    backgroundColor: Color.colorLightCyan,
-    marginLeft: screenWidth * 0.05,
-    borderWidth: 0,
-    alignSelf: "center",
-  },
+  
 });
 
 export default LoginMenu;

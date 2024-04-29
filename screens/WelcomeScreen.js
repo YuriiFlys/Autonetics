@@ -15,25 +15,37 @@ import {
   Keyboard,
 } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
+import { useUser } from "./UserContext";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const WelcomeScreen = () => {
   const route = useRoute();
-  const user = route.params?.user;
+  const {user, updateUser} = useUser();
   const [password, setPassword] = React.useState("");
   const [repeatPassword, setRepeatPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
   const [isSelected, setSelection] = React.useState(false);
   const repeatPasswordRef = React.useRef();
   const navigator = useNavigation();
+  React.useEffect(() => {
+    console.log(user);
+  }, []);
   const handleFinalRegister = async () => {
     if (password !== repeatPassword) {
       setErrorMessage("Паролі не співпадають");
       return;
     }
-    const email = user.Email;
-    const phoneNumber = user.PhoneNumber;
+    const newClient = {
+      ...user,
+      firstName: "Не",
+      lastName: "Вказано",
+      gender: "Не вказано",
+      birthDate: Date.now(),
+      password: password,
+    }
+    const email = user.email;
+    const phoneNumber = user.phoneNumber;
     try {
       const response = await fetch(`http://23.100.50.204:8080/client`, {
         method: "POST",
@@ -41,6 +53,10 @@ const WelcomeScreen = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          FirstName: newClient.firstName,
+          LastName: newClient.lastName,
+          Gender: newClient.gender,
+          BirthDate: newClient.birthDate,
           Email: email,
           PhoneNumber: phoneNumber,
           Password: password,
@@ -54,11 +70,8 @@ const WelcomeScreen = () => {
       const data = await response.json();
       const clientId = data.clientId;
       await AsyncStorage.setItem(email, clientId);
-      const response2 = await fetch(
-        `http://23.100.50.204:8080/client/${clientId}`
-      );
-      const user = await response2.json();
-      navigator.navigate("BottomMenu", { user: user, screen: "Home" });
+      updateUser({...user, firstName: newClient.firstName, lastName: newClient.lastName, gender: newClient.gender, birthDate: newClient.birthDate, password: password});
+      navigator.navigate("BottomMenu", {screen: "Home" });
     } catch (error) {
       console.error(error);
       setErrorMessage("Сталася помилка під час реєстрації");

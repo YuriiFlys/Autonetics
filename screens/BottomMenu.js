@@ -14,11 +14,11 @@ const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
 const PromotionsStack = createStackNavigator();
 
-function ProfileStackScreen({ user }) {
+function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen name="ProfileHome" options={{ headerShown: false }}>
-        {(props) => <Profile {...props} user={user} />}
+        {() => <Profile />}
       </ProfileStack.Screen>
       <ProfileStack.Screen
         name="UserProfile"
@@ -28,7 +28,7 @@ function ProfileStackScreen({ user }) {
           title: "Особистий кабінет",
         }}
       >
-        {(props) => <UserProfile {...props} user={user} />}
+        {() => <UserProfile />}
       </ProfileStack.Screen>
       <ProfileStack.Screen
         name="Settings"
@@ -38,11 +38,12 @@ function ProfileStackScreen({ user }) {
           title: "Налаштування",
         }}
       >
-        {(props) => <Settings {...props} user={user} />}
+        {() => <Settings />}
       </ProfileStack.Screen>
     </ProfileStack.Navigator>
   );
 }
+
 function PromotionsStackScreen() {
   return (
     <PromotionsStack.Navigator>
@@ -65,11 +66,10 @@ function PromotionsStackScreen() {
 }
 
 export default function BottomMenu({ route }) {
-  const user = route.params?.user;
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ size }) => {
           let iconName;
 
           if (route.name === "Home") {
@@ -92,10 +92,10 @@ export default function BottomMenu({ route }) {
       })}
     >
       <Tab.Screen name="Home" options={{ headerShown: false }}>
-        {(props) => <MyTabs {...props} user={user} />}
+        {() => <MyTabs />}
       </Tab.Screen>
       <Tab.Screen name="Promotions" options={{ headerShown: false }}>
-        {(props) => <PromotionsStackScreen {...props} />}
+        {() => <PromotionsStackScreen />}
       </Tab.Screen>
       <Tab.Screen
         name="Cart"
@@ -103,7 +103,7 @@ export default function BottomMenu({ route }) {
         options={{ headerShown: false }}
       />
       <Tab.Screen name="Profile" options={{ headerShown: false }}>
-        {(props) => <ProfileStackScreen {...props} user={user} />}
+        {() => <ProfileStackScreen />}
       </Tab.Screen>
     </Tab.Navigator>
   );
