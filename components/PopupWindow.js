@@ -62,7 +62,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
   return (
     <View style={styles.bottomsheetcontainer}>
       <View style={styles.bottomsheet_header_container}>
-        <Text style={styles.textCartContainer}>Ваша Козина</Text>
+        <Text style={styles.textCartContainer}>Ваша Корзина</Text>
       </View>
       <ScrollView
         ref={scrollViewRef}

@@ -14,7 +14,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const SalesScreen = () => {
-  let list = []; // воно потрібно але я хз як це забрати
+  let list = [];
   const [data, setData] = useState([]);
   shop = {
     name: "Магазин АТБ",
@@ -116,7 +116,7 @@ const SalesScreen = () => {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.payNameScreen}>Опалата</Text>
+              <Text style={styles.payNameScreen}>Оплата</Text>
               <View style={styles.shopInfoContainer}>
                 <View style={styles.shopMainInfoContainer}>
                   <Image source={shop.imageSource} style={styles.shopImage} />
