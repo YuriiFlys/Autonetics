@@ -9,9 +9,12 @@ import {
 import { Image } from "expo-image";
 import Logo from "../../components/Logo";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
-import UserComponent from "../../components/User";
 import GrayLine from "../../components/GrayLine";
 import { useNavigation } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
+import { useUser } from "../UserContext";
+import User from "../../components/User";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -29,53 +32,55 @@ const ButtonMenu = ({ image, name, navig }) => {
   );
 };
 
-const UserAcount = (props) => {
-  const user = props.user;
+const UserAcount = ({}) => {
+  const { user } = useUser();
   const navigator = useNavigation();
-  const [userName, setUserName] = React.useState("");
-  const [profileImage, setImage] = React.useState(null);
-  React.useEffect(() => {
-    if (user.firstName === null || user.lastName === null) {
-      setUserName(" ");
-    } else {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    if (user && user.firstName && user.lastName) {
       setUserName(user.firstName + " " + user.lastName);
+    } else {
+      setUserName(" ");
     }
   }, [user]);
   
   return (
     <SafeAreaView style={styles.container}>
-      <Logo name="Особистий кабінет" />
-      <UserComponent
-        userName={userName}
-        profileImage={profileImage}
-        description={"Директор"}
-        imageSize={0.25}
-      />
-      <GrayLine style={{ marginTop: 10 }} />
-      <ButtonMenu
-        image={require("../../assets/Profile/user.svg")}
-        name={"Особисті дані"}
-        navig={() => navigator.navigate("UserProfile")}
-      />
-      <GrayLine />
-      <ButtonMenu
-        image={require("../../assets/Profile/history.svg")}
-        name={"Історія"}
-        navig={() => navigator.navigate("Cart", { screen: "Історія" })}
-      />
-      <GrayLine />
-      <ButtonMenu
-        image={require("../../assets/Profile/help.svg")}
-        name={"Допомога"}
-        navig={() => console.log("Допомога")}
-      />
-      <GrayLine />
-      <ButtonMenu
-        image={require("../../assets/Profile/Settings.svg")}
-        name={"Налаштування"}
-        navig={() => navigator.navigate("Settings")}
-      />
-      <GrayLine />
+      <ScrollView contentContainerStyle={styles.scrollviewcontainer}>
+        <Logo name="Особистий кабінет" />
+        <User
+          userName={userName}
+          profileImage={user ? user.profileImage : null}  
+          description={"Директор"}
+          imageSize={0.25}
+        />
+        <GrayLine style={{ marginTop: 10 }} />
+        <ButtonMenu
+          image={require("../../assets/Profile/user.svg")}
+          name={"Особисті дані"}
+          navig={() => navigator.navigate("UserProfile")}
+        />
+        <GrayLine />
+        <ButtonMenu
+          image={require("../../assets/Profile/history.svg")}
+          name={"Історія"}
+          navig={() => navigator.navigate("Cart", { screen: "Історія" })}
+        />
+        <GrayLine />
+        <ButtonMenu
+          image={require("../../assets/Profile/help.svg")}
+          name={"Допомога"}
+          navig={() => console.log("Допомога")}
+        />
+        <GrayLine />
+        <ButtonMenu
+          image={require("../../assets/Profile/Settings.svg")}
+          name={"Налаштування"}
+          navig={() => navigator.navigate("Settings")}
+        />
+        <GrayLine />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -84,6 +89,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.colorWhite,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  scrollviewcontainer: {
+    flex: 1,
     flexDirection: "column",
     alignItems: "center",
   },

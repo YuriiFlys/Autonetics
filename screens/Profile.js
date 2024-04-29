@@ -13,14 +13,15 @@ import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
 import UserComponent from "../components/User";
+import { useUser } from "./UserContext";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 
 
-const Profile = (props) => {
-  const user = props.user;
+const Profile = () => {
+  const {user} = useUser();
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);

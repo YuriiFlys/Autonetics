@@ -24,13 +24,14 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
+import { useUser } from "./UserContext";
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const UserProfile = (props, isAdmin) => {
-  const userData = props.user;
+const UserProfile = () => {
+  const { user, updateUser } = useUser();
   const navigator = useNavigation();
   const [initials, setInitials] = useState("");
   const fullnameRef = React.useRef();
@@ -43,8 +44,8 @@ const UserProfile = (props, isAdmin) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingContacts, setIsEditingContacts] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [user, setUser] = useState(null);
-  
+
+
   function getInitials(name) {
     try {
       const words = name.split(" ");
@@ -55,17 +56,19 @@ const UserProfile = (props, isAdmin) => {
     }
   }
   useEffect(() => {
-    setGender(userData.gender || "Не вказано");
-    setDate(new Date(userData.birthDate || Date.now()));
-    phoneRef.current = userData.phoneNumber ? userData.phoneNumber.substring(4) : "Не вказано";
-  emailRef.current = userData.email || "";
-  fullnameRef.current = userData.firstName && userData.lastName ? userData.firstName + " " + userData.lastName : "Не вказано";
-  if (fullnameRef.current==="Не вказано") {
-    setInitials(" ");
-  } else {
-    setInitials(getInitials(fullnameRef.current));
+    if(user){
+      setGender(user.gender || "Не вказано");
+      setDate(new Date(user.birthDate || Date.now()));
+      phoneRef.current = user.phoneNumber ? user.phoneNumber.substring(4) : "Не вказано";
+    emailRef.current = user.email || "";
+    fullnameRef.current = user.firstName && user.lastName ? user.firstName + " " + user.lastName : "Не вказано";
+    if (fullnameRef.current==="Не вказано") {
+      setInitials(" ");
+    } else {
+      setInitials(getInitials(fullnameRef.current));
+    }
   }
-  }, [userData]);
+  }, [user]);
 
   
 
@@ -75,7 +78,7 @@ const UserProfile = (props, isAdmin) => {
       "email":emailRef.current,
     };
     try{
-      const response = await fetch(`http://23.100.50.204:8080/client/${userData.userID}`, {
+      const response = await fetch(`http://23.100.50.204:8080/client/}`, {
         method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -94,6 +97,30 @@ const UserProfile = (props, isAdmin) => {
     setIsEditingContacts(false);
   }, [phoneRef, emailRef]);
 
+  const handleFullnameSave = useCallback(async() => {
+    const UpdatedData={
+      "firstName":fullnameRef.current.split(" ")[0],
+      "lastName":fullnameRef.current.split(" ")[1],
+    };
+    try{
+      const response = await fetch(`http://23.100.50.204:8080/client/57`, {
+        method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(UpdatedData),
+    });
+    if (!response.ok) {
+      throw new Error('HTTP status ' + response.status);
+    }
+    updateUser({ ...user, firstName: UpdatedData.firstName, lastName: UpdatedData.lastName });
+    }
+    catch (error) {
+      console.error(error);
+    }
+    setIsEditing(false);
+  }, [fullnameRef]);
+
   const handleMainSave = useCallback(async() => {  
     const UpdatedData={
       "firstName":fullnameRef.current.split(" ")[0],
@@ -102,7 +129,7 @@ const UserProfile = (props, isAdmin) => {
       "gender":gender
     };
     try{
-      const response = await fetch(`http://23.100.50.204:8080/client/${userData.userID}`, {
+      const response = await fetch(`http://23.100.50.204:8080/client/${user.userID}`, {
         method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -140,9 +167,9 @@ const UserProfile = (props, isAdmin) => {
   
 
   const genderlist = [
-    { label: "Чоловіча", value: "Male" },
-    { label: "Жіноча", value: "Female" },
-    { label: "Не вказано", value: "null" },
+    { label: "Чоловіча", value: "Чоловіча" },
+    { label: "Жіноча", value: "Жіноча" },
+    { label: "Не вказано", value: "Не вказано" },
   ];
 
   const showDatePicker = () => {
@@ -251,7 +278,7 @@ const UserProfile = (props, isAdmin) => {
             {isEditing && (
               <TouchableOpacity
                 styles={styles.saveIcon}
-                onPress={handleMainSave}
+                onPress={handleFullnameSave}
               >
                 <Image
                   style={styles.saveIcon}
@@ -360,28 +387,31 @@ const UserProfile = (props, isAdmin) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <SafeAreaView style={styles.container}>
-        <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
-          <View style={styles.scrollView}>
-            <View style={styles.userIcon}>
-              {image ? (
-                <Image source={{ uri: image }} style={styles.userIconImage} />
-              ) : (
-                <Text style={styles.userIconText}>{initials}</Text>
-              )}
+      
+        <SafeAreaView style={styles.container}>
+          <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true} 
+          >
+            <View style={styles.scrollView}>
+              <View style={styles.userIcon}>
+                {image ? (
+                  <Image source={{ uri: image }} style={styles.userIconImage} />
+                ) : (
+                  <Text style={styles.userIconText}>{initials}</Text>
+                )}
+              </View>
+              <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
+              <ContactsWidget
+                widgetname={"Контакти"}
+                phone={"+380123456789"}
+                email={emailRef.current}
+              />
+              <SignOut />
             </View>
-            <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
-            <ContactsWidget
-              widgetname={"Контакти"}
-              phone={"+380123456789"}
-              email={emailRef.current}
-            />
-            <SignOut />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
     </KeyboardAvoidingView>
   );
+  
 };
 const styles = StyleSheet.create({
   container: {
