@@ -17,18 +17,16 @@ import { LogBox } from "react-native";
 import ProductInfoAdmin from "./screens/Admin/ProductInfoAdmin";
 import { UserProvider } from "./screens/UserContext";
 
-
+import AddProducts from "./screens/Admin/AddProducts";
 
 const Stack = createNativeStackNavigator();
 LogBox.ignoreAllLogs();
 const App = () => {
-
   const [hideSplashScreen] = React.useState(true);
   return (
     <>
-    <UserProvider>
-      <NavigationContainer>
-          
+      <UserProvider>
+        <NavigationContainer>
           {hideSplashScreen ? (
             <Stack.Navigator
               screenOptions={{
@@ -47,6 +45,14 @@ const App = () => {
                 name="Signup"
                 component={SignupMenu}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AddProducts"
+                component={AddProducts}
+                options={{
+                  headerShown: true,
+                  title: "Замовлення товарів",
+                }}
               />
 
               <Stack.Screen
@@ -110,10 +116,9 @@ const App = () => {
                   title: "Історія",
                 }}
               />
-              
             </Stack.Navigator>
           ) : null}
-      </NavigationContainer>
+        </NavigationContainer>
       </UserProvider>
     </>
   );
