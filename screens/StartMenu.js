@@ -20,12 +20,15 @@ const StartMenu = () => {
       setFontsLoaded(true);
     }
     loadFonts();
-    console.log("startmenu");
-    const token = AsyncStorage.getItem("token");
-    if (!token) {
-    } else {
-      navigation.navigate("BottomMenu");
+    async function loadTocken() {
+      const token = await AsyncStorage.getItem("token");
+      console.log("token", token);
+      if (!token) {
+      } else {
+        navigation.navigate("BottomMenu");
+      }
     }
+    loadTocken();
   }, []);
 
   if (!fontsLoaded) {

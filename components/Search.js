@@ -8,17 +8,26 @@ import {
   Text,
 } from "react-native";
 import { Color } from "../GlobalStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+import { useNavigation } from "@react-navigation/native";
 
 const Search = () => {
+  const navigator = useNavigation();
   return (
     <View style={{ flexDirection: "row", marginTop: 20 }}>
       <TextInput style={styles.field} />
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => {
-          console.log("Пошук");
+        onPress={async () => {
+          const token1 = await AsyncStorage.getItem("token");
+          console.log("Token before removal:", token1);
+          await AsyncStorage.clear();
+          console.log("Token removed");
+          const token = await AsyncStorage.getItem("token");
+          console.log("Token after removal:", token);
+          navigator.navigate("StartMenu");
         }}
       >
         <Text style={styles.buttonSearch}>Пошук</Text>
