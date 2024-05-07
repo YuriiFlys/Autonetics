@@ -5,6 +5,8 @@ import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { set } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -18,6 +20,12 @@ const StartMenu = () => {
       setFontsLoaded(true);
     }
     loadFonts();
+    console.log("startmenu");
+    const token = AsyncStorage.getItem("token");
+    if (!token) {
+    } else {
+      navigation.navigate("BottomMenu");
+    }
   }, []);
 
   if (!fontsLoaded) {
@@ -46,7 +54,7 @@ const StartMenu = () => {
       </Pressable>
       <Pressable
         style={styles.signupButton}
-        onPress={() => navigation.navigate("Signup")}
+        onPress={() => navigation.navigate("AddProducts")}
       >
         <View style={styles.signupButtonChild} />
         <Text style={styles.signUp}>Sign Up</Text>

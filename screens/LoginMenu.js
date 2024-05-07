@@ -13,9 +13,11 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { useUser } from "./UserContext";
+import { login } from "../api/user_api";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,48 +28,16 @@ const LoginMenu = ({}) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  const {updateUser } = useUser(); 
+  const { updateUser } = useUser();
 
   const handleLogin = async () => {
-    try {
-      const staffResponse = await fetch(`http://23.100.50.204:8080/staff/byEmail/${email}`);
-      const staffData = await staffResponse.json();
-      
-      if (!staffResponse.ok) {
-        const clientResponse = await fetch(`http://23.100.50.204:8080/client/byEmail/${email}`);
-        const clientData = await clientResponse.json();
-        
-        if (!clientResponse.ok) {
-          setErrorMessage("Неправильний email або пароль");
-          return;
-        }
-        
-        if (clientData.password !== password) {
-          setErrorMessage("Неправильний email або пароль");
-          return;
-        }
-        updateUser({ ...clientData });
-        navigator.navigate("BottomMenu", { screen: "Home" });
-        return;
+    login({ email: email, password: password }).then((response) => {
+      if (response.status == 200) {
+        AsyncStorage.setItem("token", response.data.token);
+        navigator.navigate("BottomMenu");
       }
-      
-      if (staffData.password !== password) {
-        setErrorMessage("Неправильний email або пароль");
-        return;
-      }
-      updateUser({ ...staffData });
-      navigator.navigate("BottomAdminMenu", { screen: "Home" });
-    } catch (error) {
-      console.error(error);
-      let errorMessage = "";
-      switch (error.code) {
-        default:
-          errorMessage = "Сталася помилка під час входу в систему";
-      }
-      setErrorMessage(errorMessage);
-    }
+    });
   };
-  
 
   return (
     <KeyboardAvoidingView
@@ -227,7 +197,6 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorLightCyan,
     justifyContent: "flex-start",
   },
-  
 });
 
 export default LoginMenu;

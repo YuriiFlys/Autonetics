@@ -18,10 +18,8 @@ import { useUser } from "./UserContext";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
-
 const Profile = () => {
-  const {user} = useUser();
+  const { user } = useUser();
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
@@ -50,8 +48,12 @@ const Profile = () => {
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
       <View style={styles.mainContainer}>
-        <UserComponent userName={userName} profileImage={profileImage} imageSize={0.25} />
-        <GrayLine style={{marginTop:10}} />
+        <UserComponent
+          userName={userName}
+          profileImage={profileImage}
+          imageSize={0.25}
+        />
+        <GrayLine style={{ marginTop: 10 }} />
         <ButtonMenu
           image={require("../assets/Profile/user.svg")}
           name={"Особисті дані"}
