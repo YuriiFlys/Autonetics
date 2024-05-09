@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
-import Slider from "react-native-slider";
+import Slider from "@react-native-community/slider";
 import RNPickerSelect from "react-native-picker-select";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
