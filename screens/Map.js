@@ -126,7 +126,7 @@ const Map = () => {
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsUserLocation={true}
         initialRegion={{

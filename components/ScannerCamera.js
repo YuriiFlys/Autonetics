@@ -40,7 +40,7 @@ const Scanner = ({
   const [scanned, setScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
-  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
+  // const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   useEffect(() => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.getCameraPermissionsAsync();
@@ -49,7 +49,7 @@ const Scanner = ({
 
     getCameraPermissions();
     if (isFocused) {
-      setFlashMode(Camera.Constants.FlashMode.off);
+      // setFlashMode(Camera.Constants.FlashMode.off);
     }
     setScanned(false);
     setTimeout(() => {
@@ -80,20 +80,20 @@ const Scanner = ({
     return <Text>No access to camera</Text>;
   }
 
-  const toggleFlashlight = () => {
-    if (flashMode === Camera.Constants.FlashMode.off) {
-      setFlashMode(Camera.Constants.FlashMode.torch);
-    } else {
-      setFlashMode(Camera.Constants.FlashMode.off);
-    }
-  };
+  // const toggleFlashlight = () => {
+  //   if (flashMode === Camera.Constants.FlashMode.off) {
+  //     setFlashMode(Camera.Constants.FlashMode.torch);
+  //   } else {
+  //     setFlashMode(Camera.Constants.FlashMode.off);
+  //   }
+  // };
   return (
     <View style={styles.container_c}>
       {isFocused && (
         <Camera
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.scannerwindow}
-          flashMode={flashMode}
+          // flashMode={flashMode}
         >
           <SafeAreaView style={[styles.buttonCameraContainer, styleflashlight]}>
             <TouchableOpacity
