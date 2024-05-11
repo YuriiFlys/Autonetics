@@ -13,23 +13,34 @@ import { useNavigation } from "@react-navigation/native";
 import Logo from "../components/Logo";
 import GrayLine from "../components/GrayLine";
 import UserComponent from "../components/User";
-import { useUser } from "./UserContext";
+import { jwtDecode } from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "react-native-axios";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Profile = () => {
-  const { user } = useUser();
+  
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
-  React.useEffect(() => {
-    if (user.firstName === null || user.lastName === null) {
-      setUserName(" ");
-    } else {
-      setUserName(user.firstName + " " + user.lastName);
-    }
-  }, [user]);
+  React.useEffect(async () => {
+    const token = await AsyncStorage.getItem("token");
+    const decoded_jwt = jwtDecode(token);
+    axios.get(`http://localhost:3000/api/clients/by-email/${decoded_jwt.email}`).then((res) => {
+      const user = res.data;
+      if (user.firstName === null || user.lastName === null) {
+        setUserName(" ");
+      } else {
+        setUserName(user.firstName + " " + user.lastName);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}, [userName]);
+
 
   const ButtonMenu = ({ image, name, navig }) => {
     return (
