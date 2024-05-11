@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
   useSharedValue,
@@ -20,51 +22,86 @@ import * as Location from "expo-location";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const data = [
-  {
-    id: 1,
-    name: "АШАН",
-    street: "Вул Університетська, 1",
-    distance: "200м",
-    imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    coordinate: {
-      latitude: 49.842606,
-      longitude: 24.025363,
-    },
-  },
-  {
-    id: 2,
-    name: "Магазин Атб",
-    street: "Вулиця Шевченка, 2а",
-    distance: "500м",
-    imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    coordinate: {
-      latitude: 49.839426,
-      longitude: 24.022695,
-    },
-  },
-  {
-    id: 3,
-    name: "Хата Тімліда",
-    street: "Вулиця Варшавська,201А",
-    distance: "100м",
-    imageSource: require("../assets/logoAutonetics.png"),
-    coordinate: {
-      latitude: 49.869481,
-      longitude: 24.015616,
-    },
-  },
-];
+// const data = [
+//   {
+//     id: 1,
+//     name: "АШАН",
+//     street: "Вул Університетська, 1",
+//     distance: "200м",
+//     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+//     coordinate: {
+//       latitude: 49.842606,
+//       longitude: 24.025363,
+//     },
+//   },
+//   {
+//     id: 2,
+//     name: "Магазин Атб",
+//     street: "Вулиця Шевченка, 2а",
+//     distance: "500м",
+//     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+//     coordinate: {
+//       latitude: 49.839426,
+//       longitude: 24.022695,
+//     },
+//   },
+//   {
+//     id: 3,
+//     name: "Хата Тімліда",
+//     street: "Вулиця Варшавська,201А",
+//     distance: "100м",
+//     imageSource: require("../assets/logoAutonetics.png"),
+//     coordinate: {
+//       latitude: 49.869481,
+//       longitude: 24.015616,
+//     },
+//   },
+// ];
 
 const Map = () => {
   const navigation = useNavigation();
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState({
+    latitude: 49.839426,
+    longitude: 24.022695,
+  });
+  const [data, setData] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const translateY = useSharedValue(screenHeight);
   const mapRef = useRef(null);
+  useEffect(() => {
+    handleLoadShop();
+  }, []);
+  const handleLoadShop = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`http://23.100.50.204:8080/api/shops`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const responseData = await response.json();
+      const newData = responseData.map((item) => ({
+        ...item,
+        imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+        distance: "500м",
+      }));
+      console.log("newData from Map", newData);
+      setData(newData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     getLocation();
+    const intervalId = setInterval(() => {
+      getLocation();
+    }, 60 * 1000); // кожну хвивлину оновлюємо місцезнаходження
+
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -126,12 +163,11 @@ const Map = () => {
   return (
     <View style={styles.container}>
       <MapView
-        // provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsUserLocation={true}
         initialRegion={{
-          latitude: userLocation?.latitude || 0,
-          longitude: userLocation?.longitude || 0,
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
@@ -140,7 +176,10 @@ const Map = () => {
         {data.map((place) => (
           <Marker
             key={place.id}
-            coordinate={place.coordinate}
+            coordinate={{
+              latitude: place.address.latitude,
+              longitude: place.address.longitude,
+            }}
             onPress={() => handleMarkerPress(place)}
           />
         ))}
@@ -151,7 +190,7 @@ const Map = () => {
           <Image source={selectedPlace.imageSource} style={styles.image} />
           <View style={styles.textContainer}>
             <Text style={styles.shopName}>{selectedPlace.name}</Text>
-            <Text style={styles.street}>{selectedPlace.street}</Text>
+            <Text style={styles.street}>{selectedPlace.address.name}</Text>
           </View>
           <View>
             <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
@@ -164,7 +203,6 @@ const Map = () => {
         </Animated.View>
       )}
       <TouchableOpacity style={styles.centerButton} onPress={centerMapOnUser}>
-        {/* <Text style={{ color: "#fff" }}>Центрувати карту</Text> */}
         <Image
           source={require("../assets/gps.svg")}
           style={{ width: "100%", height: "100%" }}

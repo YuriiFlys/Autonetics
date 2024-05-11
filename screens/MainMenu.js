@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,72 +6,60 @@ import {
   Image,
   Dimensions,
   FlatList,
-  TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import GrayLine from "../components/GrayLine";
 import Search from "../components/Search";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const MainMenu = () => {
   const navigator = useNavigation();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
   const keyExtractor = (item, index) => index.toString();
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await handleLoadShop();
+      setLoading(false);
+    };
+    loadData();
+  }, []);
 
-  const data = [
-    {
-      id: 1,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-    {
-      id: 2,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-    {
-      id: 3,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-    {
-      id: 4,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-    {
-      id: 5,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-    {
-      id: 6,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-    {
-      id: 7,
-      name: "Магазин Атб",
-      street: "Вулиця Шевченка, 2а",
-      distance: "500м",
-      imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-    },
-  ];
+  const handleLoadShop = async () => {
+    setIsRefreshing(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`http://23.100.50.204:8080/api/shops`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const responseData = await response.json();
+      const newData = responseData.map((item) => ({
+        ...item,
+        imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+        distance: "500м",
+      }));
+      console.log(newData);
+      setData(newData);
+      setIsRefreshing(false);
+    } catch (error) {
+      console.error(error);
+      setIsRefreshing(false);
+    }
+  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -84,7 +72,7 @@ const MainMenu = () => {
       <Image source={item.imageSource} style={styles.image} />
       <View style={styles.textContainer}>
         <Text style={styles.shopName}>{item.name}</Text>
-        <Text style={styles.street}>{item.street}</Text>
+        <Text style={styles.street}>{item.address.name}</Text>
       </View>
       <Text style={styles.distanceText}>{item.distance}</Text>
     </TouchableOpacity>
@@ -94,14 +82,22 @@ const MainMenu = () => {
     <View style={styles.container}>
       <Search />
       <GrayLine style={{ marginTop: 20 }} />
-      <FlatList
-        data={data}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        style={styles.shopContainer}
-        refreshing={false}
-        onRefresh={() => console.log("refresh")}
-      />
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          style={styles.shopContainer}
+          refreshing={isRefreshing}
+          onRefresh={handleLoadShop}
+        />
+      )}
     </View>
   );
 };
