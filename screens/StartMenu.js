@@ -19,16 +19,32 @@ const StartMenu = () => {
       await Fonts();
       setFontsLoaded(true);
     }
-    loadFonts();
-    async function loadTocken() {
+
+    async function loadToken() {
       const token = await AsyncStorage.getItem("token");
       console.log("token", token);
+
       if (!token) {
+        await AsyncStorage.clear();
       } else {
-        navigation.navigate("BottomMenu");
+        const isTokenExpired = () => {
+          const decodedToken = jwtDecode(token);
+          const currentTime = Date.now() / 1000;
+          console.log("decodedToken.exp", decodedToken.exp);
+          console.log("currentTime", currentTime);
+          return decodedToken.exp < currentTime;
+        };
+
+        if (isTokenExpired()) {
+          await AsyncStorage.clear();
+        } else {
+          navigation.navigate("BottomMenu");
+        }
       }
     }
-    loadTocken();
+
+    loadFonts();
+    loadToken();
   }, []);
 
   if (!fontsLoaded) {
