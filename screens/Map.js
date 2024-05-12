@@ -88,7 +88,6 @@ const Map = () => {
         imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
         distance: "500м",
       }));
-      console.log("newData from Map", newData);
       setData(newData);
     } catch (error) {
       console.error(error);

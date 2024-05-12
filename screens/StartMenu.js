@@ -5,8 +5,8 @@ import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import Fonts from "../GlobalStyles";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { set } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -21,25 +21,25 @@ const StartMenu = () => {
     }
 
     async function loadToken() {
-      const token = await AsyncStorage.getItem("token");
-      console.log("token", token);
-
-      if (!token) {
-        await AsyncStorage.clear();
-      } else {
-        const isTokenExpired = () => {
-          const decodedToken = jwtDecode(token);
-          const currentTime = Date.now() / 1000;
-          console.log("decodedToken.exp", decodedToken.exp);
-          console.log("currentTime", currentTime);
-          return decodedToken.exp < currentTime;
-        };
-
-        if (isTokenExpired()) {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
           await AsyncStorage.clear();
         } else {
-          navigation.navigate("BottomMenu");
+          const isTokenExpired = async () => {
+            const decodedToken = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            return decodedToken.exp < currentTime;
+          };
+
+          if (await isTokenExpired()) {
+            await AsyncStorage.clear();
+          } else {
+            navigation.navigate("BottomMenu");
+          }
         }
+      } catch (error) {
+        console.error("Error while loading token:", error);
       }
     }
 
