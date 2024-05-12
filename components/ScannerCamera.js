@@ -11,7 +11,7 @@ import {
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -39,25 +39,22 @@ const Scanner = ({
     ]);
   };
 
-  const [facing, setFacing] = useState('back');
+  const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
   const [torch, setTorch] = useState(false);
 
-
   const handleBarCodeScanned = useCallback(async ({ type, data }) => {
     setIsScanning(false);
-  
     if (data) {
-      setScanned(true); 
-      
+      setScanned(true);
+      handleScanned(data);
       // Додаємо затримку 500 мілісекунд (0.5 секунди)
-      await new Promise(resolve => setTimeout(resolve, 500));
-  
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      Alert.alert('Scanned', `Type: ${type}\nData: ${data}`);
+      // Alert.alert("Scanned", `Type: ${type}\nData: ${data}`);
     } else {
       setScanned(false);
     }
@@ -83,25 +80,25 @@ const Scanner = ({
   if (!permission.granted) {
     return (
       <View style={styles.container_c}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission to show the camera
+        </Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
   }
 
-  
   return (
     <View style={styles.container_c}>
       {isFocused && (
         <CameraView
-        barcodeScannerSettings={{
-          barcodeTypes: ['ean13']
-        }}
+          // barcodeScannerSettings={{
+          //   barcodeTypes: ['ean13']
+          // }}
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.scannerwindow}
           enableTorch={torch}
           facing={facing}
-          
         >
           <SafeAreaView style={[styles.buttonCameraContainer, styleflashlight]}>
             <TouchableOpacity
@@ -146,7 +143,6 @@ const Scanner = ({
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   buttonCameraContainer: {

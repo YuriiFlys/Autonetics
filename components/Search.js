@@ -20,15 +20,7 @@ const Search = () => {
       <TextInput style={styles.field} />
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={async () => {
-          const token1 = await AsyncStorage.getItem("token");
-          console.log("Token before removal:", token1);
-          await AsyncStorage.clear();
-          console.log("Token removed");
-          const token = await AsyncStorage.getItem("token");
-          console.log("Token after removal:", token);
-          navigator.navigate("StartMenu");
-        }}
+        onPress={() => console.log("Search")}
       >
         <Text style={styles.buttonSearch}>Пошук</Text>
       </TouchableOpacity>

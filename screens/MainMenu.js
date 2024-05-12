@@ -64,7 +64,7 @@ const MainMenu = () => {
       style={styles.shop}
       onPress={() => {
         console.log(item.name);
-        navigator.navigate("SalesScreen", { shopName: item.name });
+        navigator.navigate("SalesScreen", { id: item.id });
       }}
     >
       <Image source={item.imageSource} style={styles.image} />

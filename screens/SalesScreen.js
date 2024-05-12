@@ -6,14 +6,16 @@ import { useNavigation } from "@react-navigation/native";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import PopupWindow from "../components/PopupWindow";
-import Scanner from "../components/ScannerCamera";
+import ScannerCamera from "../components/ScannerCamera";
 import PayButton from "../components/PayButton";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const SalesScreen = () => {
+const SalesScreen = ({ route }) => {
+  const { id } = route.params;
+  console.log("id", id);
   let list = [];
   const [data, setData] = useState([]);
   shop = {
@@ -83,7 +85,7 @@ const SalesScreen = () => {
   return (
     <SafeAreaProvider style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
-        <Scanner isCross={true} handleScanned={handleScanned} />
+        <ScannerCamera isCross={true} handleScanned={handleScanned} />
         <BottomSheet
           ref={bottomSheetRef}
           index={0}
