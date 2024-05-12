@@ -16,6 +16,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const Permission = ({ name, value }) => {
   const [switchStates, setSwitchStates] = useState(value);
+  console.log("switchStates", switchStates);
   return (
     <View>
       <View style={styles.sepLine}></View>
@@ -26,7 +27,7 @@ const Permission = ({ name, value }) => {
           thumbColor={switchStates ? "#f4f3f4" : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={() => {
-            setSwitchStates(!field);
+            setSwitchStates(!switchStates);
           }}
           value={switchStates}
         />

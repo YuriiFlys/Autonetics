@@ -43,15 +43,9 @@ const ProductInfoAdmin = ({ route }) => {
         res.count = 10;
         res.numberSales = {
           2024: [110, 290, 360, 40, 50, 60, 80, 120, 23, 43, 34, 32], //2024
-          2023: Array.from({ length: 12 }, () =>
-            Math.floor(Math.random() * 1000)
-          ), //2023
-          2022: Array.from({ length: 12 }, () =>
-            Math.floor(Math.random() * 1000)
-          ), //2022
-          2021: Array.from({ length: 12 }, () =>
-            Math.floor(Math.random() * 1000)
-          ), //2021
+          2023: [75, 79, 52, 81, 69, 61, 79, 73, 60, 92, 81, 48], //2023
+          2022: [41, 166, 51, 147, 145, 90, 163, 10, 82, 178, 193, 173], //2022
+          2021: [119, 171, 76, 186, 230, 233, 18, 100, 178, 164, 184, 221], //2021
         };
         res.discount = 20;
         if (res.discount === 0) {
