@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { Image } from "expo-image";
 import SmallWidget from "../components/SmallWidget";
@@ -21,61 +23,93 @@ const ProductInfo = ({ route }) => {
   const { id } = route.params;
   const [price, setPrice] = useState([]);
   const [product, setProduct] = useState();
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const updateProduct = () => {
-    fetch(`http://23.100.50.204:8080/goods/${id}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Помилка при завантаженні даних");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [descriptionTable, setDescriptionTable] = useState();
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await handleLoadProduct();
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  const handleLoadProduct = async () => {
+    setIsRefreshing(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/goods/" + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        return res.json();
-      })
-      .then((res) => {
-        res.imageSource = [
-          require("../assets/Image_Product_or_Shop/voda.png"),
-          require("../assets/Image_Product_or_Shop/voda.png"),
-          require("../assets/Image_Product_or_Shop/voda.png"),
-        ];
-        res.shopLogo = require("../assets/Image_Product_or_Shop/atbLogo.png");
-        res.count = 10;
-        // res.characteristics = {
-        //   "Торгова марка": "Боржомі",
-        //   Склад:
-        //     "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
-        //   ГМО: "НІ",
-        //   Газованість: "СИЛЬНОГАЗОВАНА",
-        //   "Сульфати (SO4)": "<10 мг/дм.куб.м",
-        //   "Температура зберігання": "+3..+30 °C",
-        //   "Хлор (Cl)": "250-500 мг/дм.куб.",
-        //   "Кальцій (Ca)": "20-150 мг/дм.куб.",
-        //   "Органічний продукт": "НІ",
-        //   "Вид продукції": "ВОДА МІНЕРАЛЬНА",
-        //   "Калій (K)": "15-45 мг/дм.куб.",
-        //   "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
-        // };
-        res.discount = 20;
-        if (res.discount === 0) {
-          setPrice(res.goodPriceOut.toString().split("."));
-        } else {
-          setPrice(
-            (res.goodPriceOut * (100 - res.discount)) /
-              (100).toString().split(".")
-          );
-        }
-        setPrice(res.goodPriceOut.toFixed(2).toString().split("."));
-        console.log(".toFixed(2).toString()", price);
-        setProduct(res);
-        setLoading(true);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      let responseData = await response.json();
+      console.log("response", responseData);
+
+      let descriptionResponse = {
+        Вага: responseData.weight,
+        "Тип продукту": responseData.goodsTypeId.name,
+        Виробник: responseData.producer,
+        "Методи зберігання": responseData.storageCondition,
+        Склад: responseData.composition,
+        Країна: responseData.countryID.name,
+      };
+      console.log("descriptionResponse", descriptionResponse);
+
+      setDescriptionTable(descriptionResponse);
+
+      responseData.imageSource = [
+        require("../assets/Image_Product_or_Shop/voda.png"),
+        require("../assets/Image_Product_or_Shop/voda.png"),
+        require("../assets/Image_Product_or_Shop/voda.png"),
+      ];
+
+      responseData.shopLogo = require("../assets/Image_Product_or_Shop/atbLogo.png");
+      responseData.count = 10;
+
+      // res.characteristics = {
+      //   "Торгова марка": "Боржомі",
+      //   Склад:
+      //     "Вода мінеральна природна лікувально-столова гідрокарбонатна натрієва сильногазована",
+      //   ГМО: "НІ",
+      //   Газованість: "СИЛЬНОГАЗОВАНА",
+      //   "Сульфати (SO4)": "<10 мг/дм.куб.м",
+      //   "Температура зберігання": "+3..+30 °C",
+      //   "Хлор (Cl)": "250-500 мг/дм.куб.",
+      //   "Кальцій (Ca)": "20-150 мг/дм.куб.",
+      //   "Органічний продукт": "НІ",
+      //   "Вид продукції": "ВОДА МІНЕРАЛЬНА",
+      //   "Калій (K)": "15-45 мг/дм.куб.",
+      //   "Гідрокарбонати (HCO3)": "3500-5000 мг/куб.дм",
+      // };
+      responseData.discount = 20;
+      console.log(
+        "responseData",
+        responseData.priceOut.toFixed(2).toString().split(".")
+      );
+
+      if (responseData.discount === 0) {
+        setPrice(responseData.priceOut.toFixed(2).toString().split("."));
+      } else {
+        setPrice(
+          (responseData.priceOut * (100 - responseData.discount)) /
+            (100).toString().split(".")
+        );
+      }
+      setProduct(responseData);
+    } catch (error) {
+      console.error("Error while fetching goods:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
-  if (!loading) {
-    updateProduct();
-  }
-  const [isYear, setIsYear] = useState(true);
 
   const item = {
     id: 1,
@@ -89,6 +123,10 @@ const ProductInfo = ({ route }) => {
   const scrollViewRef = useRef();
 
   return loading ? (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
+  ) : (
     <SafeAreaView style={styles.container}>
       <ScrollView
         automaticallyAdjustContentInsets={true}
@@ -105,7 +143,7 @@ const ProductInfo = ({ route }) => {
           <Image source={product.shopLogo} style={styles.shopLogo} />
         </View>
         <View style={styles.productNameContainer}>
-          <Text style={styles.productNameText}>{product.goodName}</Text>
+          <Text style={styles.productNameText}>{product.name}</Text>
           <View
             style={{
               height: screenHeight * 0.05,
@@ -125,7 +163,6 @@ const ProductInfo = ({ route }) => {
               <Text>{product.count > 0 ? "В наявності" : "Немає"}</Text>
             </View>
             <View style={styles.priceContainer}>
-              {/* стара ціна */}
               <View style={styles.priceContainer}>
                 <Text
                   style={[
@@ -152,7 +189,6 @@ const ProductInfo = ({ route }) => {
                   {price[1]}
                 </Text>
               </View>
-              {/* нова ціна */}
               <View style={styles.priceContainer}>
                 <Text style={[styles.priceWholePart, { fontSize: 25 }]}>
                   20
@@ -167,44 +203,12 @@ const ProductInfo = ({ route }) => {
         <View style={styles.descriptionContainer}>
           <Text style={styles.title}>Опис та характеристики</Text>
           <Text style={styles.descriptionText}>{product.description}</Text>
-          {/* {Object.entries(product.characteristics).map(([key, value]) => (
+          {Object.entries(descriptionTable).map(([key, value]) => (
             <View style={styles.characteristicsItemContainer}>
               <Text style={styles.characteristicsKey}>{key}</Text>
               <Text style={styles.characteristicsValue}>{value}</Text>
             </View>
-          ))} */}
-          <View style={styles.characteristicsItemContainer}>
-            <Text style={styles.characteristicsKey}>Тип продукту</Text>
-            <Text style={styles.characteristicsValue}>
-              {product.goodsTypeID}
-            </Text>
-          </View>
-          <View style={styles.characteristicsItemContainer}>
-            <Text style={styles.characteristicsKey}>Виробник</Text>
-            <Text style={styles.characteristicsValue}>{product.producer}</Text>
-          </View>
-          <View style={styles.characteristicsItemContainer}>
-            <Text style={styles.characteristicsKey}>Країна</Text>
-            <Text style={styles.characteristicsValue}>{product.countryID}</Text>
-          </View>
-          <View style={styles.characteristicsItemContainer}>
-            <Text style={styles.characteristicsKey}>Термін придатності</Text>
-            <Text style={styles.characteristicsValue}>
-              {product.expiryDate}
-            </Text>
-          </View>
-          <View style={styles.characteristicsItemContainer}>
-            <Text style={styles.characteristicsKey}>Умови зберігання</Text>
-            <Text style={styles.characteristicsValue}>
-              {product.storageCondition}
-            </Text>
-          </View>
-          <View style={styles.characteristicsItemContainer}>
-            <Text style={styles.characteristicsKey}>Склад</Text>
-            <Text style={styles.characteristicsValue}>
-              {product.composition}
-            </Text>
-          </View>
+          ))}
           <View style={styles.characteristicsItemContainer}>
             <Text style={styles.characteristicsKey}>Рейтинг</Text>
             <View style={{ flex: 1, flexDirection: "row" }}>
@@ -228,10 +232,6 @@ const ProductInfo = ({ route }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  ) : (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ActivityIndicator size="large" />
-    </View>
   );
 };
 

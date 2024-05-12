@@ -87,7 +87,7 @@ const App = () => {
               />
               <Stack.Screen
                 name="ProductInfo"
-                component={ProductInfoAdmin}
+                component={ProductInfo}
                 initialParams={{}}
                 options={{
                   headerShown: true,
