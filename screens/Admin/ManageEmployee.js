@@ -14,6 +14,26 @@ import UserComponent from "../../components/User";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+const Permission = ({ name, value }) => {
+  const [switchStates, setSwitchStates] = useState(value);
+  return (
+    <View>
+      <View style={styles.sepLine}></View>
+      <View style={styles.row}>
+        <Text style={styles.MainWidgetText}>{name}</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#00FF00" }}
+          thumbColor={switchStates ? "#f4f3f4" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={() => {
+            setSwitchStates(!field);
+          }}
+          value={switchStates}
+        />
+      </View>
+    </View>
+  );
+};
 
 const Permissions = ({ widgetname, fields }) => {
   const [switchStates, setSwitchStates] = useState(
@@ -25,26 +45,13 @@ const Permissions = ({ widgetname, fields }) => {
     setSwitchStates({ ...switchStates, [field]: newState });
     console.log(`Field: ${field}, State: ${newState}`);
   };
+  console.log("switchStates", switchStates);
 
   return (
     <View style={styles.mainWidgetView}>
       <Text style={styles.widgetProfileName}>{widgetname}</Text>
-      {fields.map((field, index) => (
-        <View key={index}>
-          <View style={styles.sepLine}></View>
-          <View style={styles.row}>
-            <Text style={styles.MainWidgetText}>{field}</Text>
-            <Switch
-              trackColor={{ false: "#767577", true: "#00FF00" }}
-              thumbColor={switchStates[field] ? "#f4f3f4" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={() => {
-                toggleSwitch(field);
-              }}
-              value={switchStates[field]}
-            />
-          </View>
-        </View>
+      {Object.entries(switchStates).map(([key, value]) => (
+        <Permission name={key} value={value} />
       ))}
     </View>
   );
