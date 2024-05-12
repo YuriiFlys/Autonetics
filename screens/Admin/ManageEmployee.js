@@ -24,7 +24,7 @@ const Permission = ({ name, value }) => {
         <Text style={styles.MainWidgetText}>{name}</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#00FF00" }}
-          thumbColor={switchStates ? "#f4f3f4" : "#f4f3f4"}
+          thumbColor={switchStates ? "#f4f3f4" : "#f4f3f3"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={() => {
             setSwitchStates(!switchStates);
