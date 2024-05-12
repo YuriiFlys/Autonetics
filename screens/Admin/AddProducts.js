@@ -46,48 +46,50 @@ const AddProducts = () => {
   return (
     <SafeAreaView style={styles.container}>
       {data.map((order) => {
-        order.product.map((product) => {
-          product.isBuy = false;
-        });
-        const [isBuy, setIsBuy] = useState(false);
-        const [sum, setSum] = useState(0);
-        const handleIsBuy = () => {
-          let buy = !order.product.every((product) => product.isBuy);
-          setIsBuy(buy);
-        };
-        return (
-          <>
-            <TouchableOpacity style={styles.containerNameOrder}>
-              <Text style={styles.orderName}>{order.orderName}</Text>
-              <View style={styles.imageContainer}>
-                <Image
-                  source={require("../../assets/Profile/arrow.svg")}
-                  style={styles.arrowImage}
-                />
-              </View>
-            </TouchableOpacity>
-            <GrayLine />
-            <View style={styles.flaListContainer}>
-              <FlatList
-                data={order.product}
-                keyExtractor={(product) => product.id.toString()}
-                renderItem={({ item }) => (
-                  <Element item={item} handleIsBuy={handleIsBuy} />
-                )}
-              />
-            </View>
-
-            {isBuy ? (
-              <View style={styles.buyContainer}>
-                <TouchableOpacity style={styles.toBuy}>
-                  <Text style={styles.buttonText}>Перейти до Замовлення</Text>
-                </TouchableOpacity>
-              </View>
-            ) : null}
-          </>
-        );
+        <RenderItem item={order} />;
       })}
     </SafeAreaView>
+  );
+};
+const RenderItem = ({ item }) => {
+  order.product.map((product) => {
+    product.isBuy = false;
+  });
+  const [isBuy, setIsBuy] = useState(false);
+  const handleIsBuy = () => {
+    let buy = !order.product.every((product) => product.isBuy);
+    setIsBuy(buy);
+  };
+  return (
+    <>
+      <TouchableOpacity style={styles.containerNameOrder}>
+        <Text style={styles.orderName}>{order.orderName}</Text>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../../assets/Profile/arrow.svg")}
+            style={styles.arrowImage}
+          />
+        </View>
+      </TouchableOpacity>
+      <GrayLine />
+      <View style={styles.flaListContainer}>
+        <FlatList
+          data={order.product}
+          keyExtractor={(product) => product.id.toString()}
+          renderItem={({ item }) => (
+            <Element item={item} handleIsBuy={handleIsBuy} />
+          )}
+        />
+      </View>
+
+      {isBuy ? (
+        <View style={styles.buyContainer}>
+          <TouchableOpacity style={styles.toBuy}>
+            <Text style={styles.buttonText}>Перейти до Замовлення</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+    </>
   );
 };
 
