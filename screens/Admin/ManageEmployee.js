@@ -36,7 +36,7 @@ const Permissions = ({ widgetname, fields }) => {
             <Text style={styles.MainWidgetText}>{field}</Text>
             <Switch
               trackColor={{ false: "#767577", true: "#00FF00" }}
-              thumbColor={switchStates[index] ? "#f4f3f4" : "#f4f3f4"}
+              thumbColor={switchStates[field] ? "#f4f3f4" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={() => {
                 toggleSwitch(field);

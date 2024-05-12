@@ -41,29 +41,32 @@ const data = [
     ],
   },
 ];
-
 const AddProducts = () => {
   return (
     <SafeAreaView style={styles.container}>
       {data.map((order) => {
-        <RenderItem item={order} />;
+        return <RenderItem key={order.id} item={order} />;
       })}
     </SafeAreaView>
   );
 };
+
 const RenderItem = ({ item }) => {
-  order.product.map((product) => {
+  item.product.forEach((product) => {
     product.isBuy = false;
   });
+
   const [isBuy, setIsBuy] = useState(false);
+
   const handleIsBuy = () => {
-    let buy = !order.product.every((product) => product.isBuy);
+    let buy = !item.product.every((product) => product.isBuy);
     setIsBuy(buy);
   };
+
   return (
     <>
       <TouchableOpacity style={styles.containerNameOrder}>
-        <Text style={styles.orderName}>{order.orderName}</Text>
+        <Text style={styles.orderName}>{item.orderName}</Text>
         <View style={styles.imageContainer}>
           <Image
             source={require("../../assets/Profile/arrow.svg")}
@@ -74,7 +77,7 @@ const RenderItem = ({ item }) => {
       <GrayLine />
       <View style={styles.flaListContainer}>
         <FlatList
-          data={order.product}
+          data={item.product}
           keyExtractor={(product) => product.id.toString()}
           renderItem={({ item }) => (
             <Element item={item} handleIsBuy={handleIsBuy} />

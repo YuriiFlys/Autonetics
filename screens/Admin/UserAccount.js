@@ -32,7 +32,7 @@ const ButtonMenu = ({ image, name, navig }) => {
   );
 };
 
-const UserAcount = ({}) => {
+const UserAcount = () => {
   const { user } = useUser();
   const navigator = useNavigation();
   const [userName, setUserName] = useState("");
@@ -44,14 +44,14 @@ const UserAcount = ({}) => {
       setUserName(" ");
     }
   }, [user]);
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollviewcontainer}>
         <Logo name="Особистий кабінет" />
         <User
           userName={userName}
-          profileImage={user ? user.profileImage : null}  
+          profileImage={user ? user.profileImage : null}
           description={"Директор"}
           imageSize={0.25}
         />

@@ -22,7 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const LoginMenu = ({}) => {
+const LoginMenu = () => {
   const navigator = useNavigation();
   const passwordRef = React.useRef();
   const [email, setEmail] = React.useState("");
