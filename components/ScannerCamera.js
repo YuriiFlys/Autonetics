@@ -11,10 +11,13 @@ import {
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { Camera } from "expo-camera";
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Button } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-import { SafeAreaView } from "react-native-safe-area-context";
+
 const Scanner = ({
   styleflashlight,
   styleFrame,
@@ -36,33 +39,33 @@ const Scanner = ({
     ]);
   };
 
-  const [hasPermission, setHasPermission] = useState(null);
+  const [facing, setFacing] = useState('back');
+  const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
-  // const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
-  useEffect(() => {
-    const getCameraPermissions = async () => {
-      const { status } = await Camera.getCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
+  const [torch, setTorch] = useState(false);
 
-    getCameraPermissions();
-    if (isFocused) {
-      // setFlashMode(Camera.Constants.FlashMode.off);
-    }
-    setScanned(false);
-    setTimeout(() => {
-      setScanned(true);
-    }, 100);
-  }, [isFocused]);
 
-  useEffect(() => {}, [isFocused]);
-  const handleBarCodeScanned = useCallback(({ type, data }) => {
-    setScanned(true);
+  const handleBarCodeScanned = useCallback(async ({ type, data }) => {
     setIsScanning(false);
-    handleScanned(data);
+  
+    if (data) {
+      setScanned(true); 
+      
+      // Додаємо затримку 500 мілісекунд (0.5 секунди)
+      await new Promise(resolve => setTimeout(resolve, 500));
+  
+
+      Alert.alert('Scanned', `Type: ${type}\nData: ${data}`);
+    } else {
+      setScanned(false);
+    }
   }, []);
+
+  const ToggleTorch = () => {
+    setTorch(!torch);
+  };
 
   const startScan = () => {
     setIsScanning(!isScanning);
@@ -73,27 +76,32 @@ const Scanner = ({
     }
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+  if (!permission) {
+    return <View />;
   }
 
-  // const toggleFlashlight = () => {
-  //   if (flashMode === Camera.Constants.FlashMode.off) {
-  //     setFlashMode(Camera.Constants.FlashMode.torch);
-  //   } else {
-  //     setFlashMode(Camera.Constants.FlashMode.off);
-  //   }
-  // };
+  if (!permission.granted) {
+    return (
+      <View style={styles.container_c}>
+        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
+
+  
   return (
     <View style={styles.container_c}>
       {isFocused && (
-        <Camera
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        <CameraView
+        barcodeScannerSettings={{
+          barcodeTypes: ['ean13']
+        }}
+          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.scannerwindow}
-          // flashMode={flashMode}
+          enableTorch={torch}
+          facing={facing}
+          
         >
           <SafeAreaView style={[styles.buttonCameraContainer, styleflashlight]}>
             <TouchableOpacity
@@ -108,7 +116,7 @@ const Scanner = ({
                 />
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => toggleFlashlight()}>
+            <TouchableOpacity onPress={() => ToggleTorch()}>
               <Image
                 source={require("../assets/Camera/light.svg")}
                 style={styles.light}
@@ -133,11 +141,12 @@ const Scanner = ({
               <View style={styles.innerCircle} />
             </TouchableOpacity>
           </View>
-        </Camera>
+        </CameraView>
       )}
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   buttonCameraContainer: {
