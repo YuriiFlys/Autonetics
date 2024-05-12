@@ -59,7 +59,7 @@ const screenHeight = Dimensions.get("window").height;
 // ];
 
 const Map = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigation();
   const [userLocation, setUserLocation] = useState({
     latitude: 49.839426,
     longitude: 24.022695,
@@ -186,19 +186,33 @@ const Map = () => {
 
       {selectedPlace && (
         <Animated.View style={[styles.shop, animatedStyle]}>
-          <Image source={selectedPlace.imageSource} style={styles.image} />
-          <View style={styles.textContainer}>
-            <Text style={styles.shopName}>{selectedPlace.name}</Text>
-            <Text style={styles.street}>{selectedPlace.address.name}</Text>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
-              <Image
-                source={require("../assets/cross_Blue.svg")}
-                style={styles.closeImage}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={{
+              width: screenWidth * 0.9,
+              height: screenHeight * 0.13,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: 20,
+            }}
+            onPress={() =>
+              navigator.navigate("SalesScreen", { id: selectedPlace.id })
+            }
+          >
+            <Image source={selectedPlace.imageSource} style={styles.image} />
+            <View style={styles.textContainer}>
+              <Text style={styles.shopName}>{selectedPlace.name}</Text>
+              <Text style={styles.street}>{selectedPlace.address.name}</Text>
+            </View>
+            <View>
+              <TouchableOpacity style={styles.closeButton} onPress={closeInfo}>
+                <Image
+                  source={require("../assets/cross_Blue.svg")}
+                  style={styles.closeImage}
+                />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         </Animated.View>
       )}
       <TouchableOpacity style={styles.centerButton} onPress={centerMapOnUser}>
