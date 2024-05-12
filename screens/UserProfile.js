@@ -18,20 +18,24 @@ import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { format} from "date-fns";
+import { format, set} from "date-fns";
+import { Platform } from "react-native";
+import { jwtDecode } from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "react-native-axios";
 import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
-import { useUser } from "./UserContext";
+
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const UserProfile = () => {
-  const { user, updateUser } = useUser();
+  const [user, setUser] = useState(null);
   const navigator = useNavigation();
   const [initials, setInitials] = useState("");
   const fullnameRef = React.useRef();
@@ -55,6 +59,28 @@ const UserProfile = () => {
       return "";
     }
   }
+
+  useEffect(() => {
+    async function fetchData() {
+        const token = await AsyncStorage.getItem("token");
+        const decoded_jwt = jwtDecode(token);
+        try {
+            const res = await axios.get(`http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const userData = res.data;
+            setUser(userData);
+            
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    fetchData();
+}, []);
+
+
   useEffect(() => {
     if(user){
       setGender(user.gender || "Не вказано");

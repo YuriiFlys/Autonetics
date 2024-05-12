@@ -25,20 +25,28 @@ const Profile = () => {
   const navigator = useNavigation();
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
-  React.useEffect(async () => {
-    const token = await AsyncStorage.getItem("token");
-    const decoded_jwt = jwtDecode(token);
-    axios.get(`http://localhost:3000/api/clients/by-email/${decoded_jwt.email}`).then((res) => {
-      const user = res.data;
-      if (user.firstName === null || user.lastName === null) {
-        setUserName(" ");
-      } else {
-        setUserName(user.firstName + " " + user.lastName);
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  React.useEffect(() => {
+    async function fetchData() {
+        const token = await AsyncStorage.getItem("token");
+        const decoded_jwt = jwtDecode(token);
+        console.log(decoded_jwt.email);
+        try {
+            const res = await axios.get(`http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`, {
+              headers: {
+                  'Authorization': `Bearer ${token}`
+              }
+          });
+            const user = res.data;
+            if (user.firstName === null || user.lastName === null) {
+                setUserName(" ");
+            } else {
+                setUserName(user.firstName + " " + user.lastName);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    fetchData();
 }, [userName]);
 
 
