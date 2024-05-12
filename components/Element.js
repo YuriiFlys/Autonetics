@@ -67,8 +67,8 @@ const Element = ({ item, updateData, deleteElement }) => {
           >
             <Image source={item.photo} style={styles.imageSource} />
             <View style={styles.nameContainer}>
-              <Text style={styles.shopName}>{item.goodName}</Text>
-              <Text style={styles.counterText}>Ціна: {item.goodPriceOut}$</Text>
+              <Text style={styles.shopName}>{item.name}</Text>
+              <Text style={styles.counterText}>Ціна: {item.priceOut}$</Text>
             </View>
             <View style={styles.counterContainer}>
               <View style={{ flexDirection: "row", marginRight: 20 }}>
@@ -92,7 +92,7 @@ const Element = ({ item, updateData, deleteElement }) => {
                     { fontFamily: FontFamily.CommissioneBold },
                   ]}
                 >
-                  {item.number * item.goodPriceOut}$ {/* todo */}
+                  {item.number * item.priceOut}$ {/* todo */}
                 </Text>
               </View>
             </View>
@@ -110,7 +110,7 @@ const Element = ({ item, updateData, deleteElement }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              deleteElement(item.goodID);
+              deleteElement(item.id);
             }}
             style={[styles.hiddenButton, { backgroundColor: "red" }]}
           >

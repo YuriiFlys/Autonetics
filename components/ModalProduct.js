@@ -60,8 +60,8 @@ const ModalProduct = ({
               <Image source={item.photo} style={styles.productimage} />
               <View style={styles.productinfocontainer}>
                 <View style={styles.productnamecontainer}>
-                  <Text style={styles.productName}>{item.goodName}</Text>
-                  <Text style={styles.productPrice}>{item.goodPriceOut}$</Text>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>{item.priceOut}$</Text>
                 </View>
                 <View style={[styles.productnamecontainer]}>
                   <View
@@ -87,7 +87,7 @@ const ModalProduct = ({
                       <Text style={styles.buttonTextPlusMinus}>+</Text>
                     </TouchableOpacity>
                   </View>
-                  <Text>Сума: {item.number * item.goodPriceOut}$</Text>
+                  <Text>Сума: {item.number * item.priceOut}$</Text>
                 </View>
               </View>
               <View
@@ -101,7 +101,7 @@ const ModalProduct = ({
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(false);
-                  navigator.navigate("ProductInfo", { id: item.goodID });
+                  navigator.navigate("ProductInfo", { id: item.id });
                 }}
                 style={styles.moreInfoButton}
               >

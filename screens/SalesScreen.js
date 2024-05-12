@@ -9,6 +9,7 @@ import PopupWindow from "../components/PopupWindow";
 import ScannerCamera from "../components/ScannerCamera";
 import PayButton from "../components/PayButton";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -44,39 +45,43 @@ const SalesScreen = ({ route }) => {
   };
 
   const [sum, setSum] = useState(
-    data.reduce((acc, item) => acc + item.number * item.goodPriceOut, 0)
+    data.reduce((acc, item) => acc + item.number * item.priceOut, 0)
   );
 
-  const handleScanned = (barcode) => {
-    fetch(`http://23.100.50.204:8080/goods/byBarCode/${barcode}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Помилка при завантаженні даних");
+  const scanned = async (barcode) => {
+    // setIsRefreshing(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/goods/barcode/" + barcode,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        return res.json();
-      })
-      .then((res) => {
-        let existingIndex = list.findIndex(
-          (item) => item.goodID === res.goodID
-        );
-        console.log("existingIndex", existingIndex);
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const res = await response.json();
+      let existingIndex = list.findIndex((item) => item.id === res.id);
+      console.log("existingIndex", existingIndex);
 
-        if (existingIndex !== -1) {
-          list[existingIndex].number = list[existingIndex].number + 1;
-        } else {
-          res.photo = require("../assets/Image_Product_or_Shop/voda.png");
-          res.number = 1;
-          list.push(res);
-        }
-        setData([...list]);
-        setSum(
-          list.reduce((acc, item) => acc + item.number * item.goodPriceOut, 0)
-        );
-      })
-      .catch((error) => {
-        console.error("Error1:", error);
-        Alert.alert("Не знайдено товар", "Ой cхоже товар не знайдено");
-      });
+      if (existingIndex !== -1) {
+        list[existingIndex].number = list[existingIndex].number + 1;
+      } else {
+        res.photo = require("../assets/Image_Product_or_Shop/voda.png");
+        res.number = 1;
+        list.push(res);
+      }
+      setData([...list]);
+      setSum(list.reduce((acc, item) => acc + item.number * item.priceOut, 0));
+    } catch (error) {
+      console.error("Error while fetching goods:", error);
+      Alert.alert("Не знайдено товар", "Ой cхоже товар не знайдено");
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   const currentDateTime = new Date();
@@ -85,7 +90,7 @@ const SalesScreen = ({ route }) => {
   return (
     <SafeAreaProvider style={styles.container}>
       <GestureHandlerRootView style={styles.GestureHandlerRootViewContainer}>
-        <ScannerCamera isCross={true} handleScanned={handleScanned} />
+        <ScannerCamera isCross={true} handleScanned={scanned} />
         <BottomSheet
           ref={bottomSheetRef}
           index={0}

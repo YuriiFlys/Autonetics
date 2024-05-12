@@ -41,7 +41,7 @@ const Scanner = ({
 
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
-  const [scanned, setScanned] = useState(false);
+  const [scanned, setScanned] = useState(true);
   const [isScanning, setIsScanning] = useState(false);
   const isFocused = useIsFocused();
   const [torch, setTorch] = useState(false);
@@ -49,8 +49,11 @@ const Scanner = ({
   const handleBarCodeScanned = useCallback(async ({ type, data }) => {
     setIsScanning(false);
     if (data) {
-      setScanned(true);
+      console.log("data1", data);
       handleScanned(data);
+      console.log("data2", data);
+
+      setScanned(true);
       // Додаємо затримку 500 мілісекунд (0.5 секунди)
       await new Promise((resolve) => setTimeout(resolve, 500));
 

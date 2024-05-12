@@ -27,7 +27,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
     });
     setSum((prevSum) => {
       const total = data.reduce((acc, item) => {
-        return acc + item.number * item.price;
+        return acc + item.number * item.priceOut;
       }, 0);
       return total;
     });
@@ -79,7 +79,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
                 deleteElement={deleteElement}
               />
             )}
-            keyExtractor={(item) => item.goodID.toString()}
+            keyExtractor={(item) => item.id.toString()}
           />
         </View>
         <GrayLine />
@@ -106,7 +106,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
           <FlatList
             data={data}
             renderItem={({ item }) => <SmallWidget item={item} />}
-            keyExtractor={(item) => item.goodID}
+            keyExtractor={(item) => item.id}
             horizontal={true}
           />
         </View>
