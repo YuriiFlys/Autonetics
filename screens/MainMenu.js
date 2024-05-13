@@ -59,6 +59,36 @@ const MainMenu = () => {
     }
   };
 
+  const handleSearchShop = async (data) => {
+    setIsRefreshing(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/shops/by-name/" + data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const responseData = await response.json();
+      const newData = responseData.map((item) => ({
+        ...item,
+        imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+        distance: "500м",
+      }));
+      setData(newData);
+    } catch (error) {
+      console.error("Error while fetching shops:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.shop}
@@ -78,7 +108,7 @@ const MainMenu = () => {
 
   return (
     <View style={styles.container}>
-      <Search />
+      <Search search={handleSearchShop} />
       <GrayLine style={{ marginTop: 20 }} />
       {loading ? (
         <View

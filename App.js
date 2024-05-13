@@ -92,6 +92,7 @@ const App = () => {
                 options={{
                   headerShown: true,
                   title: "Інформація про товар",
+                  headerBackTitle: "Назад",
                 }}
               />
               <Stack.Screen

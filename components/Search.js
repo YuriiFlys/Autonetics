@@ -13,14 +13,22 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import { useNavigation } from "@react-navigation/native";
 
-const Search = () => {
+const Search = ({ search }) => {
   const navigator = useNavigation();
+  const [field, setField] = React.useState("");
   return (
     <View style={{ flexDirection: "row", marginTop: 20 }}>
-      <TextInput style={styles.field} />
+      <TextInput
+        style={styles.field}
+        value={field}
+        onChangeText={(text) => setField(text)}
+      />
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => console.log("Search")}
+        onPress={() => {
+          console.log("Search");
+          search(field);
+        }}
       >
         <Text style={styles.buttonSearch}>Пошук</Text>
       </TouchableOpacity>
