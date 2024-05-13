@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Image } from "expo-image";
 import RNPickerSelect from "react-native-picker-select";
@@ -18,7 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { format, set} from "date-fns";
+import { format, set } from "date-fns";
 import { Platform } from "react-native";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,8 +29,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
-
-
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -48,12 +47,14 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingContacts, setIsEditingContacts] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+  const [isLoading, setLoading] = React.useState(true);
 
   function getInitials(name) {
     try {
       const words = name.split(" ");
-      const initials = words.map((word) => word.charAt(0).toUpperCase()).join("");
+      const initials = words
+        .map((word) => word.charAt(0).toUpperCase())
+        .join("");
       return initials;
     } catch (error) {
       return "";
@@ -62,112 +63,125 @@ const UserProfile = () => {
 
   useEffect(() => {
     async function fetchData() {
-        const token = await AsyncStorage.getItem("token");
-        const decoded_jwt = jwtDecode(token);
-        try {
-            const res = await axios.get(`http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const userData = res.data;
-            setUser(userData);
-            
-        } catch (error) {
-            console.error(error);
-        }
+      const token = await AsyncStorage.getItem("token");
+      const decoded_jwt = jwtDecode(token);
+      try {
+        const res = await axios.get(
+          `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const userData = res.data;
+        setUser(userData);
+      } catch (error) {
+        console.error(error);
+      }
     }
-    fetchData();
-}, []);
-
+    const loadData = async () => {
+      setLoading(true);
+      await fetchData();
+      setLoading(false);
+    };
+    loadData();
+  }, []);
 
   useEffect(() => {
-    if(user){
+    if (user) {
       setGender(user.gender || "Не вказано");
       setDate(new Date(user.birthDate || Date.now()));
-      phoneRef.current = user.phoneNumber ? user.phoneNumber.substring(4) : "Не вказано";
-    emailRef.current = user.email || "";
-    fullnameRef.current = user.firstName && user.lastName ? user.firstName + " " + user.lastName : "Не вказано";
-    if (fullnameRef.current==="Не вказано") {
-      setInitials(" ");
-    } else {
-      setInitials(getInitials(fullnameRef.current));
+      phoneRef.current = user.phoneNumber
+        ? user.phoneNumber.substring(4)
+        : "Не вказано";
+      emailRef.current = user.email || "";
+      fullnameRef.current =
+        user.firstName && user.lastName
+          ? user.firstName + " " + user.lastName
+          : "Не вказано";
+      if (fullnameRef.current === "Не вказано") {
+        setInitials(" ");
+      } else {
+        setInitials(getInitials(fullnameRef.current));
+      }
     }
-  }
   }, [user]);
 
-  
-
-  const handleContactSave = useCallback(async() => {
-    const UpdatedData={
-      "phoneNumber":`+380${phoneRef.current}`,
-      "email":emailRef.current,
+  const handleContactSave = useCallback(async () => {
+    const UpdatedData = {
+      phoneNumber: `+380${phoneRef.current}`,
+      email: emailRef.current,
     };
-    try{
+    try {
       const response = await fetch(`http://23.100.50.204:8080/client/}`, {
-        method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(UpdatedData),
-    });
-    if (!response.ok) {
-      throw new Error('HTTP status ' + response.status);
-    }
-    const data = await response.text();
-    }
-    catch (error) {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(UpdatedData),
+      });
+      if (!response.ok) {
+        throw new Error("HTTP status " + response.status);
+      }
+      const data = await response.text();
+    } catch (error) {
       console.error(error);
     }
 
     setIsEditingContacts(false);
   }, [phoneRef, emailRef]);
 
-  const handleFullnameSave = useCallback(async() => {
-    const UpdatedData={
-      "firstName":fullnameRef.current.split(" ")[0],
-      "lastName":fullnameRef.current.split(" ")[1],
+  const handleFullnameSave = useCallback(async () => {
+    const UpdatedData = {
+      firstName: fullnameRef.current.split(" ")[0],
+      lastName: fullnameRef.current.split(" ")[1],
     };
-    try{
+    try {
       const response = await fetch(`http://23.100.50.204:8080/client/57`, {
-        method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(UpdatedData),
-    });
-    if (!response.ok) {
-      throw new Error('HTTP status ' + response.status);
-    }
-    updateUser({ ...user, firstName: UpdatedData.firstName, lastName: UpdatedData.lastName });
-    }
-    catch (error) {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(UpdatedData),
+      });
+      if (!response.ok) {
+        throw new Error("HTTP status " + response.status);
+      }
+      updateUser({
+        ...user,
+        firstName: UpdatedData.firstName,
+        lastName: UpdatedData.lastName,
+      });
+    } catch (error) {
       console.error(error);
     }
     setIsEditing(false);
   }, [fullnameRef]);
 
-  const handleMainSave = useCallback(async() => {  
-    const UpdatedData={
-      "firstName":fullnameRef.current.split(" ")[0],
-      "lastName":fullnameRef.current.split(" ")[1],
-      "birthDate":format(date, "yyyy-MM-dd"),
-      "gender":gender
+  const handleMainSave = useCallback(async () => {
+    const UpdatedData = {
+      firstName: fullnameRef.current.split(" ")[0],
+      lastName: fullnameRef.current.split(" ")[1],
+      birthDate: format(date, "yyyy-MM-dd"),
+      gender: gender,
     };
-    try{
-      const response = await fetch(`http://23.100.50.204:8080/client/${user.userID}`, {
-        method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(UpdatedData),
-    });
-    if (!response.ok) {
-      throw new Error('HTTP status ' + response.status);
-    }
-    const data = await response.text();
-    }
-    catch (error) {
+    try {
+      const response = await fetch(
+        `http://23.100.50.204:8080/client/${user.userID}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(UpdatedData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("HTTP status " + response.status);
+      }
+      const data = await response.text();
+    } catch (error) {
       console.error(error);
     }
     setIsEditing(false);
@@ -190,7 +204,6 @@ const UserProfile = () => {
   const handleEmailChange = useCallback((email) => {
     emailRef.current = email;
   }, []);
-  
 
   const genderlist = [
     { label: "Чоловіча", value: "Чоловіча" },
@@ -210,50 +223,53 @@ const UserProfile = () => {
     setDate(date);
     hideDatePicker();
   };
-  
 
   const MainInfo = ({ widgetname }) => {
-    return (
+    return isLoading ? (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    ) : (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.mainWidgetView}>
-            <View style={styles.mainWidgetLabel}>
+          <View style={styles.mainWidgetLabel}>
+            <Image
+              style={{
+                height: screenWidth * 0.09,
+                width: screenWidth * 0.09,
+              }}
+              contentFit="contain"
+              source={require("../assets/account.png")}
+            />
+            <Text style={styles.widgetProfileName}>{widgetname}</Text>
+            <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
               <Image
-                style={{
-                  height: screenWidth * 0.09,
-                  width: screenWidth * 0.09,
-                }}
+                style={styles.editIcon}
                 contentFit="contain"
-                source={require("../assets/account.png")}
+                source={require("../assets/Profile/Settings.svg")}
               />
-              <Text style={styles.widgetProfileName}>{widgetname}</Text>
-              <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
-                <Image
-                  style={styles.editIcon}
-                  contentFit="contain"
-                  source={require("../assets/Profile/Settings.svg")}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sepLine}></View>
-            <Text style={styles.MainWidgetText}>{"Ім'я та прізвище"}</Text>
-            {isEditing ? (
-              <TextInput
-                style={styles.EditedText}
-                defaultValue={fullnameRef.current}
-                onChangeText={handleFullnameChange}
-              />
-            ) : (
-              <Text style={styles.EditedText}>{fullnameRef.current}</Text>
-            )}
-            <View style={styles.sepLine}></View>
-            <Text style={styles.MainWidgetText} onPress={showDatePicker}>
-              {"Дата народження"}
-            </Text>
-            {isEditing ? (
-              <TouchableOpacity onPress={showDatePicker}>
-                <Text style={styles.dateplaceholder}>
-                  {format(date, "dd-MM-yyyy")}
-                </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.sepLine}></View>
+          <Text style={styles.MainWidgetText}>{"Ім'я та прізвище"}</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.EditedText}
+              defaultValue={fullnameRef.current}
+              onChangeText={handleFullnameChange}
+            />
+          ) : (
+            <Text style={styles.EditedText}>{fullnameRef.current}</Text>
+          )}
+          <View style={styles.sepLine}></View>
+          <Text style={styles.MainWidgetText} onPress={showDatePicker}>
+            {"Дата народження"}
+          </Text>
+          {isEditing ? (
+            <TouchableOpacity onPress={showDatePicker}>
+              <Text style={styles.dateplaceholder}>
+                {format(date, "dd-MM-yyyy")}
+              </Text>
               <View>
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
@@ -264,56 +280,53 @@ const UserProfile = () => {
                   onCancel={hideDatePicker}
                 />
               </View>
-              </TouchableOpacity>
-            ) : (
-              <Text style={styles.EditedText}>
-                {format(date, "dd-MM-yyyy")}
-              </Text>
-            )}
-            <View style={styles.sepLine}></View>
-            <Text style={styles.MainWidgetText}>Стать</Text>
-            {isEditing ? (
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.pickerText,
-                    inputAndroid: styles.pickerText,
-                  }}
-                  onValueChange={(value) => setGender(value)}
-                  items={genderlist}
-                  placeholder={{}}
-                  value={gender}
-                />
-              </TouchableOpacity>
-            ) : (
-              <View style={{ flexDirection: "column" }}>
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.pickerText,
-                    inputAndroid: styles.pickerText,
-                  }}
-                  onValueChange={(value) => setGender(value)}
-                  items={genderlist}
-                  disabled={true}
-                  placeholder={{}}
-                  value={gender}
-                />
-              </View>
-            )}
-            {isEditing && <View style={styles.sepLine}></View>}
-            {isEditing && (
-              <TouchableOpacity
-                styles={styles.saveIcon}
-                onPress={handleFullnameSave}
-              >
-                <Image
-                  style={styles.saveIcon}
-                  contentFit="contain"
-                  source={require("../assets/tick.svg")}
-                />
-              </TouchableOpacity>
-            )}
-          
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.EditedText}>{format(date, "dd-MM-yyyy")}</Text>
+          )}
+          <View style={styles.sepLine}></View>
+          <Text style={styles.MainWidgetText}>Стать</Text>
+          {isEditing ? (
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <RNPickerSelect
+                style={{
+                  inputIOS: styles.pickerText,
+                  inputAndroid: styles.pickerText,
+                }}
+                onValueChange={(value) => setGender(value)}
+                items={genderlist}
+                placeholder={{}}
+                value={gender}
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={{ flexDirection: "column" }}>
+              <RNPickerSelect
+                style={{
+                  inputIOS: styles.pickerText,
+                  inputAndroid: styles.pickerText,
+                }}
+                onValueChange={(value) => setGender(value)}
+                items={genderlist}
+                disabled={true}
+                placeholder={{}}
+                value={gender}
+              />
+            </View>
+          )}
+          {isEditing && <View style={styles.sepLine}></View>}
+          {isEditing && (
+            <TouchableOpacity
+              styles={styles.saveIcon}
+              onPress={handleFullnameSave}
+            >
+              <Image
+                style={styles.saveIcon}
+                contentFit="contain"
+                source={require("../assets/tick.svg")}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableWithoutFeedback>
     );
@@ -387,7 +400,7 @@ const UserProfile = () => {
 
   const SignOut = () => {
     const handleSignOut = () => {
-        navigator.navigate("StartMenu");
+      navigator.navigate("StartMenu");
     };
     const confirmation = () => {
       Alert.alert("Вихід", "Чи справді ви хочете вийти?", [
@@ -413,31 +426,28 @@ const UserProfile = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      
-        <SafeAreaView style={styles.container}>
-          <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true} 
-          >
-            <View style={styles.scrollView}>
-              <View style={styles.userIcon}>
-                {image ? (
-                  <Image source={{ uri: image }} style={styles.userIconImage} />
-                ) : (
-                  <Text style={styles.userIconText}>{initials}</Text>
-                )}
-              </View>
-              <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
-              <ContactsWidget
-                widgetname={"Контакти"}
-                phone={"+380123456789"}
-                email={emailRef.current}
-              />
-              <SignOut />
+      <SafeAreaView style={styles.container}>
+        <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
+          <View style={styles.scrollView}>
+            <View style={styles.userIcon}>
+              {image ? (
+                <Image source={{ uri: image }} style={styles.userIconImage} />
+              ) : (
+                <Text style={styles.userIconText}>{initials}</Text>
+              )}
             </View>
-          </ScrollView>
-        </SafeAreaView>
+            <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
+            <ContactsWidget
+              widgetname={"Контакти"}
+              phone={"+380123456789"}
+              email={emailRef.current}
+            />
+            <SignOut />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
-  
 };
 const styles = StyleSheet.create({
   container: {

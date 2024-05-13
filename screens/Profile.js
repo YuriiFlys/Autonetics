@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
@@ -16,39 +17,48 @@ import UserComponent from "../components/User";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "react-native-axios";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Profile = () => {
-  
   const navigator = useNavigation();
+  const [isLoading, setLoading] = React.useState(true);
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
   React.useEffect(() => {
     async function fetchData() {
-        const token = await AsyncStorage.getItem("token");
-        const decoded_jwt = jwtDecode(token);
-        console.log(decoded_jwt.email);
-        try {
-            const res = await axios.get(`http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`, {
-              headers: {
-                  'Authorization': `Bearer ${token}`
-              }
-          });
-            const user = res.data;
-            if (user.firstName === null || user.lastName === null) {
-                setUserName(" ");
-            } else {
-                setUserName(user.firstName + " " + user.lastName);
-            }
-        } catch (error) {
-            console.error(error);
+      const token = await AsyncStorage.getItem("token");
+      const decoded_jwt = jwtDecode(token);
+      console.log(decoded_jwt.email);
+      try {
+        const res = await axios.get(
+          `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const user = res.data;
+        if (user.firstName === null || user.lastName === null) {
+          setUserName(" ");
+        } else {
+          setUserName(user.firstName + " " + user.lastName);
         }
+      } catch (error) {
+        console.error(error);
+      }
     }
-    fetchData();
-}, [userName]);
 
+    const loadData = async () => {
+      setLoading(true);
+      await fetchData();
+      setLoading(false);
+    };
+    loadData();
+  }, [userName]);
 
   const ButtonMenu = ({ image, name, navig }) => {
     return (
@@ -66,38 +76,46 @@ const Profile = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Logo name={"Профіль"} />
-      <View style={styles.mainContainer}>
-        <UserComponent
-          userName={userName}
-          profileImage={profileImage}
-          imageSize={0.25}
-        />
-        <GrayLine style={{ marginTop: 10 }} />
-        <ButtonMenu
-          image={require("../assets/Profile/user.svg")}
-          name={"Особисті дані"}
-          navig={() => navigator.navigate("UserProfile")}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../assets/Profile/history.svg")}
-          name={"Історія"}
-          navig={() => navigator.navigate("Cart", { screen: "Історія" })}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../assets/Profile/help.svg")}
-          name={"Допомога"}
-          navig={() => console.log("Допомога")}
-        />
-        <GrayLine />
-        <ButtonMenu
-          image={require("../assets/Profile/Settings.svg")}
-          name={"Налаштування"}
-          navig={() => navigator.navigate("Settings")}
-        />
-        <GrayLine />
-      </View>
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <View style={styles.mainContainer}>
+          <UserComponent
+            userName={userName}
+            profileImage={profileImage}
+            imageSize={0.25}
+          />
+          <GrayLine style={{ marginTop: 10 }} />
+          <ButtonMenu
+            image={require("../assets/Profile/user.svg")}
+            name={"Особисті дані"}
+            navig={() => navigator.navigate("UserProfile")}
+          />
+          <GrayLine />
+          <ButtonMenu
+            image={require("../assets/Profile/history.svg")}
+            name={"Історія"}
+            navig={() => navigator.navigate("Cart", { screen: "Історія" })}
+          />
+          <GrayLine />
+          <ButtonMenu
+            image={require("../assets/Profile/help.svg")}
+            name={"Допомога"}
+            navig={() => console.log("Допомога")}
+          />
+          <GrayLine />
+          <ButtonMenu
+            image={require("../assets/Profile/Settings.svg")}
+            name={"Налаштування"}
+            navig={() => navigator.navigate("Settings")}
+          />
+          <GrayLine />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
