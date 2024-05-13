@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import Logo from "../../components/Logo";
 import { Image } from "expo-image";
@@ -17,29 +18,68 @@ import Search from "../../components/Search";
 import GrayLine from "../../components/GrayLine";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const data = [
-  {
-    name: "Мінеральна вода негазована 1.5л Моршинська",
-    price: 20.99,
-    count: 10,
-    imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
-  },
-  {
-    name: "Мінеральна вода негазована 1.5л Моршинська",
-    price: 20.99,
-    count: 10,
-    imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
-  },
-];
+// const data = [
+//   {
+//     name: "Мінеральна вода негазована 1.5л Моршинська",
+//     price: 20.99,
+//     count: 10,
+//     imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
+//   },
+//   {
+//     name: "Мінеральна вода негазована 1.5л Моршинська",
+//     price: 20.99,
+//     count: 10,
+//     imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
+//   },
+// ];
 const Storage = () => {
   const navigator = useNavigation();
+  const [data, setData] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await handleLoadGoods();
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  const handleLoadGoods = async () => {
+    setIsRefreshing(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await fetch("http://23.100.50.204:8080/api/goods", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const responseData = await response.json();
+      console.log("responseDatar", responseData);
+      const newData = responseData.map((item) => ({
+        ...item,
+        imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
+      }));
+      setData(newData);
+    } catch (error) {
+      console.error("Error while fetching shops:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.productContainer}
-        onPress={() => navigator.navigate("ProductInfo", { id: 1 })} //todo
+        onPress={() => navigator.navigate("ProductInfo", { id: item.id })} //todo
       >
         <Image
           source={item.imageSource}
@@ -47,7 +87,7 @@ const Storage = () => {
         />
         <View style={styles.nameContainer}>
           <Text style={styles.nameText}>{item.name}</Text>
-          <Text style={styles.nameText}>{item.price}₴</Text>
+          <Text style={styles.nameText}>{item.priceOut}₴</Text>
         </View>
         <View style={styles.countContainer}>
           <Text style={styles.countText}>{item.count}шт</Text>
@@ -80,12 +120,20 @@ const Storage = () => {
           <Text style={styles.buttonSearch}>+</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        refreshing={false}
-        onRefresh={() => console.log("refresh")}
-      />
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          refreshing={isRefreshing}
+          onRefresh={() => handleLoadGoods}
+        />
+      )}
     </SafeAreaView>
   );
 };

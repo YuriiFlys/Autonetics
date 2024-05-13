@@ -48,11 +48,10 @@ const Scanner = ({
 
   const handleBarCodeScanned = useCallback(async ({ type, data }) => {
     setIsScanning(false);
+    // console.log("data", data);
     if (data) {
-      console.log("data1", data);
+      // console.log("data1", data);
       handleScanned(data);
-      console.log("data2", data);
-
       setScanned(true);
       // Додаємо затримку 500 мілісекунд (0.5 секунди)
       await new Promise((resolve) => setTimeout(resolve, 500));
