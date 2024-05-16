@@ -11,10 +11,11 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const InputField = () => {
+const InputField = ({ name }) => {
+  console.log(name);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Input Field</Text>
+      <Text style={styles.text}>{name}</Text>
       <TextInput
         style={styles.input}
         autoCapitalize="none"

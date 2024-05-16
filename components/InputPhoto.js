@@ -89,6 +89,7 @@ const InputPhoto = () => {
 const styles = StyleSheet.create({
   container: {
     width: screenWidth * 0.9,
+    height: screenHeight * 0.25,
   },
   text: {
     fontFamily: FontFamily.CommissioneMedium,
