@@ -11,6 +11,7 @@ import Logo from "../../components/Logo";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import InputField from "../../components/InputField.js";
 import InputPhoto from "../../components/InputPhoto.js";
+import SelectList from "../../components/SelectList";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const fields = [
@@ -27,7 +28,20 @@ const fields = [
   "Клас",
 ];
 
+const data = [
+  { key: "1", value: "Mobiles" },
+  { key: "2", value: "Appliances" },
+  { key: "3", value: "Cameras" },
+  { key: "4", value: "Computers" },
+  { key: "5", value: "Vegetables" },
+  { key: "6", value: "Diary Products" },
+  { key: "7", value: "Drinks" },
+];
+
 const AddProductsScreen = () => {
+  const [selected, setSelected] = React.useState("");
+  // let selected;
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ weight: screenWidth * 0.9 }}>
@@ -35,6 +49,28 @@ const AddProductsScreen = () => {
         {fields.map((field) => (
           <InputField name={field} />
         ))}
+        <SelectList
+          setSelected={setSelected}
+          data={data}
+          searchPlaceholder="Виберіть класс"
+          search={true}
+          dropdownShown={false}
+        />
+        <SelectList
+          setSelected={setSelected}
+          data={data}
+          searchPlaceholder="Виберіть класс"
+          search={true}
+          dropdownShown={false}
+        />
+        <SelectList
+          setSelected={setSelected}
+          data={data}
+          placeholder={"Виберіть класс"}
+          searchPlaceholder="Виберіть класс"
+          search={true}
+          dropdownShown={false}
+        />
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttontext}>Додати товар</Text>
         </TouchableOpacity>

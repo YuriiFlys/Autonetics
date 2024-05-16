@@ -12,7 +12,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const InputField = ({ name }) => {
-  console.log(name);
+  // console.log(name);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{name}</Text>
@@ -40,14 +40,15 @@ const styles = StyleSheet.create({
     color: Color.colorLightGray,
   },
   input: {
-    height: 40,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     weight: "100%",
     borderColor: Color.colorDarkBlue,
-    borderWidth: 1,
     width: "100%",
-    borderRadius: 5,
     padding: 10,
     marginVertical: 10,
+    borderWidth: 1,
+    borderRadius: 10,
   },
 });
 
