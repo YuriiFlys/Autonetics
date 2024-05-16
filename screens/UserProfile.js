@@ -112,84 +112,55 @@ const UserProfile = () => {
     }
   }, [user]);
 
-  const handleContactSave = useCallback(async () => {
-    const UpdatedData = {
-      phoneNumber: `+380${phoneRef.current}`,
-      email: emailRef.current,
-    };
-    try {
-      const response = await fetch(`http://23.100.50.204:8080/client/}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(UpdatedData),
-      });
-      if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
-      }
-      const data = await response.text();
-    } catch (error) {
-      console.error(error);
-    }
+  
 
-    setIsEditingContacts(false);
-  }, [phoneRef, emailRef]);
+const handleContactSave = useCallback(async() => {
+  const UpdatedData = {
+    "phoneNumber": `+380${phoneRef.current}`,
+  };
 
-  const handleFullnameSave = useCallback(async () => {
-    const UpdatedData = {
-      firstName: fullnameRef.current.split(" ")[0],
-      lastName: fullnameRef.current.split(" ")[1],
-    };
-    try {
-      const response = await fetch(`http://23.100.50.204:8080/client/57`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(UpdatedData),
-      });
-      if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const userId= await user.id;
+    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${userId}`, UpdatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
-      updateUser({
-        ...user,
-        firstName: UpdatedData.firstName,
-        lastName: UpdatedData.lastName,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    setIsEditing(false);
-  }, [fullnameRef]);
+    });
+    fetchData();
+  } catch (error) {
+    console.error(error);
+  }
 
-  const handleMainSave = useCallback(async () => {
-    const UpdatedData = {
-      firstName: fullnameRef.current.split(" ")[0],
-      lastName: fullnameRef.current.split(" ")[1],
-      birthDate: format(date, "yyyy-MM-dd"),
-      gender: gender,
-    };
-    try {
-      const response = await fetch(
-        `http://23.100.50.204:8080/client/${user.userID}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(UpdatedData),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
+  setIsEditingContacts(false);
+}, [phoneRef, emailRef]);
+
+const handleMainSave = useCallback(async() => {  
+  const UpdatedData = {
+    "firstName": fullnameRef.current.split(" ")[0],
+    "lastName": fullnameRef.current.split(" ")[1],
+    "birthDate": format(date, "yyyy-MM-dd"),
+    "gender": gender
+  };
+
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const userId= await user.id;
+    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${userId}`, UpdatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
-      const data = await response.text();
-    } catch (error) {
-      console.error(error);
-    }
-    setIsEditing(false);
-  }, [fullnameRef, date, gender]);
+    });
+    fetchData();
+  } catch (error) {
+    console.error(error);
+  }
+
+  setIsEditing(false);
+}, [fullnameRef, date, gender]);
+
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -203,10 +174,6 @@ const UserProfile = () => {
   }, []);
   const handlePhoneChange = useCallback((phone) => {
     phoneRef.current = phone;
-  }, []);
-
-  const handleEmailChange = useCallback((email) => {
-    emailRef.current = email;
   }, []);
 
   const genderlist = [
@@ -372,15 +339,7 @@ const UserProfile = () => {
           </View>
           <View style={styles.sepLine}></View>
           <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
-          {isEditingContacts ? (
-            <TextInput
-              style={styles.EditedText}
-              defaultValue={emailRef.current}
-              onChangeText={handleEmailChange}
-            />
-          ) : (
-            <Text style={styles.EditedText}>{emailRef.current}</Text>
-          )}
+          <Text style={styles.EditedText}>{emailRef.current}</Text>
         </View>
         {isEditingContacts && <View style={styles.sepLine}></View>}
         {isEditingContacts && (

@@ -17,7 +17,6 @@ import UserComponent from "../components/User";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "react-native-axios";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -28,10 +27,9 @@ const Profile = () => {
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
   React.useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       const token = await AsyncStorage.getItem("token");
       const decoded_jwt = jwtDecode(token);
-      console.log(decoded_jwt.email);
       try {
         const res = await axios.get(
           `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
@@ -41,24 +39,26 @@ const Profile = () => {
             },
           }
         );
-        const user = res.data;
-        if (user.firstName === null || user.lastName === null) {
+        const userData = res.data;
+        if (userData.firstName === null || userData.lastName === null) {
           setUserName(" ");
         } else {
-          setUserName(user.firstName + " " + user.lastName);
+          setUserName(userData.firstName + " " + userData.lastName);
         }
       } catch (error) {
         console.error(error);
       }
-    }
-
-    const loadData = async () => {
+    };
+  
+    const unsubscribe = navigator.addListener("focus", async () => {
       setLoading(true);
       await fetchData();
       setLoading(false);
-    };
-    loadData();
-  }, [userName]);
+    });
+  
+    return unsubscribe;
+  }, [navigator]);
+  
 
   const ButtonMenu = ({ image, name, navig }) => {
     return (
