@@ -17,10 +17,12 @@ import {
 } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { register } from "../api/user_api";
+import { login } from "../api/user_api";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const WelcomeScreen = ({route}) => {
+const WelcomeScreen = ({ route }) => {
   const { user } = route.params;
   const [password, setPassword] = React.useState("");
   const [repeatPassword, setRepeatPassword] = React.useState("");
@@ -31,15 +33,15 @@ const WelcomeScreen = ({route}) => {
 
   React.useEffect(() => {
     console.log(user);
-    console.log(Date.now())
+    console.log(Date.now());
   }, []);
-  
+
   const handleFinalRegister = async () => {
     if (password !== repeatPassword) {
       setErrorMessage("Паролі не співпадають");
       return;
     }
-    
+
     const email = user.email;
     const phoneNumber = user.phoneNumber;
     const newClient = {
@@ -50,14 +52,28 @@ const WelcomeScreen = ({route}) => {
       phoneNumber: phoneNumber,
       email: email,
       password: password,
-    }
+    };
     console.log(newClient);
-    register({firstName:"Не",lastName: "Вказано",birthDate: "1955-01-01",gender: "Чоловіча",phoneNumber: phoneNumber,email: email,password: password}).then((response) => {
+    register({
+      firstName: "Не",
+      lastName: "Вказано",
+      birthDate: "1955-01-01",
+      gender: "Чоловіча",
+      phoneNumber: phoneNumber,
+      email: email,
+      password: password,
+    }).then((response) => {
       console.log(response.status);
       if (response.status == 200) {
-        AsyncStorage.setItem("token", response.data.token);
-        navigator.navigate("BottomMenu");
-      }else{
+        // AsyncStorage.setItem("token", response.data.token);
+        // navigator.navigate("BottomMenu");
+        login({ email: email, password: password }).then((response) => {
+          if (response.status == 200) {
+            AsyncStorage.setItem("token", response.data.token);
+            navigator.navigate("BottomMenu");
+          }
+        });
+      } else {
         setErrorMessage("Помилка реєстрації");
       }
     });
