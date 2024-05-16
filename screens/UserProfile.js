@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Image } from "expo-image";
 import RNPickerSelect from "react-native-picker-select";
@@ -60,26 +61,29 @@ const UserProfile = () => {
       return "";
     }
   }
+  async function fetchData() {
+    setRefreshing(true);
+    const token = await AsyncStorage.getItem("token");
+    const decoded_jwt = jwtDecode(token);
+    try {
+      const res = await axios.get(
+        `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const userData = res.data;
+      setUser(userData);
+      setRefreshing(false);
+    } catch (error) {
+      console.error(error);
+      setRefreshing(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      const token = await AsyncStorage.getItem("token");
-      const decoded_jwt = jwtDecode(token);
-      try {
-        const res = await axios.get(
-          `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const userData = res.data;
-        setUser(userData);
-      } catch (error) {
-        console.error(error);
-      }
-    }
     const loadData = async () => {
       setLoading(true);
       await fetchData();
@@ -316,10 +320,7 @@ const UserProfile = () => {
           )}
           {isEditing && <View style={styles.sepLine}></View>}
           {isEditing && (
-            <TouchableOpacity
-              styles={styles.saveIcon}
-              onPress={handleFullnameSave}
-            >
+            <TouchableOpacity styles={styles.saveIcon} onPress={handleMainSave}>
               <Image
                 style={styles.saveIcon}
                 contentFit="contain"
@@ -421,32 +422,50 @@ const UserProfile = () => {
   };
 
   const scrollViewRef = useRef();
+  const [refreshing, setRefreshing] = React.useState(false);
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <SafeAreaView style={styles.container}>
-        <ScrollView ref={scrollViewRef} automaticallyAdjustContentInsets={true}>
-          <View style={styles.scrollView}>
-            <View style={styles.userIcon}>
-              {image ? (
-                <Image source={{ uri: image }} style={styles.userIconImage} />
-              ) : (
-                <Text style={styles.userIconText}>{initials}</Text>
-              )}
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <SafeAreaView style={styles.container}>
+          <ScrollView
+            ref={scrollViewRef}
+            automaticallyAdjustContentInsets={true}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+            }
+          >
+            <View style={styles.scrollView}>
+              <View style={styles.userIcon}>
+                {image ? (
+                  <Image source={{ uri: image }} style={styles.userIconImage} />
+                ) : (
+                  <Text style={styles.userIconText}>{initials}</Text>
+                )}
+              </View>
+              <MainInfo
+                widgetname={"Персональні дані"}
+                fullname={fullnameRef}
+              />
+              <ContactsWidget
+                widgetname={"Контакти"}
+                phone={"+380123456789"}
+                email={emailRef.current}
+              />
+              <SignOut />
             </View>
-            <MainInfo widgetname={"Персональні дані"} fullname={fullnameRef} />
-            <ContactsWidget
-              widgetname={"Контакти"}
-              phone={"+380123456789"}
-              email={emailRef.current}
-            />
-            <SignOut />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -469,6 +488,7 @@ const styles = StyleSheet.create({
     borderColor: Color.colorLightGray,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: screenHeight * 0.02,
   },
   userIconImage: {
     width: screenWidth * 0.35,
