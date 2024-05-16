@@ -114,27 +114,7 @@ const UserProfile = () => {
 
   
 
-const handleContactSave = useCallback(async() => {
-  const UpdatedData = {
-    "phoneNumber": `+380${phoneRef.current}`,
-  };
 
-  try {
-    const token = await AsyncStorage.getItem("token");
-    const userId= await user.id;
-    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${userId}`, UpdatedData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    fetchData();
-  } catch (error) {
-    console.error(error);
-  }
-
-  setIsEditingContacts(false);
-}, [phoneRef, emailRef]);
 
 const handleMainSave = useCallback(async() => {  
   const UpdatedData = {
@@ -146,8 +126,7 @@ const handleMainSave = useCallback(async() => {
 
   try {
     const token = await AsyncStorage.getItem("token");
-    const userId= await user.id;
-    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${userId}`, UpdatedData, {
+    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -161,6 +140,27 @@ const handleMainSave = useCallback(async() => {
   setIsEditing(false);
 }, [fullnameRef, date, gender]);
 
+const handleContactSave = useCallback(async() => {
+  const UpdatedData = {
+    "phoneNumber": `+380${phoneRef.current}`
+  };
+  
+  try {
+    const token = await AsyncStorage.getItem("token");
+    
+    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    fetchData();
+  } catch (error) {
+    console.error(error);
+  }
+
+  setIsEditingContacts(false);
+}, [phoneRef, user]);
 
   const handleEdit = () => {
     setIsEditing(true);
