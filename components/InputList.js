@@ -8,20 +8,24 @@ import {
   TextInput,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import SelectList from "../components/SelectList";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const InputField = ({ name }) => {
+const InputList = ({ name, data, setSelected, isAdded }) => {
   // console.log(name);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{name}</Text>
-      <TextInput
-        style={styles.input}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        onSubmitEditing={() => passwordRef.current.focus()}
-        blurOnSubmit={false}
+      <SelectList
+        setSelected={setSelected}
+        data={data}
+        placeholder={"Виберіть " + name}
+        searchPlaceholder={"Виберіть name" + name}
+        search={true}
+        dropdownShown={false}
+        isAdded={isAdded}
       />
     </View>
   );
@@ -43,8 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     weight: "100%",
-    // borderColor: Color.colorDarkBlue,
-    borderColor: "gray",
+    borderColor: Color.colorDarkBlue,
     width: "100%",
     padding: 10,
     marginVertical: 10,
@@ -53,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputField;
+export default InputList;

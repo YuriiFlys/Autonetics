@@ -10,11 +10,10 @@ import {
     TextInput,
     Keyboard
 } from 'react-native';
-import { Color, FontFamily } from "../GlobalStyles";
 
 type L1Keys = { key?: any; value?: any; disabled?: boolean | undefined }
 
-const SelectList=  ({
+const SelectList = ({
         setSelected,
         placeholder,
         boxStyles,
@@ -36,7 +35,8 @@ const SelectList=  ({
         onSelect = () => {},
         save = 'value',
         dropdownShown = false,
-        fontFamily
+        fontFamily,
+        isAdded = false
     }) => {
 
     const oldOption = React.useRef(null);
@@ -110,7 +110,7 @@ const SelectList=  ({
             let row = item.value.toLowerCase();
             return row.search(val.toLowerCase()) > -1;
         });
-        if (result.length === 0 && val) {
+        if (result.length === 0 && val && isAdded) {
             result = [{ key: val, value: val }];
         }
         setFilteredData(result);
@@ -209,7 +209,7 @@ const SelectList=  ({
                                     })
                                     :
                                     <TouchableOpacity style={[styles.option, dropdownItemStyles]} onPress={() => {
-                                        if (searchText) {
+                                        if (searchText && isAdded) {
                                             const newItem = { key: searchText, value: searchText };
                                             data.push(newItem);
                                             setFilteredData([newItem]);
@@ -222,7 +222,7 @@ const SelectList=  ({
                                         slideup();
                                         setTimeout(() => setFilteredData(data), 800);
                                     }}>
-                                        <Text style={[{ fontFamily }, dropdownTextStyles]}>{searchText ? searchText : notFoundText}</Text>
+                                        <Text style={[{ fontFamily }, dropdownTextStyles]}>{searchText && isAdded ? searchText : notFoundText}</Text>
                                     </TouchableOpacity>
                             }
                         </ScrollView>
@@ -237,8 +237,8 @@ const SelectList=  ({
 export default SelectList;
 
 const styles = StyleSheet.create({
-    wrapper: { margin: 20, borderWidth: 1, borderRadius: 10, borderColor: Color.colorDarkBlue, marginTop:10, paddingHorizontal: 20, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between' },
-    dropdown: { borderWidth: 1, borderRadius: 10, borderColor:  Color.colorDarkBlue, marginTop: 10, overflow: 'hidden' },
+    wrapper: {    marginVertical: 10, borderWidth: 1, borderRadius: 10, borderColor: 'gray', paddingHorizontal: 20, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between' },
+    dropdown: { borderWidth: 1, borderRadius: 10, borderColor: 'gray', marginTop: 10, overflow: 'hidden' },
     option: { paddingHorizontal: 20, paddingVertical: 8, overflow: 'hidden' },
     disabledoption: { paddingHorizontal: 20, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', backgroundColor: 'whitesmoke', opacity: 0.9 }
 });

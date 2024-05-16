@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,7 +11,10 @@ import Logo from "../../components/Logo";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import InputField from "../../components/InputField.js";
 import InputPhoto from "../../components/InputPhoto.js";
+import InputList from "../../components/InputList.js";
 import SelectList from "../../components/SelectList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const fields = [
@@ -27,20 +30,61 @@ const fields = [
   "Країна виробник",
   "Клас",
 ];
-
-const data = [
-  { key: "1", value: "Mobiles" },
-  { key: "2", value: "Appliances" },
-  { key: "3", value: "Cameras" },
-  { key: "4", value: "Computers" },
-  { key: "5", value: "Vegetables" },
-  { key: "6", value: "Diary Products" },
-  { key: "7", value: "Drinks" },
-];
+const dataField = ["Тип продукту", "Країна виробник", "Клас"];
 
 const AddProductsScreen = () => {
   const [selected, setSelected] = React.useState("");
-  // let selected;
+  const [categories, setCategories] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const loadData = async (url) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch("http://23.100.50.204:8080/api/" + url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch data url: " + url);
+      }
+      const responseData = await response.json();
+      console.log("Response data", responseData);
+      return responseData;
+    } catch (error) {
+      console.error("Error while fetching", error);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoriesData = await loadData("goods-type");
+        const mappedCategories = categoriesData.map((item, index) => ({
+          key: index,
+          value: item.name,
+        }));
+        setCategories(mappedCategories);
+
+        const countriesData = await loadData("location/countries");
+        const mappedCountries = countriesData.map((item) => ({
+          key: item.id,
+          value: item.name,
+        }));
+        setCountries(mappedCountries);
+
+        const classesData = await loadData("class");
+        const mappedClasses = classesData.map((item) => ({
+          key: item.id,
+          value: item.name,
+        }));
+        setClasses(mappedClasses);
+      } catch (error) {
+        console.error("Error while fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,27 +93,23 @@ const AddProductsScreen = () => {
         {fields.map((field) => (
           <InputField name={field} />
         ))}
-        <SelectList
+        <InputList
+          name={dataField[0]}
+          data={categories}
           setSelected={setSelected}
-          data={data}
-          searchPlaceholder="Виберіть класс"
-          search={true}
-          dropdownShown={false}
+          isAdded={true}
         />
-        <SelectList
+        <InputList
+          name={dataField[1]}
+          data={countries}
           setSelected={setSelected}
-          data={data}
-          searchPlaceholder="Виберіть класс"
-          search={true}
-          dropdownShown={false}
+          isAdded={false}
         />
-        <SelectList
+        <InputList
+          name={dataField[2]}
+          data={classes}
           setSelected={setSelected}
-          data={data}
-          placeholder={"Виберіть класс"}
-          searchPlaceholder="Виберіть класс"
-          search={true}
-          dropdownShown={false}
+          isAdded={true}
         />
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttontext}>Додати товар</Text>

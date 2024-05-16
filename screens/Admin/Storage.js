@@ -62,7 +62,6 @@ const Storage = () => {
         throw new Error("Failed to fetch shops");
       }
       const responseData = await response.json();
-      console.log("responseDatar", responseData);
       const newData = responseData.map((item) => ({
         ...item,
         count: 10,
@@ -119,7 +118,6 @@ const Storage = () => {
         throw new Error("Failed to fetch shops");
       }
       const responseData = await response.json();
-      console.log("responseDatar", responseData);
       const newData = responseData.map((item) => ({
         ...item,
         count: 10,
