@@ -18,6 +18,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const fields = [
   "Назва товару",
+  "Вихідна ціна",
   "Вхідна ціна",
   "Вага",
   "Штрих-код",
@@ -30,7 +31,6 @@ const dataField = ["Тип продукту", "Країна виробник", "
 
 const AddProductsScreen = () => {
   const navigator = useNavigation();
-  ``;
   const [selected, setSelected] = React.useState("");
   const [categories, setCategories] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -86,25 +86,73 @@ const AddProductsScreen = () => {
 
     fetchData();
   }, []);
+  const sendData = async (url, body) => {
+    console.log("Send data", body);
+    console.log("URL", url);
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch("http://23.100.50.204:8080/api/" + url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to send data");
+      }
+      const responseData = await response.json();
+      console.log("Response data", responseData);
+      return responseData;
+    } catch (error) {
+      console.error("Error while sending data", error);
+      throw error;
+    }
+  };
+  const createProduct = async () => {
+    console.log("newProduct", newProduct);
+    if (newProduct["Тип продукту"] < 0) {
+      const typeData = {
+        name: categories.find((item) => item.key === newProduct["Тип продукту"])
+          .value,
+      };
+      const class_id = await sendData("goods-type", typeData).id;
+      setData("Тип продукту", class_id);
+    }
+    if (newProduct["Клас"] < 0) {
+      const classData = {
+        name: classes.find((item) => item.key === newProduct["Клас"]).value,
+      };
+      const type_id = await sendData("class", classData).id;
+      setData("Клас", type_id);
+    }
+    const productData = {
+      priceIn: parseFloat(newProduct["Вхідна ціна"]),
+      priceOut: parseFloat(newProduct["Вихідна ціна"]),
+      weight: parseFloat(newProduct["Вага"]),
+      rating: 0,
+      goodsTypeId: newProduct["Тип продукту"],
+      barcode: parseInt(newProduct["Штрих-код"]),
+      name: newProduct["Назва товару"],
+      description: newProduct["Опис"],
+      producer: newProduct["Виробник"],
+      storageCondition: newProduct["Умови зберігання"],
+      composition: newProduct["Вміст"],
+      countryID: newProduct["Країна виробник"],
+      classID: newProduct["Клас"],
+      supplierID: 2, // ToDo
+    };
+
+    const res = await sendData("goods", productData);
+    console.log("Response", res);
+  };
   const setData = (name, value) => {
     setNewProduct((prev) => ({
       ...prev,
       [name]: value,
     }));
-    // console.log("New product", newProduct);
   };
-  useEffect(() => {
-    setData(dataField[0], selectedCategories);
-  }, [selectedCategories]);
-  useEffect(() => {
-    setData(dataField[1], selectedCountries);
-  }, [selectedCountries]);
-  useEffect(() => {
-    setData(dataField[2], selectedClasses);
-  }, [selectedClasses]);
-  const [selectedCategories, setSelectedCategories] = useState("");
-  const [selectedCountries, setSelectedCountries] = useState("");
-  const [selectedClasses, setSelectedClasses] = useState("");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -116,13 +164,13 @@ const AddProductsScreen = () => {
         <InputList
           name={dataField[0]}
           data={categories}
-          setSelected={setSelectedCategories}
+          setSelected={(val) => setData(dataField[0], val)}
           isAdded={true}
         />
         <InputList
           name={dataField[1]}
           data={countries}
-          setSelected={setSelectedCountries}
+          setSelected={(val) => setData(dataField[1], val)}
           isAdded={false}
         />
         <InputList
@@ -131,13 +179,14 @@ const AddProductsScreen = () => {
           setSelected={(val) => {
             setData(dataField[2], val);
           }}
-          // isAdded={true}
+          isAdded={true}
         />
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log("newProduct", newProduct);
-            console.log("classes", classes);
+            // console.log("newProduct", newProduct);
+            // console.log("classes", classes);
+            createProduct();
           }}
         >
           <Text style={styles.buttontext}>Додати товар</Text>

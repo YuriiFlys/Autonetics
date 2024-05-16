@@ -27,7 +27,7 @@ const SelectList = ({
   closeicon = false,
   search = true,
   searchPlaceholder = "search",
-  notFoundText = "No data found",
+  // notFoundText = "No data found",
   disabledItemStyles,
   disabledTextStyles,
   onSelect = () => {},
@@ -112,7 +112,7 @@ const SelectList = ({
   };
 
   const handleCreateNewItem = () => {
-    const newItem = { key: searchText, value: searchText };
+    const newItem = { key: -data.length, value: searchText };
     if (
       isAdded &&
       searchText &&
@@ -120,7 +120,7 @@ const SelectList = ({
     ) {
       data.push(newItem);
       setFilteredData([newItem]);
-      setSelected(newItem.value);
+      setSelected(newItem.key);
       setSelectedVal(newItem.value);
       slideup();
       setTimeout(() => setFilteredData(data), 800);
