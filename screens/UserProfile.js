@@ -399,7 +399,8 @@ const UserProfile = () => {
   };
 
   const SignOut = () => {
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
+      await AsyncStorage.clear();
       navigator.navigate("StartMenu");
     };
     const confirmation = () => {
