@@ -65,6 +65,8 @@ const Storage = () => {
       console.log("responseDatar", responseData);
       const newData = responseData.map((item) => ({
         ...item,
+        count: 10,
+
         imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
       }));
       setData(newData);
@@ -95,11 +97,46 @@ const Storage = () => {
       </TouchableOpacity>
     );
   };
+  const handleSearch = async (search) => {
+    setLoading(true);
+    if (!search) {
+      await handleLoadGoods();
+      setLoading(false);
+      return;
+    }
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/goods/name/" + search,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const responseData = await response.json();
+      console.log("responseDatar", responseData);
+      const newData = responseData.map((item) => ({
+        ...item,
+        count: 10,
+        imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
+      }));
+      setData(newData);
+    } catch (error) {
+      console.error("Error while fetching shops:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Logo name="Склад" />
       <GrayLine />
-      <Search />
+      <Search search={handleSearch} />
       <View style={{ flexDirection: "row", marginVertical: 20 }}>
         <TouchableOpacity
           style={styles.searchBarcode}

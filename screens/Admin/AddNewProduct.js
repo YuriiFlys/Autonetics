@@ -13,16 +13,28 @@ import InputField from "../../components/InputField.js";
 import InputPhoto from "../../components/InputPhoto.js";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+const fields = [
+  "Назва товару",
+  "Вхідна ціна",
+  "Вага",
+  "Тип продукту",
+  "Штрих-код",
+  "Опис",
+  "Виробник",
+  "Умови зберігання",
+  "Вміст",
+  "Країна виробник",
+  "Клас",
+];
 
 const AddProductsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ weight: screenWidth * 0.9 }}>
         <InputPhoto />
-        <InputField />
-        <InputField />
-        <InputField />
-        <InputField />
+        {fields.map((field) => (
+          <InputField name={field} />
+        ))}
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttontext}>Додати товар</Text>
         </TouchableOpacity>

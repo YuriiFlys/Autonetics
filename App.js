@@ -100,6 +100,7 @@ const App = () => {
                 component={AddProductsScreen}
                 options={{
                   headerShown: true,
+                  headerBackTitle: "Назад",
                   title: "Добавити новий товар",
                 }}
               />
