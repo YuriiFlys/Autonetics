@@ -7,13 +7,12 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import Logo from "../../components/Logo";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import InputField from "../../components/InputField.js";
 import InputPhoto from "../../components/InputPhoto.js";
 import InputList from "../../components/InputList.js";
-import SelectList from "../../components/SelectList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -21,22 +20,22 @@ const fields = [
   "Назва товару",
   "Вхідна ціна",
   "Вага",
-  "Тип продукту",
   "Штрих-код",
   "Опис",
   "Виробник",
   "Умови зберігання",
   "Вміст",
-  "Країна виробник",
-  "Клас",
 ];
 const dataField = ["Тип продукту", "Країна виробник", "Клас"];
 
 const AddProductsScreen = () => {
+  const navigator = useNavigation();
+  ``;
   const [selected, setSelected] = React.useState("");
   const [categories, setCategories] = useState([]);
   const [countries, setCountries] = useState([]);
   const [classes, setClasses] = useState([]);
+  const [newProduct, setNewProduct] = useState({});
   const loadData = async (url) => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -49,7 +48,7 @@ const AddProductsScreen = () => {
         throw new Error("Failed to fetch data url: " + url);
       }
       const responseData = await response.json();
-      console.log("Response data", responseData);
+      // console.log("Response data", responseData);
       return responseData;
     } catch (error) {
       console.error("Error while fetching", error);
@@ -60,9 +59,10 @@ const AddProductsScreen = () => {
       try {
         const categoriesData = await loadData("goods-type");
         const mappedCategories = categoriesData.map((item, index) => ({
-          key: index,
+          key: item.id,
           value: item.name,
         }));
+
         setCategories(mappedCategories);
 
         const countriesData = await loadData("location/countries");
@@ -70,6 +70,7 @@ const AddProductsScreen = () => {
           key: item.id,
           value: item.name,
         }));
+
         setCountries(mappedCountries);
 
         const classesData = await loadData("class");
@@ -85,33 +86,60 @@ const AddProductsScreen = () => {
 
     fetchData();
   }, []);
+  const setData = (name, value) => {
+    setNewProduct((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // console.log("New product", newProduct);
+  };
+  useEffect(() => {
+    setData(dataField[0], selectedCategories);
+  }, [selectedCategories]);
+  useEffect(() => {
+    setData(dataField[1], selectedCountries);
+  }, [selectedCountries]);
+  useEffect(() => {
+    setData(dataField[2], selectedClasses);
+  }, [selectedClasses]);
+  const [selectedCategories, setSelectedCategories] = useState("");
+  const [selectedCountries, setSelectedCountries] = useState("");
+  const [selectedClasses, setSelectedClasses] = useState("");
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ weight: screenWidth * 0.9 }}>
         <InputPhoto />
         {fields.map((field) => (
-          <InputField name={field} />
+          <InputField name={field} setData={setData} />
         ))}
         <InputList
           name={dataField[0]}
           data={categories}
-          setSelected={setSelected}
+          setSelected={setSelectedCategories}
           isAdded={true}
         />
         <InputList
           name={dataField[1]}
           data={countries}
-          setSelected={setSelected}
+          setSelected={setSelectedCountries}
           isAdded={false}
         />
         <InputList
           name={dataField[2]}
           data={classes}
-          setSelected={setSelected}
-          isAdded={true}
+          setSelected={(val) => {
+            setData(dataField[2], val);
+          }}
+          // isAdded={true}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            console.log("newProduct", newProduct);
+            console.log("classes", classes);
+          }}
+        >
           <Text style={styles.buttontext}>Додати товар</Text>
         </TouchableOpacity>
       </ScrollView>

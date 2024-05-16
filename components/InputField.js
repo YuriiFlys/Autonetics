@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -8,20 +8,23 @@ import {
   TextInput,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const InputField = ({ name }) => {
-  // console.log(name);
+const InputField = ({ name, setData }) => {
+  const inputRef = useRef(null);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{name}</Text>
       <TextInput
+        ref={inputRef}
         style={styles.input}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        onSubmitEditing={() => passwordRef.current.focus()}
+        // keyboardType="email-address"
+        onSubmitEditing={() => inputRef.current.focus()}
         blurOnSubmit={false}
+        onChangeText={(text) => setData(name, text)}
       />
     </View>
   );
@@ -29,10 +32,8 @@ const InputField = ({ name }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // width: "90%",
     padding: 20,
-    weight: "100%",
-    // height: "100%",
+    width: "100%",
   },
   text: {
     fontFamily: FontFamily.CommissioneMedium,
@@ -42,10 +43,8 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    weight: "100%",
-    // borderColor: Color.colorDarkBlue,
-    borderColor: "gray",
     width: "100%",
+    borderColor: "gray",
     padding: 10,
     marginVertical: 10,
     borderWidth: 1,
