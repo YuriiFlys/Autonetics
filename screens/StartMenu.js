@@ -35,7 +35,7 @@ const StartMenu = () => {
           if (await isTokenExpired()) {
             await AsyncStorage.clear();
           } else {
-            navigation.navigate("BottomAdminMenu"); //BottomMenu
+            navigation.navigate("BottomMenu"); //BottomMenu
           }
         }
       } catch (error) {
@@ -73,7 +73,7 @@ const StartMenu = () => {
       </Pressable>
       <Pressable
         style={styles.signupButton}
-        onPress={() => navigation.navigate("AddProducts")}
+        onPress={() => navigation.navigate("Signup")}
       >
         <View style={styles.signupButtonChild} />
         <Text style={styles.signUp}>Sign Up</Text>

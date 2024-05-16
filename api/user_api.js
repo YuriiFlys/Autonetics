@@ -15,3 +15,18 @@ export const login = async (data) => {
     return error.response.data;
   }
 };
+export const register = async (data) => {
+  try {
+    const result = await ApiManeger("api/auth/register", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      data: data,
+    });
+    return result;
+  } catch (error) {
+    console.error(error);
+    return error.response.data;
+  }
+};

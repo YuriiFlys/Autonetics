@@ -13,12 +13,10 @@ import {
   Dimensions,
 } from "react-native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-import { useUser } from "./UserContext";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const SignUpMenu = () => {
-  const {updateUser} = useUser();
   const navigator = useNavigation();
   const phoneRef = React.useRef();
   const [email, setEmail] = React.useState("");
@@ -47,8 +45,7 @@ const SignUpMenu = () => {
       email: email,
       phoneNumber: phoneNumber,
     };
-    updateUser({ ...user });
-    navigator.navigate("Welcome");
+    navigator.navigate("Welcome", { user: user });
   };
 
   return (

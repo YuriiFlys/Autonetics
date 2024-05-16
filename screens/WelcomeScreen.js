@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CheckBox } from "react-native-elements";
 import { Image } from "expo-image";
@@ -8,6 +8,7 @@ import {
   Text,
   View,
   Pressable,
+  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   Dimensions,
@@ -15,67 +16,51 @@ import {
   Keyboard,
 } from "react-native";
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
-import { useUser } from "./UserContext";
+import { register } from "../api/user_api";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const WelcomeScreen = () => {
-  const route = useRoute();
-  const {user, updateUser} = useUser();
+const WelcomeScreen = ({route}) => {
+  const { user } = route.params;
   const [password, setPassword] = React.useState("");
   const [repeatPassword, setRepeatPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
   const [isSelected, setSelection] = React.useState(false);
   const repeatPasswordRef = React.useRef();
   const navigator = useNavigation();
+
   React.useEffect(() => {
     console.log(user);
+    console.log(Date.now())
   }, []);
+  
   const handleFinalRegister = async () => {
     if (password !== repeatPassword) {
       setErrorMessage("Паролі не співпадають");
       return;
     }
-    const newClient = {
-      ...user,
-      firstName: "Не",
-      lastName: "Вказано",
-      gender: "Не вказано",
-      birthDate: Date.now(),
-      password: password,
-    }
+    
     const email = user.email;
     const phoneNumber = user.phoneNumber;
-    try {
-      const response = await fetch(`http://23.100.50.204:8080/client`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          FirstName: newClient.firstName,
-          LastName: newClient.lastName,
-          Gender: newClient.gender,
-          BirthDate: newClient.birthDate,
-          Email: email,
-          PhoneNumber: phoneNumber,
-          Password: password,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("HTTP status " + response.status);
-      }
-
-      const data = await response.json();
-      const clientId = data.clientId;
-      await AsyncStorage.setItem(email, clientId);
-      updateUser({...user, firstName: newClient.firstName, lastName: newClient.lastName, gender: newClient.gender, birthDate: newClient.birthDate, password: password});
-      navigator.navigate("BottomMenu", {screen: "Home" });
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Сталася помилка під час реєстрації");
+    const newClient = {
+      firstName: "Не",
+      lastName: "Вказано",
+      birthDate: "1955-01-01",
+      gender: "Чоловіча",
+      phoneNumber: phoneNumber,
+      email: email,
+      password: password,
     }
+    console.log(newClient);
+    register({firstName:"Не",lastName: "Вказано",birthDate: "1955-01-01",gender: "Чоловіча",phoneNumber: phoneNumber,email: email,password: password}).then((response) => {
+      console.log(response.status);
+      if (response.status == 200) {
+        AsyncStorage.setItem("token", response.data.token);
+        navigator.navigate("BottomMenu");
+      }else{
+        setErrorMessage("Помилка реєстрації");
+      }
+    });
   };
 
   return (
@@ -134,13 +119,13 @@ const WelcomeScreen = () => {
         checked={isSelected}
         onPress={() => setSelection(!isSelected)}
       />
-      <Pressable
+      <TouchableOpacity
         style={styles.submit}
-        onPress={handleFinalRegister}
+        onPress={() => handleFinalRegister()}
         disabled={!isSelected}
       >
         <Text style={styles.submitText}>Submit</Text>
-      </Pressable>
+      </TouchableOpacity>
       <Pressable
         style={styles.vector}
         onPress={() => navigator.navigate("Signup")}
