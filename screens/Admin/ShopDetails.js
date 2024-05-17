@@ -15,7 +15,7 @@ import {
 import { Image } from "expo-image";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
@@ -34,48 +34,38 @@ import {
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const UserProfile = () => {
-  const [user, setUser] = useState(null);
+const ShopDetails = ({route}) => {
+  const [shop, setShop] = useState(route.params.shop);
   const navigator = useNavigation();
-  const [initials, setInitials] = useState("");
-  const fullnameRef = React.useRef();
-  const [date, setDate] = useState(new Date());
-  const phoneRef = useRef("");
-  const [gender, setGender] = useState("Не вказано ");
+  const shopNameRef = React.useRef();
   const [, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
-  const emailRef = useRef();
+  const [ShopType, setShopType] = useState(null);
+  const [adress, setAdress] = useState("");
+  const [settlememt, setSettlement] = useState("");
+  const [AdditionalType, setAdditionalType] = useState("");
+  const [isParking, setIsParking] = useState(false);
+  const [AtFloor, setAtFloor] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [isEditingContacts, setIsEditingContacts] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isLoading, setLoading] = React.useState(true);
+  const [isEditingAdditional, setIsEditingAdditional] = useState(false);
 
-  function getInitials(name) {
-    try {
-      const words = name.split(" ");
-      const initials = words
-        .map((word) => word.charAt(0).toUpperCase())
-        .join("");
-      return initials;
-    } catch (error) {
-      return "";
-    }
-  }
+  
   async function fetchData() {
     setRefreshing(true);
     const token = await AsyncStorage.getItem("token");
     const decoded_jwt = jwtDecode(token);
     try {
       const res = await axios.get(
-        `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
+        `http://23.100.50.204:8080/api/shops/${shop.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      const userData = res.data;
-      setUser(userData);
+      const shopData = res.data;
+        setShop(shopData);
       setRefreshing(false);
     } catch (error) {
       console.error(error);
@@ -91,109 +81,84 @@ const UserProfile = () => {
     };
     loadData();
   }, []);
+  
 
   useEffect(() => {
-    if (user) {
-      setGender(user.gender || "Не вказано");
-      setDate(new Date(user.birthDate || Date.now()));
-      phoneRef.current = user.phoneNumber
-        ? user.phoneNumber.substring(4)
-        : "Не вказано";
-      emailRef.current = user.email || "";
-      fullnameRef.current =
-        user.firstName && user.lastName
-          ? user.firstName + " " + user.lastName
-          : "Не вказано";
-      if (fullnameRef.current === "Не вказано") {
-        setInitials(" ");
-      } else {
-        setInitials(getInitials(fullnameRef.current));
-      }
+    if (shop) {
+      shopNameRef.current = shop.name;
+        setAdress(shop.address.name);
+        setSettlement(shop.address.settlement.name);
+        setShopType(shop.shopType.shopName);
+        setAdditionalType(shop.additionalType);
+        setIsParking(shop.isParking);
+        setAtFloor(shop.atFloor);
     }
-  }, [user]);
-
-
-
-const handleMainSave = useCallback(async() => {  
-  const UpdatedData = {
-    "firstName": fullnameRef.current.split(" ")[0],
-    "lastName": fullnameRef.current.split(" ")[1],
-    "birthDate": format(date, "yyyy-MM-dd"),
-    "gender": gender
-  };
-
-  try {
-    const token = await AsyncStorage.getItem("token");
-    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    fetchData();
-  } catch (error) {
-    console.error(error);
-  }
-
-  setIsEditing(false);
-}, [fullnameRef, date, gender]);
-
-const handleContactSave = useCallback(async() => {
-  const UpdatedData = {
-    "phoneNumber": `+380${phoneRef.current}`
-  };
+  }, [shop]);
+  const handleMainSave = useCallback(async() => {  
+    const UpdatedData = {
+      name: shopNameRef.current,
+    };
   
-  try {
-    const token = await AsyncStorage.getItem("token");
-    
-    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    fetchData();
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.patch(`http://23.100.50.204:8080/api/shops/${shop.id}`, UpdatedData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  
+    setIsEditing(false);
+  }, [shopNameRef.current]);
 
-  setIsEditingContacts(false);
-}, [phoneRef, user]);
+  const handleAdditionalSave = useCallback(async() => {
+    const UpdatedData = {
+      isParking: isParking,
+        atFloor: AtFloor,
+    };
+    try {
+      const token = await AsyncStorage.getItem("token");
+      
+      const response = await axios.patch(`http://23.100.50.204:8080/api/shops/${shop.id}`, UpdatedData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  
+    setIsEditingAdditional(false);
+  }, [isParking, AtFloor]);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
-  const handleContactEdit = () => {
-    setIsEditingContacts(true);
-  };
+  
+  const handleAdditionalEdit = () => {
+    setIsEditingAdditional(true);
+    };
 
-  const handleFullnameChange = useCallback((fullname) => {
-    fullnameRef.current = fullname;
-  }, []);
-  const handlePhoneChange = useCallback((phone) => {
-    phoneRef.current = phone;
+  const handleShopnameChange = useCallback((shopname) => {
+    shopNameRef.current = shopname;
   }, []);
 
-  const genderlist = [
-    { label: "Чоловіча", value: "Чоловіча" },
-    { label: "Жіноча", value: "Жіноча" },
-    { label: "Не вказано", value: "Не вказано" },
+
+  const IsParkingStatus = [
+    { label: "Присутня", value: true },
+    { label: "Відсутня", value: false },
   ];
+  
+  const floors = Array.from({length: 23}, (_, i) => i - 2);
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date) => {
-    setDate(date);
-    hideDatePicker();
-  };
-
-  const MainInfo = ({ widgetname }) => {
+  const MainDetailsWidget = ({ widgetname }) => {
     return isLoading ? (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
@@ -208,88 +173,44 @@ const handleContactSave = useCallback(async() => {
                 width: screenWidth * 0.09,
               }}
               contentFit="contain"
-              source={require("../assets/account.png")}
+              source={require("../../assets/Admin/shop.svg")}
             />
             <Text style={styles.widgetProfileName}>{widgetname}</Text>
             <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
               <Image
                 style={styles.editIcon}
                 contentFit="contain"
-                source={require("../assets/Profile/Settings.svg")}
+                source={require("../../assets/Profile/Settings.svg")}
               />
             </TouchableOpacity>
           </View>
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText}>{"Ім'я та прізвище"}</Text>
+          <Text style={styles.MainWidgetText}>{"Назва магазину"}</Text>
           {isEditing ? (
             <TextInput
               style={styles.EditedText}
-              defaultValue={fullnameRef.current}
-              onChangeText={handleFullnameChange}
+              defaultValue={shopNameRef.current}
+              onChangeText={handleShopnameChange}
             />
           ) : (
-            <Text style={styles.EditedText}>{fullnameRef.current}</Text>
+            <Text style={styles.EditedText}>{shopNameRef.current}</Text>
           )}
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText} onPress={showDatePicker}>
-            {"Дата народження"}
-          </Text>
-          {isEditing ? (
-            <TouchableOpacity onPress={showDatePicker}>
-              <Text style={styles.dateplaceholder}>
-                {format(date, "dd-MM-yyyy")}
-              </Text>
-              <View>
-                <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
-                  textColor="black"
-                  mode="date"
-                  maximumDate={new Date()}
-                  onConfirm={handleConfirm}
-                  onCancel={hideDatePicker}
-                />
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <Text style={styles.EditedText}>{format(date, "dd-MM-yyyy")}</Text>
-          )}
+          <Text style={styles.MainWidgetText}>{"Місто"}</Text>
+          <Text style={styles.EditedText}>{settlememt}</Text>
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText}>Стать</Text>
-          {isEditing ? (
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <RNPickerSelect
-                style={{
-                  inputIOS: styles.pickerText,
-                  inputAndroid: styles.pickerText,
-                }}
-                onValueChange={(value) => setGender(value)}
-                items={genderlist}
-                placeholder={{}}
-                value={gender}
-              />
-            </TouchableOpacity>
-          ) : (
-            <View style={{ flexDirection: "column" }}>
-              <RNPickerSelect
-                style={{
-                  inputIOS: styles.pickerText,
-                  inputAndroid: styles.pickerText,
-                }}
-                onValueChange={(value) => setGender(value)}
-                items={genderlist}
-                disabled={true}
-                placeholder={{}}
-                value={gender}
-              />
-            </View>
-          )}
+          <Text style={styles.MainWidgetText}>{"Адреса магазину"}</Text>
+            <Text style={styles.EditedText}>{adress}</Text>
+          <View style={styles.sepLine}></View>
+          <Text style={styles.MainWidgetText}>{"Тип магазину"}</Text>
+          <Text style={styles.EditedText}>{ShopType}</Text>
           {isEditing && <View style={styles.sepLine}></View>}
           {isEditing && (
             <TouchableOpacity styles={styles.saveIcon} onPress={handleMainSave}>
               <Image
                 style={styles.saveIcon}
                 contentFit="contain"
-                source={require("../assets/tick.svg")}
+                source={require("../../assets/tick.svg")}
               />
             </TouchableOpacity>
           )}
@@ -297,7 +218,7 @@ const handleContactSave = useCallback(async() => {
       </TouchableWithoutFeedback>
     );
   };
-  const ContactsWidget = ({ widgetname }) => {
+  const AdditionalDetailsWidget = ({ widgetname }) => {
     return (
       <View style={styles.ContactsWidgetView}>
         <View style={styles.widgetInfoRow}>
@@ -305,50 +226,71 @@ const handleContactSave = useCallback(async() => {
             <Image
               style={{ height: screenWidth * 0.08, width: screenWidth * 0.08 }}
               contentFit="contain"
-              source={require("../assets/telephone.png")}
+              source={require("../../assets/telephone.png")}
             />
             <Text style={styles.widgetProfileName}>{widgetname}</Text>
             <TouchableOpacity
               style={styles.editIcon}
-              onPress={handleContactEdit}
+              onPress={handleAdditionalEdit}
             >
               <Image
                 style={styles.editIcon}
                 contentFit="contain"
-                source={require("../assets/Profile/Settings.svg")}
+                source={require("../../assets/Profile/Settings.svg")}
               />
             </TouchableOpacity>
           </View>
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText}>{"Номер телефону"}</Text>
-          <View style={styles.Phonenumber}>
-            <Text style={styles.EditedText}>{"+380"}</Text>
-            {isEditingContacts ? (
-              <TextInput
-                style={styles.EditedText}
-                defaultValue={phoneRef.current}
-                keyboardType="numeric"
-                onChangeText={handlePhoneChange}
-                maxLength={9}
-              />
+          <Text style={styles.MainWidgetText}>{"Поверх"}</Text>
+          {isEditingAdditional ? (
+            <RNPickerSelect
+            style={{
+                inputIOS: styles.pickerText,
+                inputAndroid: styles.pickerText,
+                }}
+                onValueChange={(value) => setAtFloor(Number(value))} 
+                items={floors.map((item) => ({ label: item.toString(), value: item.toString() }))} 
+                value={AtFloor.toString()} 
+          />
             ) : (
-              <Text style={styles.EditedText}>{phoneRef.current}</Text>
-            )}
-          </View>
+                <Text style={styles.EditedText}>
+                    {AtFloor}
+                </Text>
+                )
+        }
+          
           <View style={styles.sepLine}></View>
-          <Text style={styles.MainWidgetText}>{"Електронна пошта"}</Text>
-          <Text style={styles.EditedText}>{emailRef.current}</Text>
+          <Text style={styles.MainWidgetText}>{"Парковка"}</Text>
+            {isEditingAdditional ? (
+
+                <RNPickerSelect
+                    style={{
+                    inputIOS: styles.pickerText,
+                    inputAndroid: styles.pickerText,
+                    }}
+                    onValueChange={(value) => setIsParking(value)}
+                    items={IsParkingStatus}
+                    placeholder={{}}
+                    value={isParking}
+                />
+
+            ) : (
+                <Text style={styles.pickerText}>
+                    {isParking ? 'Присутня' : 'Відсутня'}
+                </Text>
+
+            )}
         </View>
-        {isEditingContacts && <View style={styles.sepLine}></View>}
-        {isEditingContacts && (
+        {isEditingAdditional && <View style={styles.sepLine}></View>}
+        {isEditingAdditional && (
           <TouchableOpacity
             styles={styles.saveIcon}
-            onPress={handleContactSave}
+            onPress={handleAdditionalSave}
           >
             <Image
               style={styles.saveIcon}
               contentFit="contain"
-              source={require("../assets/tick.svg")}
+              source={require("../../assets/tick.svg")}
             />
           </TouchableOpacity>
         )}
@@ -356,27 +298,6 @@ const handleContactSave = useCallback(async() => {
     );
   };
 
-  const SignOut = () => {
-    const handleSignOut = async () => {
-      await AsyncStorage.clear();
-      navigator.navigate("StartMenu");
-    };
-    const confirmation = () => {
-      Alert.alert("Вихід", "Чи справді ви хочете вийти?", [
-        {
-          text: "Ні",
-          onPress: () => console.log("Відміна"),
-          style: "cancel",
-        },
-        { text: "Так", onPress: () => handleSignOut() },
-      ]);
-    };
-    return (
-      <TouchableOpacity style={styles.SignOutView} onPress={confirmation}>
-        <Text style={styles.SignOutText}>Вийти з аккаунту</Text>
-      </TouchableOpacity>
-    );
-  };
 
   const scrollViewRef = useRef();
   const [refreshing, setRefreshing] = React.useState(false);
@@ -406,19 +327,19 @@ const handleContactSave = useCallback(async() => {
                 {image ? (
                   <Image source={{ uri: image }} style={styles.userIconImage} />
                 ) : (
-                  <Text style={styles.userIconText}>{initials}</Text>
+                  <Text style={styles.userIconText}>{"І Л"}</Text>
                 )}
               </View>
-              <MainInfo
-                widgetname={"Персональні дані"}
-                fullname={fullnameRef}
+              <MainDetailsWidget
+                widgetname={"Основна інформація"}
+                fullname={"Ім'я Прізвище"}
               />
-              <ContactsWidget
-                widgetname={"Контакти"}
+              <AdditionalDetailsWidget
+                widgetname={"Додаткова інформація"}
                 phone={"+380123456789"}
-                email={emailRef.current}
+                email={"lol"}
               />
-              <SignOut />
+              
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -596,4 +517,4 @@ const styles = StyleSheet.create({
     color: Color.colorDarkBlue,
   },
 });
-export default UserProfile;
+export default ShopDetails;

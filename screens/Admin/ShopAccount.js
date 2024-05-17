@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
-  SafeAreaView,
-  Dimensions,
-  TouchableOpacity,
+  View,
   Text,
+  TouchableOpacity,
+  Dimensions,
+  SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
-import Logo from "../../components/Logo";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import UserComponent from "../../components/User";
+import Logo from "../../components/Logo";
 import GrayLine from "../../components/GrayLine";
+import UserComponent from "../../components/User";
+import { jwtDecode } from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "react-native-axios";
+import { ScrollView } from "react-native-gesture-handler";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -29,8 +35,12 @@ const ButtonMenu = ({ image, name, navig }) => {
   );
 };
 
+
 const ShopAccount = () => {
+  const [shopName, setShopName] = React.useState("");
+  const [shopAddress, setShopAddress] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
+  const [isLoading, setLoading] = React.useState(true);
   const navigator = useNavigation();
   React.useEffect(() => {
     //setImage to profile image
@@ -38,20 +48,69 @@ const ShopAccount = () => {
       "https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png"
     );
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const decoded_jwt = jwtDecode(token);
+      try {
+        const res = await axios.get(
+          `http://23.100.50.204:8080/api/staff/by-email/johndoe@mail.com`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const shopId = res.data.shopId;
+        try{
+          console.log(shopId);
+        const resShop = await axios.get(
+          `http://23.100.50.204:8080/api/shops/${shopId}`,
+          {
+            headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const shopData = resShop.data;
+        setShopName(shopData.name);
+        setShopAddress(shopData.address.name + ", " + shopData.address.settlement.name);
+        }
+        catch (error) {
+          console.error(error);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    const unsubscribe = navigator.addListener("focus", async () => {
+      setLoading(true);
+      await fetchData();
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, [navigator]);
   return (
     <SafeAreaView style={styles.container}>
       <Logo name="Керування магазином" />
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+      <ScrollView contentContainerStyle={styles.mainContainer}>
       <UserComponent
-        userName={"Магазин АТБ"}
+        userName={shopName}
         profileImage={profileImage}
-        description={"Вул Шевченка 234, Львівська обл, 79888"}
+        description={shopAddress}
         imageSize={0.25}
       />
       <GrayLine style={{ marginTop: 10 }} />
       <ButtonMenu
         image={require("../../assets/Admin/shop.svg")}
         name={"Дані магазину"}
-        //navig={() => navigator.navigate("UserProfile")}
+        navig={() => navigator.navigate("ShopsList")}
       />
       <GrayLine />
       <ButtonMenu
@@ -66,6 +125,8 @@ const ShopAccount = () => {
         navig={() => navigator.navigate("Settings")}
       />
       <GrayLine />
+      </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -75,6 +136,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.colorWhite,
     flexDirection: "column",
+    alignItems: "center",
+  },
+  mainContainer: {
+    height: screenHeight,
+    width: screenWidth,
     alignItems: "center",
   },
   buttonContainer: {

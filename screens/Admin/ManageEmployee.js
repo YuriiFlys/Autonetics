@@ -64,9 +64,9 @@ const ManageEmployee = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <Logo name="Керування правами" />
       <UserComponent
-        userName={employee.userName}
+        userName={employee.firstName + " " + employee.lastName}
         profileImage={employee.profileImage}
-        description={employee.description}
+        description={employee.staffType.name}
         imageSize={0.25}
       />
 

@@ -15,6 +15,8 @@ import PromotionsAdmin from "./PromotionsAdmin";
 import SellHistory from "./SellHistory";
 import Order from "./Order";
 import ManageEmployee from "./ManageEmployee";
+import ShopsList from "./Shops";
+import ShopDetails from "./ShopDetails";
 
 const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
@@ -49,6 +51,16 @@ function ProfileShopScreen({ user }) {
     >
       <ProfileShopStack.Screen name="ShopHome" options={{ headerShown: false }}>
         {(props) => <ShopAccount {...props} user={user} />}
+      </ProfileShopStack.Screen>
+      <ProfileShopStack.Screen name="ShopsList" options={{ headerShown: false }}>
+        {(props) => <ShopsList {...props}  />}
+      </ProfileShopStack.Screen>
+      <ProfileShopStack.Screen name = "ShopDetails" options={{
+          headerShown: true,
+          headerBackTitle: "Назад",
+          title: "Кабінет магазину",
+        }}>
+        {(props) => <ShopDetails {...props} />}
       </ProfileShopStack.Screen>
       <ProfileShopStack.Screen
         name="Employees"
