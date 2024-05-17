@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -8,24 +8,24 @@ import {
   TextInput,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import SelectList from "../components/SelectList";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const InputField = ({ name, setData, data }) => {
-  const inputRef = useRef(null);
-
+const InputList = ({ name, data, setSelected, isAdded }) => {
+  // console.log(name);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{name}</Text>
-      <TextInput
-        ref={inputRef}
-        style={styles.input}
-        // keyboardType="email-address"
-        onSubmitEditing={() => inputRef.current.focus()}
-        blurOnSubmit={false}
-        onChangeText={(text) => setData(name, text)}
-        value={data}
+      <SelectList
+        setSelected={setSelected}
+        data={data}
+        placeholder={"Виберіть " + name}
+        searchPlaceholder={"Виберіть name" + name}
+        search={true}
+        dropdownShown={false}
+        isAdded={isAdded}
       />
     </View>
   );
@@ -33,8 +33,10 @@ const InputField = ({ name, setData, data }) => {
 
 const styles = StyleSheet.create({
   container: {
+    // width: "90%",
     padding: 20,
-    width: "100%",
+    weight: "100%",
+    // height: "100%",
   },
   text: {
     fontFamily: FontFamily.CommissioneMedium,
@@ -44,8 +46,9 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 20,
     paddingVertical: 12,
+    weight: "100%",
+    borderColor: Color.colorDarkBlue,
     width: "100%",
-    borderColor: "gray",
     padding: 10,
     marginVertical: 10,
     borderWidth: 1,
@@ -53,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputField;
+export default InputList;
