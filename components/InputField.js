@@ -12,7 +12,7 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const InputField = ({ name, setData }) => {
+const InputField = ({ name, setData, data }) => {
   const inputRef = useRef(null);
 
   return (
@@ -25,6 +25,7 @@ const InputField = ({ name, setData }) => {
         onSubmitEditing={() => inputRef.current.focus()}
         blurOnSubmit={false}
         onChangeText={(text) => setData(name, text)}
+        value={data}
       />
     </View>
   );
