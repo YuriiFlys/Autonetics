@@ -22,6 +22,7 @@ const AdminWindow = () => {
       imageSource: require("../../assets/Admin/SaleSVG.svg"),
       name: "Продати товар",
       navigate: "SalesScreen",
+      params: { id: 1 },
     },
     {
       imageSource: require("../../assets/Admin/Storage.svg"),

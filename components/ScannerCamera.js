@@ -24,6 +24,7 @@ const Scanner = ({
   styleButtonScanner,
   isCross,
   handleScanned,
+  onClose,
 }) => {
   const navigator = useNavigation();
 
@@ -51,7 +52,7 @@ const Scanner = ({
     // console.log("data", data);
     if (data) {
       // console.log("data1", data);
-      //handleScanned(data);
+      handleScanned(data);
       setScanned(true);
       // Додаємо затримку 500 мілісекунд (0.5 секунди)
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -105,7 +106,7 @@ const Scanner = ({
           <SafeAreaView style={[styles.buttonCameraContainer, styleflashlight]}>
             <TouchableOpacity
               onPress={() => {
-                showAlert();
+                onClose ? onClose() : showAlert();
               }}
             >
               {isCross && (

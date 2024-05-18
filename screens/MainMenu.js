@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import GrayLine from "../components/GrayLine";
 import Search from "../components/Search";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -37,15 +38,22 @@ const MainMenu = () => {
     setIsRefreshing(true);
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch("http://23.100.50.204:8080/api/shops", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const location = (await Location.getCurrentPositionAsync({})).coords;
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/shops/by-location",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch shops");
       }
       const responseData = await response.json();
+
       const newData = responseData.map((item) => ({
         ...item,
         imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
