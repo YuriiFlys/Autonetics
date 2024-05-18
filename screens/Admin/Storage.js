@@ -40,17 +40,19 @@ const Storage = () => {
   const [data, setData] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [searchData, setSearchData] = useState("");
+  const [shopID, setShopID] = useState();
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
+      await handleLoadShop();
       await handleLoadGoods();
       setLoading(false);
     };
     loadData();
   }, []);
-
-  const handleLoadGoods = async () => {
-    setIsRefreshing(true);
+  const handleLoadShop = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
       const email = await jwtDecode(token).email;
@@ -62,14 +64,23 @@ const Storage = () => {
           },
         }
       );
-      if (!employee.ok) {
+      if (!employeeResponse.ok) {
         throw new Error("Failed to fetch emloyee");
       }
       const emloyee = await employeeResponse.json();
+      setShopID(emloyee.shopId);
+    } catch (error) {
+      console.error("Error while fetching shops:", error);
+    }
+  };
+
+  const handleLoadGoods = async () => {
+    setIsRefreshing(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
 
       const response = await fetch(
-        "http://23.100.50.204:8080/api/inventories/by-shop-id/" +
-          employee.shopId,
+        "http://23.100.50.204:8080/api/inventories/by-shop-id/" + shopID,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -81,7 +92,7 @@ const Storage = () => {
       }
       const responseData = await response.json();
       const newData = responseData.map((item) => ({
-        ...item,
+        ...item.goodsID,
         count: 10,
 
         imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
@@ -124,14 +135,11 @@ const Storage = () => {
     try {
       const token = await AsyncStorage.getItem("token");
 
-      const response = await fetch(
-        "http://23.100.50.204:8080/api/goods/name/" + search,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch("http://23.100.50.204:8080/api//" + search, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch shops");
       }
@@ -152,7 +160,7 @@ const Storage = () => {
     <SafeAreaView style={styles.container}>
       <Logo name="Склад" />
       <GrayLine />
-      <Search search={handleSearch} />
+      <Search search={handleSearch} setData={setSearchData} />
       <View style={{ flexDirection: "row", marginVertical: 20 }}>
         <TouchableOpacity
           style={styles.searchBarcode}

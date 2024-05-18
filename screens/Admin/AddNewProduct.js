@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import ProductInfo from "../ProductInfo";
 import { Image } from "expo-image";
 import ScannerCamera from "../../components/ScannerCamera";
+import { jwtDecode } from "jwt-decode";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -79,6 +80,7 @@ const AddProductsScreen = () => {
       console.error("Error while fetching", error);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -119,8 +121,6 @@ const AddProductsScreen = () => {
     fetchData();
   }, []);
   const sendData = async (url, body) => {
-    console.log("Send data", body);
-    console.log("URL", url);
     const token = await AsyncStorage.getItem("token");
     const response = await fetch("http://23.100.50.204:8080/api/" + url, {
       method: "POST",
@@ -131,10 +131,10 @@ const AddProductsScreen = () => {
       body: JSON.stringify(body),
     });
     if (!response.ok) {
-      throw new Error("Failed to send data");
+      throw new Error("Failed to send data: ", response.status);
     }
     const responseData = await response.json();
-    console.log("Response data", responseData);
+    console.log("Response data", responseData, url);
     return responseData;
   };
   const createProduct = async () => {
@@ -166,13 +166,14 @@ const AddProductsScreen = () => {
         const supplier_id = await sendData("supplier", typeData).id;
         setData("Постачальник", supplier_id);
       }
+      console.log("newProduct[Штрих код]", newProduct["Штрих код"]);
       const productData = {
         priceIn: parseFloat(newProduct["Вхідна ціна"]),
         priceOut: parseFloat(newProduct["Вихідна ціна"]),
         weight: parseFloat(newProduct["Вага"]),
-        rating: 0,
+        rating: 5,
         goodsTypeId: newProduct["Тип продукту"],
-        barcode: parseInt(newProduct["Штрих-код"]),
+        barcode: parseInt(newProduct["Штрих код"]),
         name: newProduct["Назва товару"],
         description: newProduct["Опис"],
         producer: newProduct["Виробник"],
@@ -180,11 +181,39 @@ const AddProductsScreen = () => {
         composition: newProduct["Вміст"],
         countryID: newProduct["Країна виробник"],
         classID: newProduct["Клас"],
-        supplierID: 2, // ToDo
+        supplierID: newProduct["Постачальник"],
       };
+      console.log(newProduct["Штрих код"]);
+      console.log("Product data", productData);
 
       const res = await sendData("goods", productData);
       console.log("Response", res);
+      const token = await AsyncStorage.getItem("token");
+
+      const email = await jwtDecode(token).email;
+      const employeeResponse = await fetch(
+        "http://23.100.50.204:8080/api/staff/by-email/" + email,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!employeeResponse.ok) {
+        throw new Error("Failed to fetch emloyee");
+      }
+      const emloyee = await employeeResponse.json();
+      console.log({
+        goodsID: res.id,
+        shopID: emloyee.shopId,
+        numbers: 0,
+      });
+
+      const resInventory = await sendData("inventories", {
+        goodsID: res.id,
+        shopID: emloyee.shopId,
+        number: 0,
+      });
       navigator.navigate("ProductInfo", { id: res.id });
     } catch (error) {
       console.error("Error while sending data", error);

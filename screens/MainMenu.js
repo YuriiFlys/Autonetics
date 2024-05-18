@@ -27,6 +27,13 @@ const MainMenu = () => {
 
   const keyExtractor = (item, index) => index.toString();
   useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+    })();
     const loadData = async () => {
       setLoading(true);
       await handleLoadShop();
@@ -36,14 +43,12 @@ const MainMenu = () => {
   }, []);
 
   const handleLoadShop = async () => {
-    if (searchData !== "" || searchData !== null) {
-      await handleSearchShop(searchData);
-      return;
-    }
     setIsRefreshing(true);
     try {
       const token = await AsyncStorage.getItem("token");
-      const location = (await Location.getCurrentPositionAsync({})).coords;
+      let location = (await Location.getCurrentPositionAsync({})).coords;
+      console.log("location", location);
+
       const response = await fetch(
         "http://23.100.50.204:8080/api/shops/by-location",
         {
@@ -73,6 +78,10 @@ const MainMenu = () => {
   };
 
   const handleSearchShop = async (data) => {
+    // if (searchData === "" || searchData === null) {
+    //   await handleLoadShop();
+    //   return;
+    // }
     setIsRefreshing(true);
     try {
       const token = await AsyncStorage.getItem("token");

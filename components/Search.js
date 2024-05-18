@@ -29,7 +29,7 @@ const Search = ({ search, setData }) => {
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
-          console.log("Search");
+          console.log("Search", field);
           search(field);
         }}
       >

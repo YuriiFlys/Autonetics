@@ -127,7 +127,7 @@ const ProductInfo = ({ route }) => {
       <ActivityIndicator size="large" />
     </View>
   ) : (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         automaticallyAdjustContentInsets={true}
         style={{ backgroundColor: Color.colorSuperLightGray }}
@@ -231,7 +231,7 @@ const ProductInfo = ({ route }) => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
