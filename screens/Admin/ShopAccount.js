@@ -54,7 +54,7 @@ const ShopAccount = () => {
       const decoded_jwt = jwtDecode(token);
       try {
         const res = await axios.get(
-          `http://23.100.50.204:8080/api/staff/by-email/johndoe@mail.com`,
+          `http://23.100.50.204:8080/api/staff/by-email/${decoded_jwt.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,9 +63,8 @@ const ShopAccount = () => {
         );
         const shopId = res.data.shopId;
         try{
-          console.log(shopId);
         const resShop = await axios.get(
-          `http://23.100.50.204:8080/api/shops/${shopId}`,
+          `http://23.100.50.204:8080/api/shops/by-id/${shopId}`,
           {
             headers: {
             Authorization: `Bearer ${token}`,

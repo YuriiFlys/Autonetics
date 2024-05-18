@@ -101,7 +101,7 @@ const ShopDetails = ({route}) => {
   
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.patch(`http://23.100.50.204:8080/api/shops/${shop.id}`, UpdatedData, {
+      const response = await axios.patch(`http://23.100.50.204:8080/api/shops/by-id/${shop.id}`, UpdatedData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
