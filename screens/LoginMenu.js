@@ -16,6 +16,7 @@ import {
 import { FontFamily, FontSize, Border, Color } from "../GlobalStyles";
 import { useUser } from "./UserContext";
 import { login } from "../api/user_api";
+import { jwtDecode } from "jwt-decode";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -33,8 +34,16 @@ const LoginMenu = () => {
   const handleLogin = async () => {
     login({ email: email, password: password }).then((response) => {
       if (response.status == 200) {
-        AsyncStorage.setItem("token", response.data.token);
+        const token = response.data.token;
+        const decoded_jwt = jwtDecode(token);
+        const role = decoded_jwt.role[0].authority;
+        AsyncStorage.setItem("token", token);
+        if (role === "ROLE_STAFF") {
+          navigator.navigate("BottomAdminMenu");
+        }
+        if (role === "ROLE_CLIENT") {
         navigator.navigate("BottomMenu");
+        }
       }
     });
   };

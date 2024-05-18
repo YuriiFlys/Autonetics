@@ -23,11 +23,11 @@ const StartMenu = () => {
     async function loadToken() {
       try {
         const token = await AsyncStorage.getItem("token");
+        const decodedToken = jwtDecode(token);
         if (!token) {
           await AsyncStorage.clear();
         } else {
           const isTokenExpired = async () => {
-            const decodedToken = jwtDecode(token);
             const currentTime = Date.now() / 1000;
             return decodedToken.exp < currentTime;
           };
@@ -35,7 +35,12 @@ const StartMenu = () => {
           if (await isTokenExpired()) {
             await AsyncStorage.clear();
           } else {
-            navigation.navigate("BottomAdminMenu"); //BottomMenu || BottomAdminMenu
+            if (decodedToken.role[0].authority === "ROLE_STAFF") {
+              navigation.navigate("BottomAdminMenu");
+            }
+            if (decodedToken.role[0].authority === "ROLE_CLIENT") {
+              navigation.navigate("BottomMenu");
+            }
           }
         }
       } catch (error) {
