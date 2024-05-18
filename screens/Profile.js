@@ -7,6 +7,8 @@ import {
   Dimensions,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl
 } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
@@ -26,36 +28,40 @@ const Profile = () => {
   const [isLoading, setLoading] = React.useState(true);
   const [userName, setUserName] = React.useState("");
   const [profileImage, setImage] = React.useState(null);
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const token = await AsyncStorage.getItem("token");
-      const decoded_jwt = jwtDecode(token);
-      try {
-        const res = await axios.get(
-          `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const userData = res.data;
-        if (userData.firstName === null || userData.lastName === null) {
-          setUserName(" ");
-        } else {
-          setUserName(userData.firstName + " " + userData.lastName);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const scrollViewRef = React.useRef();
+  const fetchData = async () => {
+    setRefreshing(true);
+    const token = await AsyncStorage.getItem("token");
+    const decoded_jwt = jwtDecode(token);
+    try {
+      const res = await axios.get(
+        `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (error) {
-        console.error(error);
+      );
+      const userData = res.data;
+      if (userData.firstName === null || userData.lastName === null) {
+        setUserName(" ");
+      } else {
+        setUserName(userData.firstName + " " + userData.lastName);
+        setRefreshing(false);
       }
-    };
-  
+    } catch (error) {
+      console.error(error);
+      setRefreshing(false);
+    }
+  };
+  React.useEffect(() => {
     const unsubscribe = navigator.addListener("focus", async () => {
       setLoading(true);
       await fetchData();
       setLoading(false);
     });
-  
+
     return unsubscribe;
   }, [navigator]);
   
@@ -83,7 +89,12 @@ const Profile = () => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <View style={styles.mainContainer}>
+        <ScrollView ref={scrollViewRef}
+        automaticallyAdjustContentInsets={true}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+        }
+        contentContainerStyle={styles.mainContainer}>
           <UserComponent
             userName={userName}
             profileImage={profileImage}
@@ -114,7 +125,7 @@ const Profile = () => {
             navig={() => navigator.navigate("Settings")}
           />
           <GrayLine />
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );

@@ -65,15 +65,28 @@ const UserProfile = () => {
     setRefreshing(true);
     const token = await AsyncStorage.getItem("token");
     const decoded_jwt = jwtDecode(token);
+    const role = decoded_jwt.role[0].authority;
+    let res;
     try {
-      const res = await axios.get(
-        `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if(role === "ROLE_CLIENT") {
+        res = await axios.get(
+          `http://23.100.50.204:8080/api/clients/by-email/${decoded_jwt.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        res = await axios.get(
+          `http://23.100.50.204:8080/api/staff/by-email/${decoded_jwt.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
       const userData = res.data;
       setUser(userData);
       setRefreshing(false);
@@ -124,12 +137,24 @@ const handleMainSave = useCallback(async() => {
 
   try {
     const token = await AsyncStorage.getItem("token");
-    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
+    const decoded_jwt = jwtDecode(token);
+    const role = decoded_jwt.role[0].authority;
+    if(role === "ROLE_CLIENT") {
+      const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
     });
+    }
+    if(role === "ROLE_STAFF") {
+      const response = await axios.patch(`http://23.100.50.204:8080/api/staff/${user.id}`, UpdatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    }
     fetchData();
   } catch (error) {
     console.error(error);
@@ -145,13 +170,24 @@ const handleContactSave = useCallback(async() => {
   
   try {
     const token = await AsyncStorage.getItem("token");
-    
-    const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
+    const decoded_jwt = jwtDecode(token);
+    const role = decoded_jwt.role[0].authority;
+    if(role === "ROLE_CLIENT") {
+      const response = await axios.patch(`http://23.100.50.204:8080/api/clients/${user.id}`, UpdatedData, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
     });
+    }
+    if(role === "ROLE_STAFF") {
+      const response = await axios.patch(`http://23.100.50.204:8080/api/staff/${user.id}`, UpdatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    }
     fetchData();
   } catch (error) {
     console.error(error);

@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,6 +8,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Image } from "expo-image";
 import Logo from "../../components/Logo";
@@ -43,31 +45,38 @@ const UserAcount = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(true);
+  const scrollViewRef = useRef();
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const fetchData = async () => {
+    setRefreshing(true);
+    const token = await AsyncStorage.getItem("token");
+    const decoded_jwt = jwtDecode(token);
+    try {
+      const res = await axios.get(
+        `http://23.100.50.204:8080/api/staff/by-email/${decoded_jwt.email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const userData = res.data;
+      if (userData.firstName === null || userData.lastName === null) {
+        setUserName(" ");
+      } else {
+        setUserName(userData.firstName + " " + userData.lastName);
+        setDescription(userData.staffType.name);
+        setRefreshing(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setRefreshing(false);
+    }
+  };
   
   useEffect(() => {
-    const fetchData = async () => {
-      const token = await AsyncStorage.getItem("token");
-      const decoded_jwt = jwtDecode(token);
-      try {
-        const res = await axios.get(
-          `http://23.100.50.204:8080/api/staff/by-email/johndoe@mail.com`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const userData = res.data;
-        if (userData.firstName === null || userData.lastName === null) {
-          setUserName(" ");
-        } else {
-          setUserName(userData.firstName + " " + userData.lastName);
-          setDescription(userData.staffType.name);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    
     const unsubscribe = navigator.addListener("focus", async () => {
       setLoading(true);
       await fetchData();
@@ -85,7 +94,13 @@ const UserAcount = () => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.scrollviewcontainer}>
+        <ScrollView
+        ref={scrollViewRef}
+            automaticallyAdjustContentInsets={true}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+            }
+         contentContainerStyle={styles.scrollviewcontainer}>
           <User
             userName={userName}
             profileImage={profileImage}
