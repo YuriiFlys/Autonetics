@@ -23,6 +23,7 @@ const MainMenu = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [searchData, setSearchData] = useState("");
 
   const keyExtractor = (item, index) => index.toString();
   useEffect(() => {
@@ -35,6 +36,10 @@ const MainMenu = () => {
   }, []);
 
   const handleLoadShop = async () => {
+    if (searchData !== "" || searchData !== null) {
+      await handleSearchShop(searchData);
+      return;
+    }
     setIsRefreshing(true);
     try {
       const token = await AsyncStorage.getItem("token");
@@ -116,7 +121,7 @@ const MainMenu = () => {
 
   return (
     <View style={styles.container}>
-      <Search search={handleSearchShop} />
+      <Search search={handleSearchShop} setData={setSearchData} />
       <GrayLine style={{ marginTop: 20 }} />
       {loading ? (
         <View
