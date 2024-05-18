@@ -228,7 +228,7 @@ const AddProductsScreen = () => {
               source={require("../../assets/Admin/barcode.svg")}
               style={styles.barcodeimge}
             />
-            <Text>Пошук по штрих коду</Text>
+            <Text>Відсканувати штрих коду</Text>
           </TouchableOpacity>
         </View>
         <InputList
