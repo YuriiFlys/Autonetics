@@ -35,7 +35,7 @@ const StartMenu = () => {
           if (await isTokenExpired()) {
             await AsyncStorage.clear();
           } else {
-            navigation.navigate("BottomAdminMenu"); //BottomMenu || BottomAdminMenu
+            navigation.navigate("BottomMenu"); //BottomMenu || BottomAdminMenu
           }
         }
       } catch (error) {

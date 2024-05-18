@@ -16,6 +16,7 @@ import UserComponent from "../../components/User";
 import GrayLine from "../../components/GrayLine";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -39,12 +40,29 @@ const EmployeesList = ({ employees }) => {
     setIsRefreshing(true);
     try {
       const token = await AsyncStorage.getItem("token");
+      const email = jwtDecode(token).email;
+      const responseEmployees = await fetch(
+        "http://23.100.50.204:8080/api/staff/by-email/" + email,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!responseEmployees.ok) {
+        throw new Error("Failed to fetch employees");
+      }
+      const employeesData = await responseEmployees.json();
+      console.log("employeesData", employeesData);
 
-      const response = await fetch("http://23.100.50.204:8080/api/staff", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/staff/by-shop/" + employeesData.shopId,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch shops");
       }
