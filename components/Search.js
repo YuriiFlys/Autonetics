@@ -13,7 +13,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import { useNavigation } from "@react-navigation/native";
 
-const Search = ({ search }) => {
+const Search = ({ search, setData }) => {
   const navigator = useNavigation();
   const [field, setField] = React.useState("");
   return (
@@ -21,7 +21,10 @@ const Search = ({ search }) => {
       <TextInput
         style={styles.field}
         value={field}
-        onChangeText={(text) => setField(text)}
+        onChangeText={(text) => {
+          setField(text);
+          setData(text);
+        }}
       />
       <TouchableOpacity
         style={styles.buttonContainer}
