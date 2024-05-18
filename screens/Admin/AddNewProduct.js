@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
+  Modal,
+  View,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import InputField from "../../components/InputField.js";
@@ -14,6 +16,8 @@ import InputList from "../../components/InputList.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ProductInfo from "../ProductInfo";
+import { Image } from "expo-image";
+import ScannerCamera from "../../components/ScannerCamera";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -22,7 +26,7 @@ const fields = [
   "Вихідна ціна",
   "Вхідна ціна",
   "Вага",
-  "Штрих-код",
+  // "Штрих-код",
   "Опис",
   "Виробник",
   "Умови зберігання",
@@ -39,6 +43,8 @@ const dataField = ["Тип продукту", "Країна виробник", "
 const AddProductsScreen = () => {
   const navigator = useNavigation();
   const [selected, setSelected] = React.useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
   const [categories, setCategories] = useState([]);
   const [countries, setCountries] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -46,6 +52,15 @@ const AddProductsScreen = () => {
   const [newProduct, setNewProduct] = useState({});
   const [newSupplier, setNewSupplier] = useState({});
   const [alldSupplier, setAlldSupplier] = useState([]);
+
+  const openModal = () => {
+    setModalVisible(true);
+    console.log("Modal", modalVisible);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   const loadData = async (url) => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -188,6 +203,10 @@ const AddProductsScreen = () => {
     }));
     console.log(newSupplier);
   };
+  const scanned = (data) => {
+    closeModal();
+    setData("Штрих код", data);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -196,6 +215,22 @@ const AddProductsScreen = () => {
         {fields.map((field) => (
           <InputField name={field} setData={setData} />
         ))}
+        <View style={{ width: screenWidth, alignItems: "center" }}>
+          <InputField name={"Штрих код"} setData={setData} />
+          <TouchableOpacity
+            style={styles.searchBarcode}
+            onPress={() => {
+              console.log("Open");
+              openModal();
+            }}
+          >
+            <Image
+              source={require("../../assets/Admin/barcode.svg")}
+              style={styles.barcodeimge}
+            />
+            <Text>Пошук по штрих коду</Text>
+          </TouchableOpacity>
+        </View>
         <InputList
           name={dataField[0]}
           data={categories}
@@ -262,6 +297,23 @@ const AddProductsScreen = () => {
           <Text style={styles.buttontext}>Додати товар</Text>
         </TouchableOpacity>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <SafeAreaView>
+          <ScannerCamera
+            styleflashlight={{}}
+            styleFrame={{ marginTop: screenHeight * 0.2 }}
+            styleButtonScanner={{ marginTop: screenHeight * 0.1 }}
+            isCross={true}
+            handleScanned={scanned}
+            onClose={closeModal}
+          />
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -282,19 +334,38 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     marginHorizontal: "5%",
-    // height: 40,
-    // // weight: "100%",
-    // // borderColor: Color.colorDarkBlue,
-    // borderWidth: 1,
-    // // width: "100%",
-    // // borderRadius: 5,
-    // // padding: 10,
-    // marginVertical: 10,
   },
   buttontext: {
     fontFamily: FontFamily.CommissioneMedium,
     fontSize: FontSize.size_m,
     color: Color.colorWhite,
+  },
+
+  searchBarcode: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 16,
+    height: screenHeight * 0.05,
+    width: screenWidth * 0.7,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  barcodeimge: {
+    height: "100%",
+    width: "10%",
+    contentFit: "contain",
+    marginRight: 10,
+  },
+  productContainer: {
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.1,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: Color.colorLightGray,
+    alignItems: "center",
   },
 });
 
