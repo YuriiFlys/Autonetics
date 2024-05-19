@@ -10,9 +10,9 @@ import {
   View,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
-import InputField from "../../components/InputField.js";
-import InputPhoto from "../../components/InputPhoto.js";
-import InputList from "../../components/InputList.js";
+import InputField from "../../components/InputField";
+import InputPhoto from "../../components/InputPhoto";
+import InputList from "../../components/InputList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ProductInfo from "../ProductInfo";
@@ -43,8 +43,9 @@ const dataField = ["Тип продукту", "Країна виробник", "
 
 const AddProductsScreen = () => {
   const navigator = useNavigation();
-  const [selected, setSelected] = React.useState("");
+  const [selected, setSelected] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [count, setCount] = useState(0);
 
   const [categories, setCategories] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -56,28 +57,26 @@ const AddProductsScreen = () => {
 
   const openModal = () => {
     setModalVisible(true);
-    console.log("Modal", modalVisible);
   };
 
   const closeModal = () => {
     setModalVisible(false);
   };
+
   const loadData = async (url) => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch("http://23.100.50.204:8080/api/" + url, {
+      const response = await fetch(`http://23.100.50.204:8080/api/${url}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch data url: " + url);
+        throw new Error(`Failed to fetch data from ${url}`);
       }
-      const responseData = await response.json();
-      // console.log("Response data", responseData);
-      return responseData;
+      return await response.json();
     } catch (error) {
-      console.error("Error while fetching", error);
+      console.error(`Error while fetching data from ${url}`, error);
     }
   };
 
@@ -85,153 +84,162 @@ const AddProductsScreen = () => {
     const fetchData = async () => {
       try {
         const categoriesData = await loadData("goods-type");
-        const mappedCategories = categoriesData.map((item, index) => ({
-          key: item.id,
-          value: item.name,
-        }));
-
-        setCategories(mappedCategories);
+        setCategories(
+          categoriesData.map((item) => ({ key: item.id, value: item.name }))
+        );
 
         const countriesData = await loadData("location/countries");
-        const mappedCountries = countriesData.map((item) => ({
-          key: item.id,
-          value: item.name,
-        }));
-
-        setCountries(mappedCountries);
+        setCountries(
+          countriesData.map((item) => ({ key: item.id, value: item.name }))
+        );
 
         const classesData = await loadData("class");
-        const mappedClasses = classesData.map((item) => ({
-          key: item.id,
-          value: item.name,
-        }));
-        setClasses(mappedClasses);
+        setClasses(
+          classesData.map((item) => ({ key: item.id, value: item.name }))
+        );
+
         const supplierData = await loadData("supplier");
         setAlldSupplier(supplierData);
-        const mappedSupplier = supplierData.map((item) => ({
-          key: item.id,
-          value: item.email,
-        }));
-        setSupplier(mappedSupplier);
+        setSupplier(
+          supplierData.map((item) => ({ key: item.id, value: item.email }))
+        );
       } catch (error) {
-        console.error("Error while fetching data:", error);
+        console.error("Error while fetching initial data:", error);
       }
     };
 
     fetchData();
   }, []);
+
   const sendData = async (url, body) => {
-    const token = await AsyncStorage.getItem("token");
-    const response = await fetch("http://23.100.50.204:8080/api/" + url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to send data: ", response.status);
-    }
-    const responseData = await response.json();
-    console.log("Response data", responseData, url);
-    return responseData;
-  };
-  const createProduct = async () => {
-    console.log("newProduct", newProduct);
     try {
-      if (newProduct["Тип продукту"] < 0) {
-        const typeData = {
-          name: categories.find(
-            (item) => item.key === newProduct["Тип продукту"]
-          ).value,
-        };
-        const class_id = await sendData("goods-type", typeData).id;
-        setData("Тип продукту", class_id);
-      }
-      if (newProduct["Клас"] < 0) {
-        const classData = {
-          name: classes.find((item) => item.key === newProduct["Клас"]).value,
-        };
-        const type_id = await sendData("class", classData).id;
-        setData("Клас", type_id);
-      }
-      if (newProduct["Постачальник"] < 0) {
-        const typeData = {
-          ...newSupplier,
-          name: categories.find(
-            (item) => item.key === newProduct["Постачальник"]
-          ).value,
-        };
-        const supplier_id = await sendData("supplier", typeData).id;
-        setData("Постачальник", supplier_id);
-      }
-      console.log("newProduct[Штрих код]", newProduct["Штрих код"]);
-      const productData = {
-        priceIn: parseFloat(newProduct["Вхідна ціна"]),
-        priceOut: parseFloat(newProduct["Вихідна ціна"]),
-        weight: parseFloat(newProduct["Вага"]),
-        rating: 5,
-        goodsTypeId: newProduct["Тип продукту"],
-        barcode: parseInt(newProduct["Штрих код"]),
-        name: newProduct["Назва товару"],
-        description: newProduct["Опис"],
-        producer: newProduct["Виробник"],
-        storageCondition: newProduct["Умови зберігання"],
-        composition: newProduct["Вміст"],
-        countryID: newProduct["Країна виробник"],
-        classID: newProduct["Клас"],
-        supplierID: newProduct["Постачальник"],
-      };
-      console.log(newProduct["Штрих код"]);
-      console.log("Product data", productData);
-
-      const res = await sendData("goods", productData);
-      console.log("Response", res);
       const token = await AsyncStorage.getItem("token");
-
-      const email = await jwtDecode(token).email;
-      const employeeResponse = await fetch(
-        "http://23.100.50.204:8080/api/staff/by-email/" + email,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!employeeResponse.ok) {
-        throw new Error("Failed to fetch emloyee");
+      const response = await fetch(`http://23.100.50.204:8080/api/${url}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to send data to ${url}: ${response.status}`);
       }
-      const emloyee = await employeeResponse.json();
-      console.log({
-        goodsID: res.id,
-        shopID: emloyee.shopId,
-        numbers: 0,
-      });
+      return await response.json();
+    } catch (error) {
+      console.error(`Error while sending data to ${url}`, error);
+    }
+  };
 
-      const resInventory = await sendData("inventories", {
-        goodsID: res.id,
-        shopID: emloyee.shopId,
-        number: 0,
-      });
-      navigator.navigate("ProductInfo", { id: res.id });
+  const createGoodsType = async (name) => {
+    if (newProduct["Тип продукту"] < 0) {
+      const typeData = {
+        name: categories.find((item) => item.key === newProduct["Тип продукту"])
+          .value,
+      };
+      const { id } = await sendData("goods-type", typeData);
+      return id;
+    }
+    return newProduct["Тип продукту"];
+  };
+
+  const createClass = async (name) => {
+    if (newProduct["Клас"] < 0) {
+      const classData = {
+        name: classes.find((item) => item.key === newProduct["Клас"]).value,
+      };
+      const { id } = await sendData("class", classData);
+      return id;
+    }
+    return newProduct["Клас"];
+  };
+
+  const createSupplier = async (name) => {
+    if (newProduct["Постачальник"] < 0) {
+      const typeData = {
+        phoneNumber: newSupplier["Телефонний номер"],
+        name: newSupplier["Ім'я"],
+        bankAccount: newSupplier["Банкіський акаунт"],
+        email: supplier.find((item) => item.key === newProduct["Постачальник"])
+          .value,
+      };
+      const { id } = await sendData("supplier", typeData);
+      return id;
+    }
+    return newProduct["Постачальник"];
+  };
+
+  const createData = async () => {
+    try {
+      const goods_id = await createGoodsType();
+      const class_id = await createClass();
+      const supplier_id = await createSupplier();
+      console.log("ID", goods_id, class_id, supplier_id);
+      await createProduct(goods_id, class_id, supplier_id);
     } catch (error) {
       console.error("Error while sending data", error);
     }
   };
+
+  const createProduct = async (goods_id, class_id, supplier_id) => {
+    const productData = {
+      priceIn: parseFloat(newProduct["Вхідна ціна"]),
+      priceOut: parseFloat(newProduct["Вихідна ціна"]),
+      weight: parseFloat(newProduct["Вага"]),
+      rating: 5,
+      goodsTypeId: goods_id,
+      barcode: newProduct["Штрих код"],
+      name: newProduct["Назва товару"],
+      description: newProduct["Опис"],
+      producer: newProduct["Виробник"],
+      storageCondition: newProduct["Умови зберігання"],
+      composition: newProduct["Вміст"],
+      countryID: newProduct["Країна виробник"],
+      classID: class_id,
+      supplierID: supplier_id,
+    };
+
+    const res = await sendData("goods", productData);
+
+    const token = await AsyncStorage.getItem("token");
+    const email = jwtDecode(token).email;
+
+    const employeeResponse = await fetch(
+      `http://23.100.50.204:8080/api/staff/by-email/${email}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!employeeResponse.ok) {
+      throw new Error("Failed to fetch employee");
+    }
+    const employee = await employeeResponse.json();
+
+    await sendData("inventories", {
+      goodsID: res.id,
+      shopID: employee.shopId,
+      number: 0,
+    });
+
+    navigator.navigate("ProductInfo", { id: res.id });
+  };
+
   const setData = (name, value) => {
     setNewProduct((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+
   const setSupplierData = (name, value) => {
     setNewSupplier((prev) => ({
       ...prev,
       [name]: value,
     }));
-    console.log(newSupplier);
   };
+
   const scanned = (data) => {
     closeModal();
     setData("Штрих код", data);
@@ -239,23 +247,17 @@ const AddProductsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ weight: screenWidth * 0.9 }}>
+      <ScrollView style={{ width: screenWidth * 0.9 }}>
         <InputPhoto />
         {fields.map((field) => (
-          <InputField name={field} setData={setData} />
+          <InputField key={field} name={field} setData={setData} />
         ))}
         <View style={{ width: screenWidth, alignItems: "center" }}>
           <InputField name={"Штрих код"} setData={setData} />
-          <TouchableOpacity
-            style={styles.searchBarcode}
-            onPress={() => {
-              console.log("Open");
-              openModal();
-            }}
-          >
+          <TouchableOpacity style={styles.searchBarcode} onPress={openModal}>
             <Image
               source={require("../../assets/Admin/barcode.svg")}
-              style={styles.barcodeimge}
+              style={styles.barcodeImage}
             />
             <Text>Відсканувати штрих коду</Text>
           </TouchableOpacity>
@@ -275,9 +277,7 @@ const AddProductsScreen = () => {
         <InputList
           name={dataField[2]}
           data={classes}
-          setSelected={(val) => {
-            setData(dataField[2], val);
-          }}
+          setSelected={(val) => setData(dataField[2], val)}
           isAdded={true}
         />
         <InputList
@@ -293,12 +293,12 @@ const AddProductsScreen = () => {
                 "Телефонний номер": newSupplier.phoneNumber,
               });
             } else {
-              const newSupplier = supplierField.reduce((acc, item) => {
-                acc[item] = "";
-                return acc;
-              }, {});
-
-              setNewSupplier(newSupplier);
+              setNewSupplier(
+                supplierField.reduce((acc, item) => {
+                  acc[item] = "";
+                  return acc;
+                }, {})
+              );
             }
           }}
           isAdded={true}
@@ -307,6 +307,7 @@ const AddProductsScreen = () => {
           <>
             {supplierField.map((field) => (
               <InputField
+                key={field}
                 name={field}
                 setData={setSupplierData}
                 data={newSupplier[field]}
@@ -314,16 +315,8 @@ const AddProductsScreen = () => {
             ))}
           </>
         ) : null}
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            // console.log("newProduct", newProduct);
-            // console.log("classes", classes);
-            createProduct();
-          }}
-        >
-          <Text style={styles.buttontext}>Додати товар</Text>
+        <TouchableOpacity style={styles.button} onPress={createData}>
+          <Text style={styles.buttonText}>Додати товар</Text>
         </TouchableOpacity>
       </ScrollView>
       <Modal
@@ -364,12 +357,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: "5%",
   },
-  buttontext: {
+  buttonText: {
     fontFamily: FontFamily.CommissioneMedium,
     fontSize: FontSize.size_m,
     color: Color.colorWhite,
   },
-
   searchBarcode: {
     borderWidth: 1,
     borderColor: "gray",
@@ -382,7 +374,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  barcodeimge: {
+  barcodeImage: {
     height: "100%",
     width: "10%",
     contentFit: "contain",

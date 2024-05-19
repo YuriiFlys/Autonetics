@@ -47,17 +47,23 @@ const Storage = () => {
     const loadData = async () => {
       setLoading(true);
       await handleLoadShop();
-      await handleLoadGoods();
       setLoading(false);
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (shopID !== null) {
+      handleLoadGoods();
+    }
+  }, [shopID]);
+
   const handleLoadShop = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const email = await jwtDecode(token).email;
+      const email = jwtDecode(token).email;
       const employeeResponse = await fetch(
-        "http://23.100.50.204:8080/api/staff/by-email/" + email,
+        `http://23.100.50.204:8080/api/staff/by-email/${email}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,10 +71,10 @@ const Storage = () => {
         }
       );
       if (!employeeResponse.ok) {
-        throw new Error("Failed to fetch emloyee");
+        throw new Error("Failed to fetch employee");
       }
-      const emloyee = await employeeResponse.json();
-      setShopID(emloyee.shopId);
+      const employee = await employeeResponse.json();
+      setShopID(employee.shopId);
     } catch (error) {
       console.error("Error while fetching shops:", error);
     }
@@ -78,9 +84,9 @@ const Storage = () => {
     setIsRefreshing(true);
     try {
       const token = await AsyncStorage.getItem("token");
-
+      console.log("shopID", shopID);
       const response = await fetch(
-        "http://23.100.50.204:8080/api/inventories/by-shop-id/" + shopID,
+        `http://23.100.50.204:8080/api/inventories/by-shop-id/${shopID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -88,23 +94,21 @@ const Storage = () => {
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch shops");
+        throw new Error("Failed to fetch goods");
       }
       const responseData = await response.json();
       const newData = responseData.map((item) => ({
         ...item.goodsID,
         count: 10,
-
         imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
       }));
       setData(newData);
     } catch (error) {
-      console.error("Error while fetching shops:", error);
+      console.error("Error while fetching goods:", error);
     } finally {
       setIsRefreshing(false);
     }
   };
-
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
@@ -135,7 +139,7 @@ const Storage = () => {
     try {
       const token = await AsyncStorage.getItem("token");
 
-      const response = await fetch("http://23.100.50.204:8080/api//" + search, {
+      const response = await fetch("http://23.100.50.204:8080/api/" + search, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
