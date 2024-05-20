@@ -44,6 +44,36 @@ const MainMenu = () => {
 
   const handleLoadShop = async () => {
     setIsRefreshing(true);
+    // setData([
+    //   {
+    //     id: 8,
+    //     name: "Магазин АТБ",
+    //     address: { name: "вул. Шевченка, 1, Львів, Львівська область, 79000" },
+    //     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+    //     distance: "500м",
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Магазин Сільпо",
+    //     address: { name: "вул. Шевченка, 1, Львів, Львівська область, 79000" },
+    //     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+    //     distance: "500м",
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "Магазин Фуршет",
+    //     address: { name: "вул. Шевченка, 1, Львів, Львівська область, 79000" },
+    //     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+    //     distance: "500м",
+    //   },
+    //   {
+    //     id: 4,
+    //     name: "Магазин Фуршет",
+    //     address: { name: "вул. Шевченка, 1, Львів, Львівська область, 79000" },
+    //     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+    //     distance: "500м",
+    //   },
+    // ]);
     try {
       const token = await AsyncStorage.getItem("token");
       let location = (await Location.getCurrentPositionAsync({})).coords;
@@ -67,8 +97,8 @@ const MainMenu = () => {
       const newData = responseData.map((item) => ({
         ...item,
         imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-        distance: "500м",
       }));
+
       setData(newData);
     } catch (error) {
       console.error("Error while fetching shops:", error);
@@ -124,7 +154,7 @@ const MainMenu = () => {
         <Text style={styles.shopName}>{item.name}</Text>
         <Text style={styles.street}>{item.address.name}</Text>
       </View>
-      <Text style={styles.distanceText}>{item.distance}</Text>
+      <Text style={styles.distanceText}>{Math.round(item.distance)}м</Text>
     </TouchableOpacity>
   );
 
@@ -195,8 +225,8 @@ const styles = StyleSheet.create({
   distanceText: {
     alignSelf: "flex-end",
     color: "#808080",
-    marginRight: 10,
-    marginBottom: 5,
+    marginRight: 15,
+    marginBottom: 10,
   },
   field: {
     borderWidth: 2,
