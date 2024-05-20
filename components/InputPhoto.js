@@ -47,36 +47,32 @@ const InputPhoto = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Text style={styles.text}>Input Photo</Text>
-        <ScrollView style={styles.containerImage} horizontal={true}>
-          {images.map((item, index) => (
-            <View
-              key={index} // Adding key for each item
-              style={styles.imageContainer}
-            >
-              <Image source={{ uri: item.uri }} style={styles.image} />
-            </View>
-          ))}
-          <TouchableOpacity onPress={pickImage} style={styles.addButton}>
-            <Text style={styles.addButtonText}>+</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.text}>Input Photo</Text>
+      <ScrollView style={styles.containerImage} horizontal={true}>
+        {images.map((item, index) => (
+          <View
+            key={index} // Adding key for each item
+            style={styles.imageContainer}
+          >
+            <Image source={{ uri: item.uri }} style={styles.image} />
+          </View>
+        ))}
+        <TouchableOpacity onPress={pickImage} style={styles.addButton}>
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
   container: {
-    width: screenWidth * 0.9,
+    width: screenWidth * 0.8,
     height: screenHeight * 0.25,
     marginHorizontal: screenWidth * 0.05,
+    // borderColor: "gray",
+    marginTop: 20,
   },
   text: {
     fontFamily: FontFamily.CommissioneMedium,
@@ -86,7 +82,7 @@ const styles = StyleSheet.create({
   },
   containerImage: {
     height: "80%",
-    borderColor: Color.colorDarkBlue,
+    borderColor: "gray",
     borderWidth: 1,
     borderRadius: 16,
     flexDirection: "row",

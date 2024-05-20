@@ -57,7 +57,7 @@ const Scanner = ({
       // Додаємо затримку 500 мілісекунд (0.5 секунди)
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      Alert.alert("Scanned", `Type: ${type}\nData: ${data}`);
+      // Alert.alert("Scanned", `Type: ${type}\nData: ${data}`);
     } else {
       setScanned(false);
     }

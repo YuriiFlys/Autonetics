@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import InputField from "../../components/InputField";
@@ -54,6 +55,7 @@ const AddProductsScreen = () => {
   const [newProduct, setNewProduct] = useState({});
   const [newSupplier, setNewSupplier] = useState({});
   const [alldSupplier, setAlldSupplier] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const openModal = () => {
     setModalVisible(true);
@@ -133,6 +135,7 @@ const AddProductsScreen = () => {
 
   const createGoodsType = async (name) => {
     if (newProduct["Тип продукту"] < 0) {
+      console.log("Знаходимо ", newProduct["Тип продукту"]);
       const typeData = {
         name: categories.find((item) => item.key === newProduct["Тип продукту"])
           .value,
@@ -145,10 +148,14 @@ const AddProductsScreen = () => {
 
   const createClass = async (name) => {
     if (newProduct["Клас"] < 0) {
+      console.log("Знаходимо клас", newProduct["Клас"], classes);
+      const element = classes.find((item) => item.key === newProduct["Клас"]);
+      console.log("Element of class", element);
       const classData = {
-        name: classes.find((item) => item.key === newProduct["Клас"]).value,
+        name: element.value,
       };
       const { id } = await sendData("class", classData);
+      console.log("Створили клас під ID: ", id);
       return id;
     }
     return newProduct["Клас"];
@@ -170,6 +177,7 @@ const AddProductsScreen = () => {
   };
 
   const createData = async () => {
+    setLoading(true);
     try {
       const goods_id = await createGoodsType();
       const class_id = await createClass();
@@ -178,6 +186,7 @@ const AddProductsScreen = () => {
       await createProduct(goods_id, class_id, supplier_id);
     } catch (error) {
       console.error("Error while sending data", error);
+      setLoading(false);
     }
   };
 
@@ -247,95 +256,117 @@ const AddProductsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ width: screenWidth * 0.9 }}>
-        <InputPhoto />
-        {fields.map((field) => (
-          <InputField key={field} name={field} setData={setData} />
-        ))}
-        <View style={{ width: screenWidth, alignItems: "center" }}>
-          <InputField name={"Штрих код"} setData={setData} />
-          <TouchableOpacity style={styles.searchBarcode} onPress={openModal}>
-            <Image
-              source={require("../../assets/Admin/barcode.svg")}
-              style={styles.barcodeImage}
-            />
-            <Text>Відсканувати штрих коду</Text>
-          </TouchableOpacity>
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
         </View>
-        <InputList
-          name={dataField[0]}
-          data={categories}
-          setSelected={(val) => setData(dataField[0], val)}
-          isAdded={true}
-        />
-        <InputList
-          name={dataField[1]}
-          data={countries}
-          setSelected={(val) => setData(dataField[1], val)}
-          isAdded={false}
-        />
-        <InputList
-          name={dataField[2]}
-          data={classes}
-          setSelected={(val) => setData(dataField[2], val)}
-          isAdded={true}
-        />
-        <InputList
-          name={dataField[3]}
-          data={supplier}
-          setSelected={(val) => {
-            setData(dataField[3], val);
-            if (val > 0) {
-              const newSupplier = alldSupplier.find((item) => val === item.id);
-              setNewSupplier({
-                "Ім'я": newSupplier.name,
-                "Банкіський акаунт": newSupplier.bankAccount,
-                "Телефонний номер": newSupplier.phoneNumber,
-              });
-            } else {
-              setNewSupplier(
-                supplierField.reduce((acc, item) => {
-                  acc[item] = "";
-                  return acc;
-                }, {})
-              );
-            }
-          }}
-          isAdded={true}
-        />
-        {newSupplier ? (
-          <>
-            {supplierField.map((field) => (
-              <InputField
-                key={field}
-                name={field}
-                setData={setSupplierData}
-                data={newSupplier[field]}
-              />
+      ) : (
+        <>
+          <ScrollView style={{ width: screenWidth * 0.9 }}>
+            <InputPhoto />
+            {fields.map((field) => (
+              <InputField key={field} name={field} setData={setData} />
             ))}
-          </>
-        ) : null}
-        <TouchableOpacity style={styles.button} onPress={createData}>
-          <Text style={styles.buttonText}>Додати товар</Text>
-        </TouchableOpacity>
-      </ScrollView>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <SafeAreaView>
-          <ScannerCamera
-            styleflashlight={{}}
-            styleFrame={{ marginTop: screenHeight * 0.2 }}
-            styleButtonScanner={{ marginTop: screenHeight * 0.1 }}
-            isCross={true}
-            handleScanned={scanned}
-            onClose={closeModal}
-          />
-        </SafeAreaView>
-      </Modal>
+            <View style={{ width: screenWidth, alignItems: "center" }}>
+              <InputField
+                name={"Штрих код"}
+                setData={setData}
+                data={newProduct["Штрих код"]}
+              />
+              <TouchableOpacity
+                style={styles.searchBarcode}
+                onPress={openModal}
+              >
+                <Image
+                  source={require("../../assets/Admin/barcode.svg")}
+                  style={styles.barcodeImage}
+                />
+                <Text>Відсканувати штрих коду</Text>
+              </TouchableOpacity>
+            </View>
+            <InputList
+              name={dataField[0]}
+              data={categories}
+              setSelected={(val) => setData(dataField[0], val)}
+              isAdded={true}
+            />
+            <InputList
+              name={dataField[1]}
+              data={countries}
+              setSelected={(val) => setData(dataField[1], val)}
+              isAdded={false}
+            />
+            <InputList
+              name={dataField[2]}
+              data={classes}
+              setSelected={(val) => setData(dataField[2], val)}
+              isAdded={true}
+            />
+            <InputList
+              name={dataField[3]}
+              data={supplier}
+              setSelected={(val) => {
+                setData(dataField[3], val);
+                if (val > 0) {
+                  const newSupplier = alldSupplier.find(
+                    (item) => val === item.id
+                  );
+                  setNewSupplier({
+                    "Ім'я": newSupplier.name,
+                    "Банкіський акаунт": newSupplier.bankAccount,
+                    "Телефонний номер": newSupplier.phoneNumber,
+                  });
+                } else {
+                  setNewSupplier(
+                    supplierField.reduce((acc, item) => {
+                      acc[item] = "";
+                      return acc;
+                    }, {})
+                  );
+                }
+              }}
+              isAdded={true}
+            />
+            {newSupplier ? (
+              <>
+                {supplierField.map((field) => (
+                  <InputField
+                    key={field}
+                    name={field}
+                    setData={setSupplierData}
+                    data={newSupplier[field]}
+                  />
+                ))}
+              </>
+            ) : null}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => createData()}
+            >
+              <Text style={styles.buttonText}>Додати товар</Text>
+            </TouchableOpacity>
+          </ScrollView>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={modalVisible}
+            onRequestClose={closeModal}
+          >
+            <SafeAreaView>
+              <ScannerCamera
+                styleflashlight={{}}
+                styleFrame={{ marginTop: screenHeight * 0.2 }}
+                styleButtonScanner={{ marginTop: screenHeight * 0.1 }}
+                isCross={true}
+                handleScanned={scanned}
+                onClose={closeModal}
+              />
+            </SafeAreaView>
+          </Modal>
+        </>
+      )}
     </SafeAreaView>
   );
 };
