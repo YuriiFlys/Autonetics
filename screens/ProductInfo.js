@@ -11,6 +11,7 @@ import {
   RefreshControl,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import get_photo from "../api/Photo";
 
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { Image } from "expo-image";
@@ -64,12 +65,11 @@ const ProductInfo = ({ route }) => {
       console.log("descriptionResponse", descriptionResponse);
 
       setDescriptionTable(descriptionResponse);
-
       responseData.imageSource = [
-        require("../assets/Image_Product_or_Shop/voda.png"),
-        require("../assets/Image_Product_or_Shop/voda.png"),
-        require("../assets/Image_Product_or_Shop/voda.png"),
+        get_photo(responseData.photo)._j,
+        get_photo(responseData.photo)._j,
       ];
+      console.log("responseData.imageSource", responseData.imageSource);
 
       responseData.shopLogo = require("../assets/Image_Product_or_Shop/atbLogo.png");
       responseData.count = 10;

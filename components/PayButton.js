@@ -13,14 +13,23 @@ import { useNavigation } from "@react-navigation/native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const PayButton = ({ payLogo, payName, styleButton, styleText, arrow }) => {
+const PayButton = ({
+  payLogo,
+  payName,
+  styleButton,
+  styleText,
+  arrow,
+  sum,
+  shop,
+}) => {
   const navigator = useNavigation();
-
+  console.log("sum", sum);
+  console.log("shop", shop);
   return (
     <TouchableOpacity
       style={[styles.payButton, styleButton]}
       onPress={() => {
-        console.log(payName);
+        navigator.navigate("CheckScreen", { sum: sum });
       }}
     >
       <View style={{ flex: 1 }}>

@@ -16,6 +16,7 @@ import BottomAdminMenu from "./screens/Admin/BottomAdminMenu";
 import { LogBox } from "react-native";
 import ProductInfoAdmin from "./screens/Admin/ProductInfoAdmin";
 import { UserProvider } from "./screens/UserContext";
+import CheckScreen from "./screens/CheckScreen";
 
 import AddProducts from "./screens/Admin/AddProducts";
 
@@ -104,6 +105,7 @@ const App = () => {
                   title: "Добавити новий товар",
                 }}
               />
+              <Stack.Screen name="CheckScreen" component={CheckScreen} />
               <Stack.Screen
                 name="BottomMenu"
                 component={BottomMenu}

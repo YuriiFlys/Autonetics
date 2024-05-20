@@ -10,6 +10,7 @@ import ScannerCamera from "../components/ScannerCamera";
 import PayButton from "../components/PayButton";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import get_photo from "../api/Photo";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -19,7 +20,7 @@ const SalesScreen = ({ route }) => {
   console.log("id", id);
   let list = [];
   const [data, setData] = useState([]);
-  shop = {
+  const shop = {
     name: "Магазин АТБ",
     address: "вул. Шевченка, 1, Львів, Львівська область, 79000",
     imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
@@ -70,10 +71,11 @@ const SalesScreen = ({ route }) => {
       if (existingIndex !== -1) {
         list[existingIndex].number = list[existingIndex].number + 1;
       } else {
-        res.photo = require("../assets/Image_Product_or_Shop/voda.png");
+        res.photo = get_photo(res.photo)._j;
         res.number = 1;
         list.push(res);
       }
+      console.log("list", res.photo);
       setData([...list]);
       setSum(list.reduce((acc, item) => acc + item.number * item.priceOut, 0));
     } catch (error) {
@@ -144,6 +146,8 @@ const SalesScreen = ({ route }) => {
                 styleButton={{
                   backgroundColor: Color.colorBlack,
                 }}
+                sum={sum}
+                shop={shop}
               />
               <PayButton
                 payLogo={require("../assets/GooglePayLogo.svg")}
@@ -157,6 +161,8 @@ const SalesScreen = ({ route }) => {
                 styleText={{
                   color: Color.colorBlack,
                 }}
+                sum={sum}
+                shop={shop}
               />
               <PayButton
                 payLogo={require("../assets/CashPayment.svg")}
@@ -167,6 +173,8 @@ const SalesScreen = ({ route }) => {
                   borderWidth: 1,
                 }}
                 arrow={require("../assets/Arrow.svg")}
+                sum={sum}
+                shop={shop}
               />
             </View>
           </BottomSheet>

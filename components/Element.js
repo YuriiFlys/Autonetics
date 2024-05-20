@@ -62,7 +62,7 @@ const Element = ({ item, updateData, deleteElement }) => {
           <TouchableOpacity
             style={styles.shopelement}
             onPress={() => {
-              navigator.navigate("ProductInfo", { id: 1 });
+              navigator.navigate("ProductInfo", { id: item.id });
             }}
           >
             <Image source={item.photo} style={styles.imageSource} />
