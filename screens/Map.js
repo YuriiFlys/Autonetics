@@ -18,6 +18,7 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import * as Location from "expo-location";
+import get_photo from "../api/Photo";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -83,12 +84,16 @@ const Map = () => {
         throw new Error("Failed to fetch shops");
       }
       const responseData = await response.json();
-      const newData = responseData.map((item) => ({
-        ...item,
-        imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-        distance: "500м",
-      }));
-      setData(newData);
+      // const newData = responseData.map((item) => ({
+      //   ...item,
+      //   imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+      //   // distance: "500м",
+      // }));
+      console.log("responseData", responseData);
+      responseData.map((item) => {
+        item.photo = get_photo(item.photo)._j;
+      });
+      setData(responseData);
     } catch (error) {
       console.error(error);
     }
@@ -199,7 +204,7 @@ const Map = () => {
               navigator.navigate("SalesScreen", { id: selectedPlace.id })
             }
           >
-            <Image source={selectedPlace.imageSource} style={styles.image} />
+            <Image source={selectedPlace.photo} style={styles.image} />
             <View style={styles.textContainer}>
               <Text style={styles.shopName}>{selectedPlace.name}</Text>
               <Text style={styles.street}>{selectedPlace.address.name}</Text>

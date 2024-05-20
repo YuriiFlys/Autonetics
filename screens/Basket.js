@@ -27,7 +27,7 @@ const Basket = () => {
   const list = [
     {
       id: 1,
-      shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+      shopLogo: "https://blyzenko.ua/wp-content/uploads/2020/04/favicon.png",
       name: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
       orderAmount: "352.00",
@@ -51,7 +51,8 @@ const Basket = () => {
     },
     {
       id: 4,
-      shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
+      shopLogo:
+        "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQzXfKJuRuxs89ergROiyIOVI1q3qhG_160C-f-Ay9JjMKF16oh",
       name: "19:00 23.06.2024",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
       orderAmount: "99.99",

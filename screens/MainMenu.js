@@ -14,6 +14,7 @@ import GrayLine from "../components/GrayLine";
 import Search from "../components/Search";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
+import { get_photo } from "../api/Photo";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -94,12 +95,11 @@ const MainMenu = () => {
       }
       const responseData = await response.json();
 
-      const newData = responseData.map((item) => ({
-        ...item,
-        imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      }));
+      responseData.map((item) => {
+        item.goodsID.photo = get_photo(item.goodsID.photo)._j;
+      });
 
-      setData(newData);
+      setData(responseData);
     } catch (error) {
       console.error("Error while fetching shops:", error);
     } finally {
