@@ -19,6 +19,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
+import get_photo from "../../api/Photo";
 
 const Storage = () => {
   const navigator = useNavigation();
@@ -92,12 +93,10 @@ const Storage = () => {
           throw new Error("Failed to fetch goods");
         }
         const responseData = await response.json();
-        const newData = responseData.map((item) => ({
-          ...item.goodsID,
-          count: 10,
-          imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
-        }));
-        setData(newData);
+        responseData.map((item) => {
+          item.goodsID.photo = get_photo(item.goodsID.photo)._j;
+        });
+        setData(responseData);
       }
     } catch (error) {
       console.error("Error while fetching goods:", error);
@@ -113,15 +112,15 @@ const Storage = () => {
         onPress={() => navigator.navigate("ProductInfo", { id: item.id })}
       >
         <Image
-          source={item.imageSource}
-          style={{ width: "20%", height: "90%" }}
+          source={item.goodsID.photo}
+          style={{ width: "15%", height: "80%" }}
         />
         <View style={styles.nameContainer}>
-          <Text style={styles.nameText}>{item.name}</Text>
-          <Text style={styles.nameText}>{item.priceOut}₴</Text>
+          <Text style={styles.nameText}>{item.goodsID.name}</Text>
+          <Text style={styles.nameText}>{item.goodsID.priceOut}₴</Text>
         </View>
         <View style={styles.countContainer}>
-          <Text style={styles.countText}>{item.count}шт</Text>
+          <Text style={styles.countText}>{item.numbers}шт</Text>
         </View>
       </TouchableOpacity>
     );
@@ -149,12 +148,7 @@ const Storage = () => {
           throw new Error("Failed to fetch shops");
         }
         const responseData = await response.json();
-        const newData = responseData.map((item) => ({
-          ...item,
-          count: 10,
-          imageSource: require("../../assets/Image_Product_or_Shop/voda.png"),
-        }));
-        setData(newData);
+        setData(responseData);
       }
     } catch (error) {
       console.error("Error while fetching shops:", error);

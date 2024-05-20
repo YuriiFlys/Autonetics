@@ -15,6 +15,7 @@ import GrayLine from "./GrayLine";
 import SmallWidget from "./SmallWidget";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import get_photo from "../api/Photo";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,30 +27,39 @@ const PopupWindow = ({
   setData,
   shopId,
 }) => {
+  const navigation = useNavigation();
+  const [AiData, setAiData] = useState([]);
   useEffect(() => {
     const loadData = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        console.log("token", shopId);
-        const response = await fetch(
-          "http://23.100.50.204:8080/api/ai/best-product-for-weather",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              shopId: 1,
-            },
-          }
-        );
-        console.log("response", response.json());
-        setAiData(response.json());
-      } catch (e) {
-        console.error("Ai error", e);
-      }
+      await loadAiData();
     };
     loadData();
   }, []);
-  const navigation = useNavigation();
-  const [AiData, setAiData] = useState([]);
+  const loadAiData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await fetch(
+        "http://23.100.50.204:8080/api/ai/best-product-for-weather",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            shopId: 8,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch shops");
+      }
+      const responseData = await response.json();
+      responseData.map((item) => {
+        item.photo = get_photo(item.photo)._j;
+      });
+      setAiData(responseData);
+    } catch (e) {
+      console.error("Ai error", e);
+    }
+  };
   const updateData = (id, number) => {
     setData((data) => {
       const updatedData = data.map((item) =>
