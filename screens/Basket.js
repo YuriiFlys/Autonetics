@@ -28,33 +28,33 @@ const Basket = () => {
     {
       id: 1,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "Святковий кошик",
+      name: "Святковий кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99",
+      orderAmount: "99.99",
       isFavorite: false,
     },
     {
       id: 2,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "Щоденний кошик",
+      name: "Щоденний кошик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99",
+      orderAmount: "99.99",
       isFavorite: true,
     },
     {
       id: 3,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "Студенський наборчик",
+      name: "Студенський наборчик",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "112.60",
+      orderAmount: "112.60",
       isFavorite: true,
     },
     {
       id: 4,
       shopLogo: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-      nameCart: "19:00 23.06.2024",
+      name: "19:00 23.06.2024",
       shopAddress: "Вул. Шевченка 234, Львівська обл, 79023",
-      price: "99.99",
+      orderAmount: "99.99",
       isFavorite: false,
     },
   ];
@@ -90,7 +90,7 @@ const Basket = () => {
         address: "Вул. Шевченка 234, Львівська обл, 79023",
       }));
       console.log(newData);
-      setData(newData);
+      setData(list);
     } catch (error) {
       console.error("Error", error);
     }

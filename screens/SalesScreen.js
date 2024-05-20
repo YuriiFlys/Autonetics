@@ -104,6 +104,7 @@ const SalesScreen = ({ route }) => {
             setSum={setSum}
             data={data}
             setData={setData}
+            shopId={id}
           />
         </BottomSheet>
         {isBottomSheetOpen && (

@@ -14,15 +14,14 @@ const screenWidth = Dimensions.get("window").width;
 const SmallWidget = ({ item }) => {
   const navigator = useNavigation();
   //todo: замінити на item.goodPriceOut
-  // const price = item.goodPriceOut.split(".");
-  price = ["100", "00"];
+  const price = item.priceOut.split(".");
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigator.navigate("ProductInfo", { id: 1 })} // todo id
+      onPress={() => navigator.navigate("ProductInfo", { id: item.id })} // todo id
     >
       <View style={styles.productImageContainer}>
-        <Image source={item.imageSource} style={styles.productImage} />
+        <Image source={item.photo} style={styles.productImage} />
       </View>
       <Text style={styles.productNameContainer}>{item.name}</Text>
       <View

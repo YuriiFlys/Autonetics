@@ -51,8 +51,8 @@ const HistoryElement = ({ item, updateData }) => {
               width: "100%",
             }}
           >
-            <Text style={styles.nameCart}>{item.nameCart}</Text>
-            <Text style={styles.price}> {item.price} ₴</Text>
+            <Text style={styles.nameCart}>{item.name}</Text>
+            <Text style={styles.price}> {item.orderAmount} ₴</Text>
           </View>
           <Text style={styles.shopAddress}>{item.shopAddress}</Text>
         </View>

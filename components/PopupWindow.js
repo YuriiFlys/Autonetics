@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -14,10 +14,42 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import GrayLine from "./GrayLine";
 import SmallWidget from "./SmallWidget";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
+const PopupWindow = ({
+  handleOpenPress,
+  sum,
+  setSum,
+  data,
+  setData,
+  shopId,
+}) => {
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        console.log("token", shopId);
+        const response = await fetch(
+          "http://23.100.50.204:8080/api/ai/best-product-for-weather",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              shopId: 1,
+            },
+          }
+        );
+        console.log("response", response.json());
+        setAiData(response.json());
+      } catch (e) {
+        console.error("Ai error", e);
+      }
+    };
+    loadData();
+  }, []);
   const navigation = useNavigation();
+  const [AiData, setAiData] = useState([]);
   const updateData = (id, number) => {
     setData((data) => {
       const updatedData = data.map((item) =>
@@ -104,7 +136,7 @@ const PopupWindow = ({ handleOpenPress, sum, setSum, data, setData }) => {
         <View style={styles.offersContainer}>
           <Text style={styles.personalSuggestions}>Ваші пропозиції</Text>
           <FlatList
-            data={data}
+            data={AiData}
             renderItem={({ item }) => <SmallWidget item={item} />}
             keyExtractor={(item) => item.id}
             horizontal={true}
