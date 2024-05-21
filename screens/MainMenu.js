@@ -95,11 +95,31 @@ const MainMenu = () => {
       }
       const responseData = await response.json();
 
-      responseData.map((item) => {
-        item.goodsID.photo = get_photo(item.goodsID.photo)._j;
+      // `      responseData.map((item) => {
+      //         item.goodsID.photo = get_photo(item.goodsID.photo)._j;
+      //       });`
+      const newData = responseData.map((item) => {
+        let newItem = { ...item };
+        console.log("newItem", newItem);
+
+        if (newItem.id === 10) {
+          newItem.imageSource = require("../assets/Image_Product_or_Shop/eva.jpg");
+        } else if (newItem.id === 8) {
+          newItem.imageSource = require("../assets/Image_Product_or_Shop/atbLogo.png");
+        } else if (newItem.name === "Rozetka") {
+          newItem.imageSource = require("../assets/Image_Product_or_Shop/Rosetka.jpeg");
+        } else if (newItem.name === "Близенько") {
+          newItem.imageSource = require("../assets/Image_Product_or_Shop/blizenkoLogo.png");
+        } else if (newItem.id === 11) {
+          newItem.imageSource = require("../assets/Image_Product_or_Shop/RoshenLogo.png");
+        } else {
+          newItem.imageSource = require("../assets/Image_Product_or_Shop/atbLogo.png");
+        }
+
+        return newItem;
       });
 
-      setData(responseData);
+      setData(newData);
     } catch (error) {
       console.error("Error while fetching shops:", error);
     } finally {
@@ -131,8 +151,8 @@ const MainMenu = () => {
       const newData = responseData.map((item) => ({
         ...item,
         imageSource: require("../assets/Image_Product_or_Shop/atbLogo.png"),
-        distance: "500м",
       }));
+
       setData(newData);
     } catch (error) {
       console.error("Error while fetching shops:", error);
@@ -154,7 +174,9 @@ const MainMenu = () => {
         <Text style={styles.shopName}>{item.name}</Text>
         <Text style={styles.street}>{item.address.name}</Text>
       </View>
-      <Text style={styles.distanceText}>{Math.round(item.distance)}м</Text>
+      {item.distance ? (
+        <Text style={styles.distanceText}>{Math.round(item.distance)}м</Text>
+      ) : null}
     </TouchableOpacity>
   );
 

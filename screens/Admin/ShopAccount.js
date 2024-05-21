@@ -35,7 +35,6 @@ const ButtonMenu = ({ image, name, navig }) => {
   );
 };
 
-
 const ShopAccount = () => {
   const [shopName, setShopName] = React.useState("");
   const [shopAddress, setShopAddress] = React.useState("");
@@ -44,9 +43,7 @@ const ShopAccount = () => {
   const navigator = useNavigation();
   React.useEffect(() => {
     //setImage to profile image
-    setImage(
-      "https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png"
-    );
+    setImage();
   }, []);
   useEffect(() => {
     const fetchData = async () => {
@@ -62,19 +59,21 @@ const ShopAccount = () => {
           }
         );
         const shopId = res.data.shopId;
-        try{
-        const resShop = await axios.get(
-          `http://23.100.50.204:8080/api/shops/by-id/${shopId}`,
-          {
-            headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const shopData = resShop.data;
-        setShopName(shopData.name);
-        setShopAddress(shopData.address.name + ", " + shopData.address.settlement.name);
-        }
-        catch (error) {
+        try {
+          const resShop = await axios.get(
+            `http://23.100.50.204:8080/api/shops/by-id/${shopId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const shopData = resShop.data;
+          setShopName(shopData.name);
+          setShopAddress(
+            shopData.address.name + ", " + shopData.address.settlement.name
+          );
+        } catch (error) {
           console.error(error);
         }
       } catch (error) {
@@ -98,33 +97,33 @@ const ShopAccount = () => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-      <ScrollView contentContainerStyle={styles.mainContainer}>
-      <UserComponent
-        userName={shopName}
-        profileImage={profileImage}
-        description={shopAddress}
-        imageSize={0.25}
-      />
-      <GrayLine style={{ marginTop: 10 }} />
-      <ButtonMenu
-        image={require("../../assets/Admin/shop.svg")}
-        name={"Дані магазину"}
-        navig={() => navigator.navigate("ShopsList")}
-      />
-      <GrayLine />
-      <ButtonMenu
-        image={require("../../assets/Profile/user.svg")}
-        name={"Працівники"}
-        navig={() => navigator.navigate("Employees")}
-      />
-      <GrayLine />
-      <ButtonMenu
-        image={require("../../assets/Profile/Settings.svg")}
-        name={"Налаштування"}
-        navig={() => navigator.navigate("Settings")}
-      />
-      <GrayLine />
-      </ScrollView>
+        <ScrollView contentContainerStyle={styles.mainContainer}>
+          <UserComponent
+            userName={shopName}
+            profileImage={profileImage}
+            description={shopAddress}
+            imageSize={0.25}
+          />
+          <GrayLine style={{ marginTop: 10 }} />
+          <ButtonMenu
+            image={require("../../assets/Admin/shop.svg")}
+            name={"Дані магазину"}
+            navig={() => navigator.navigate("ShopsList")}
+          />
+          <GrayLine />
+          <ButtonMenu
+            image={require("../../assets/Profile/user.svg")}
+            name={"Працівники"}
+            navig={() => navigator.navigate("Employees")}
+          />
+          <GrayLine />
+          <ButtonMenu
+            image={require("../../assets/Profile/Settings.svg")}
+            name={"Налаштування"}
+            navig={() => navigator.navigate("Settings")}
+          />
+          <GrayLine />
+        </ScrollView>
       )}
     </SafeAreaView>
   );
